@@ -6,6 +6,8 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QWidget, QTableWidget, QTableWidgetItem
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QRadioButton
 from PyQt5.QtWidgets import QMainWindow, QLabel, QLineEdit
+
+
 # Github - done by Andrew
 
 class Librarian(QMainWindow):
@@ -137,7 +139,7 @@ class NewClient(QWidget):
         # Андрей - сделано добавление читателя
         if self.check_name(self.le_name.text()) and self.check_birthday(self.le_bday.text()):
             cur.execute(f"""INSERT INTO reader(id, name, date, address, info) 
-                        VALUES('{hashlib.md5(bytes(self.lb_contact_2.text(), encoding = 'utf-8')).hexdigest()}', '{self.le_name.text()}', 
+                        VALUES('{hashlib.md5(bytes(self.lb_contact_2.text(), encoding='utf-8')).hexdigest()}', '{self.le_name.text()}', 
                         '{self.le_bday.text()}', '{self.le_address.text()}', '{self.lb_contact_2.text()}')""")
 
             con.commit()
