@@ -25,6 +25,7 @@ class Librarian(QMainWindow):
         self.btn_client_search.clicked.connect(self.open_client_search)
         self.btn_book_search.clicked.connect(self.open_book_search)
         self.btn_new_client.clicked.connect(self.open_new_client)
+        self.btn_new_book.clicked.connect(self.open_new_book)
 
     def open_client_search(self):
         self.client_search = ClientSearch()
@@ -37,6 +38,10 @@ class Librarian(QMainWindow):
     def open_new_client(self):
         self.new_client = NewClient()
         self.new_client.show()
+
+    def open_new_book(self):
+        self.new_book = NewBook()
+        self.new_book.show()
 
 
 class ClientSearch(QWidget):
@@ -138,6 +143,7 @@ class NewClient(QWidget):
 
     def initUI(self):
         self.btn_input.clicked.connect(self.new_input)
+        self.btn_cancel.clicked.connect(self.closer)
 
     def new_input(self):
         name_ok = self.check_name(self.le_name.text())
@@ -182,12 +188,109 @@ class NewClient(QWidget):
             self.lb_wrong_bday.setText('Неверный формат даты.')
             return False
 
+    def closer(self):
+        self.close()
+        # Катя - оставим просто закрытие формы, запаришься с отменной добавления или вообще убрать эту кнопку?
+
+
+class NewBook(QWidget):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('NewBook.ui', self)
+        self.initUI()
+
+    def initUI(self):
+        self.widgets = [self.btn_file_input, self.btn_form_input, self.ch_1, self.ch_2, self.ch_3, self.ch_4, self.ch_5,
+                        self.ch_6, self.ch_7, self.ch_8, self.ch_9, self.ch_10, self.lb_author, self.lb_directory,
+                        self.lb_name, self.lb_number, self.lb_shelf, self.lb_succses, self.lb_type,
+                        self.lb_wrong_number, self.lb_wrong_year, self.lb_year, self.le_author, self.le_directory,
+                        self.le_name, self.le_number, self.le_shelf, self.le_year]
+        for el in self.widgets:
+            if 'form' not in el.accessibleName():
+                el.hide()
+        self.lb_wrong_type.hide()
+        self.rb_form.setChecked(True)
+
+
+        self.rb_form.clicked.connect(self.hider)
+        self.rb_file.clicked.connect(self.hider)
+        self.btn_cance.clicked.connect(self.closer)
+
+        self.btn_file_input.clicked.connect(self.input_file)
+        self.btn_form_input.clicked.connect(self.input_form)
+
+    def hider(self):
+        for el in self.widgets:
+            if self.sender().accessibleName() == el.accessibleName():
+                el.show()
+            else:
+                el.hide()
+
+    def input_file(self):
+        pass
+        # Катя - предполагается работа с документом
+        # Катя - будем запариваться с проверкой верности формата директории?
+        # или просто тогда уже найдет или нет?
+
+    def input_form(self):
+        ok_year = self.check_year(self.le_year.text())
+        ok_number = self.check_number(self.le_number.text())
+        ok_type = self.check_type()
+        if ok_year and ok_number and ok_type:
+            self.lb_success.setText('Успешно.')
+            # происходит добавление в базу
+
+    def check_year(self, year):  # Катя - сделала, но не тестировала
+        self.lb_success.setText('')
+        try:
+            if year.isdigit():
+                year = int(year)
+                if year <= 0:
+                    raise UnrealYear
+                else:
+                    self.lb_wrong_year.setText('')
+                    return True
+            else:
+                raise WrongYearFormat
+        except UnrealYear:
+            self.lb_wrong_year.setText('Несуществующий год.')
+            return False
+        except WrongYearFormat:
+            self.lb_wrong_year.setText('Допускаются только цифры.')
+            return False
+
+    def check_number(self, number): #Катя - сделаю
+        pass
+
+    def check_type(self): #Катя - сделаю
+        pass
+
+    def closer(self):
+        self.close()
+        # Катя - такой же вопрос как к "отмене" в добавление читателя
+
 
 class WrongBirthDateFormat(Exception):
     pass
 
 
 class WrongNameFormat(Exception):
+    pass
+
+
+class UnrealYear(Exception):
+    pass
+
+
+class WrongYearFormat(Exception):
+    pass
+
+
+class WrongNumberFormat(Exception):
+    pass
+
+
+class UnrealNumber(Exception):
     pass
 
 

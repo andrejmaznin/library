@@ -173,7 +173,7 @@
      <string>Новый читатель</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btn_add_to_library">
+   <widget class="QPushButton" name="btn_new_book">
     <property name="geometry">
      <rect>
       <x>95</x>
