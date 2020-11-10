@@ -36,7 +36,7 @@
     <rect>
      <x>20</x>
      <y>80</y>
-     <width>500</width>
+     <width>600</width>
      <height>30</height>
     </rect>
    </property>
@@ -46,7 +46,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Введите ФИО:</string>
+    <string>Введите ФИО (допускаются буквы любого алфавита и пробелы):</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="le_name">
@@ -168,7 +168,7 @@
     <string>Введите контактную информацию (номер телефона, email):</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lb_contact_2">
+  <widget class="QLineEdit" name="le_contact">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -199,6 +199,24 @@
      <width>150</width>
      <height>30</height>
     </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lb_success">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>420</y>
+     <width>500</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
    </property>
    <property name="text">
     <string/>
