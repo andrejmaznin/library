@@ -8,8 +8,12 @@ from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QRadioButton
 from PyQt5.QtWidgets import QMainWindow, QLabel, QLineEdit
 
 
-# Github - done by Andrew
+def test():
+    pass
 
+
+# Github - done by Andrew
+# Fixed contact info name
 class Librarian(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -139,9 +143,10 @@ class NewClient(QWidget):
         name_ok = self.check_name(self.le_name.text())
         date_ok = self.check_birthday(self.le_bday.text())
         if name_ok and date_ok:
+            print("here")
             cur.execute(f"""INSERT INTO reader(id, name, date, address, info)
                         VALUES('{hashlib.md5(bytes(self.le_contact.text(), encoding='utf-8')).hexdigest()}', '{self.le_name.text()}',
-                        '{self.le_bday.text()}', '{self.le_address.text()}', '{self.lb_contact_2.text()}')""")
+                        '{self.le_bday.text()}', '{self.le_address.text()}', '{self.le_contact.text()}')""")
             self.lb_success.setText('Читатель успешно добавлен.')
             con.commit()
             self.le_name.clear()
