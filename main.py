@@ -136,40 +136,53 @@ class NewClient(QWidget):
         self.btn_input.clicked.connect(self.new_input)
 
     def new_input(self):
-        # Андрей - сделано добавление читателя
-        if self.check_name(self.le_name.text()) and self.check_birthday(self.le_bday.text()):
-            cur.execute(f"""INSERT INTO reader(id, name, date, address, info) 
-                        VALUES('{hashlib.md5(bytes(self.lb_contact_2.text(), encoding='utf-8')).hexdigest()}', '{self.le_name.text()}', 
+        name_ok = self.check_name(self.le_name.text())
+        date_ok = self.check_birthday(self.le_bday.text())
+        if name_ok and date_ok:
+            cur.execute(f"""INSERT INTO reader(id, name, date, address, info)
+                        VALUES('{hashlib.md5(bytes(self.le_contact.text(), encoding='utf-8')).hexdigest()}', '{self.le_name.text()}',
                         '{self.le_bday.text()}', '{self.le_address.text()}', '{self.lb_contact_2.text()}')""")
-
+            self.lb_success.setText('Читатель успешно добавлен.')
             con.commit()
             self.le_name.clear()
             self.le_bday.clear()
             self.le_address.clear()
-            self.lb_contact_2.clear()
+            self.le_contact.clear()
 
     def check_name(self, name):
-        return True
-        # Катя: сделаю проверку с использованием исключений, но чуть позже
+        try:
+            self.lb_success.setText('')
+            if ''.join(name.split()).isalpha():
+                self.lb_wrong_name.setText('')
+                return True
+            else:
+                raise WrongNameFormat
+        except WrongNameFormat:
+            self.lb_wrong_name.setText('Неверный формат имени.')
+            return False
 
     def check_birthday(self, bday):
-        return True
-        # К: я допилю эту штуку чуть позже
-        # try:
-        #     if bday[0:2].isdidigt() and bday[3:5].isdigit() and bday[6:].isdigit() and bday[2] == '.' and bday[
-        #         5] == '.':
-        #         # self.lb_wrong_bday.setText('верно')
-        #         return True
-        #         # pass
-        #     else:
-        #         # raise WrongBirthDate
-        #         return False
-        # except WrongBirthDate:
-        #     self.lb_wrong_bday.setText('Неверный формат даты.')
-        #     return False
+        try:
+            self.lb_success.setText('')
+            if len(bday) == 10:
+                if bday[0:2].isdigit() and bday[3:5].isdigit() and bday[6:].isdigit() and bday[2] == '.' and bday[
+                    5] == '.':
+                    self.lb_wrong_bday.setText('')
+                    return True
+                else:
+                    raise WrongBirthDateFormat
+            else:
+                raise WrongBirthDateFormat
+        except WrongBirthDateFormat:
+            self.lb_wrong_bday.setText('Неверный формат даты.')
+            return False
 
 
-class WrongBirthDate(Exception):
+class WrongBirthDateFormat(Exception):
+    pass
+
+
+class WrongNameFormat(Exception):
     pass
 
 
