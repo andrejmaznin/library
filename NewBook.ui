@@ -543,7 +543,7 @@
     <string>file</string>
    </property>
   </widget>
-  <widget class="QLabel" name="lb_succses">
+  <widget class="QLabel" name="lb_success">
    <property name="geometry">
     <rect>
      <x>30</x>
