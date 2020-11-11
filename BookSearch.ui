@@ -446,7 +446,7 @@
    </column>
    <column>
     <property name="text">
-     <string>Номер стеллажа</string>
+     <string notr="true">Стеллаж</string>
     </property>
     <property name="font">
      <font>
