@@ -25,6 +25,7 @@ class Librarian(QMainWindow):  # основное окно
         self.btn_new_client.clicked.connect(self.open_new_client)
         self.btn_new_book.clicked.connect(self.open_new_book)
         self.btn_give_book.clicked.connect(self.open_give_book)
+        self.btn_return_book.clicked.connect(self.open_return_book)
 
     # функции открытия остальных форм
     def open_client_search(self):
@@ -46,6 +47,10 @@ class Librarian(QMainWindow):  # основное окно
     def open_give_book(self):
         self.give_book = GiveBook()
         self.give_book.show()
+
+    def open_return_book(self):
+        self.return_book = ReturnBook()
+        self.return_book.show()
 
 
 class ClientSearch(QWidget):  # поиск читателя по базе
@@ -473,6 +478,53 @@ class GiveBook(QWidget):  # выдача книг
         self.close()
 
 
+class ReturnBook(QWidget):  # сдача книг
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('ReturnBook.ui', self)
+        self.initUI()
+
+    def initUI(self):
+        self.btn_return.clicked.connect(self.returner)
+        self.btn_cancel.clicked.connect(self.closer)
+
+    def returner(self):
+        ok_book = self.check_book_id(self.le_book_id.text())  # вызов проверок
+        ok_client = self.check_client_id(self.le_client_id.text())
+        if ok_book and ok_client:
+            # происходит удаление из таблицы вадачи
+            # возможен вывод сообщений: "Такого читателя нет в библиотеке."
+            # "Такой книги нет в библиотеке."
+            # "У данного читателя не было такой книги." или "Данная книга не была у этого читателя." (равнозначные сообщения)
+            # Наличие книги или читателя в бд библиотеки можно было запихнуть в функции проверок
+            self.lb_output.setText('Сдача произведена успешно, книга может быть помещена на полку.')
+
+    def check_book_id(self, id):  # проверка id книги
+        try:
+            self.lb_wrong_book_id.setText('')
+            if id.strip() != '':  # на пустую строку
+                return True
+            else:
+                raise EmptyLE
+        except EmptyLE:
+            self.lb_wrong_book_id.setText('Обязательное поле.')
+            return False
+
+    def check_client_id(self, id):  # проверка id читателя
+        try:
+            self.lb_wrong_client_id.setText('')
+            if id.strip() != '':  # на пустую строку
+                return True
+            else:
+                raise EmptyLE
+        except EmptyLE:
+            self.lb_wrong_client_id.setText('Обязательное поле.')
+            return False
+
+    def closer(self):
+        self.close()
+
+
 # исключения используемые при проверках
 class WrongBirthDateFormat(Exception):
     pass
@@ -498,7 +550,7 @@ class NotNaturalNumber(Exception):
     pass
 
 
-class EmptyLE(Exception):
+class EmptyLE(Exception):  # ошибка: пустое поле ввода
     pass
 
 

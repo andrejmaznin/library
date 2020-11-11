@@ -224,7 +224,7 @@
      <string>Выдать книгу</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btn_retur_book">
+   <widget class="QPushButton" name="btn_return_book">
     <property name="geometry">
      <rect>
       <x>455</x>
