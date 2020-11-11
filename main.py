@@ -78,7 +78,8 @@ class BookSearch(QWidget):
     def initUI(self):
         self.widgets = [self.btn_id, self.lab_id, self.btn_name, self.lab_name, self.le_name,
                         self.btn_author, self.lab_author, self.lab_type, self.btn_type, self.ch_1,
-                        self.ch_2, self.ch_3, self.ch_4, self.ch_5, self.ch_6]
+                        self.ch_2, self.ch_3, self.ch_4, self.ch_5, self.ch_6, self.ch_7, self.ch_8, self.ch_9,
+                        self.ch_10, self.lb_nothing]
         for el in self.widgets:
             if 'id' not in el.accessibleName():
                 el.hide()
