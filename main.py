@@ -277,39 +277,47 @@ class NewBook(QWidget):
 
     def input_form(self):
         self.lb_success.hide()
+        
         ok_name = self.check_name(self.le_name.text())
         ok_author = self.check_author(self.le_author.text())
         ok_year = self.check_year(self.le_year.text())
         ok_type = self.check_type()
         ok_number = self.check_number(self.le_number.text())
         ok_shelf = self.check_shelf(self.le_shelf.text())
+
         if ok_name and ok_author and ok_year and ok_type and ok_number and ok_shelf:
-            self.name = self.le_name.text()
-            self.author = self.le_author.text()
-            self.year = self.le_year.text()
-            self.genres = [i.text().lower() if i.isChecked() else '' for i in self.widgets[2:12]]
-            self.genres = ";".join(list(set(self.genres)))
-            self.number = int(self.le_number.text())
-            self.shelf = self.le_shelf.text()
-            t = cur.execute(f"select ids from books where name = '{self.name}'").fetchall()
+            name = self.le_name.text()
+            author = self.le_author.text()
+            year = self.le_year.text()
+
+            genres = [i.text().lower() if i.isChecked() else '' for i in self.widgets[2:12]]
+            genres = ";".join(list(set(genres)))
+
+            number = int(self.le_number.text())
+            shelf = self.le_shelf.text()
+
+            t = cur.execute(f"select ids from books where name = '{name}'").fetchall()
             num = 0
+
             if t:
-                num = len(cur.execute(f"select ids from books where name = '{self.name}'").fetchall()[0][0].split(";"))
-            self.ids = ";"
-            for i in range(self.number):
-                self.hash_i = hashlib.md5(bytes(self.name + str(num + i), encoding="utf-8")).hexdigest()
-                self.ids += self.hash_i + ";"
-            self.ids += ";"
+                num = len(cur.execute(f"select ids from books where name = '{name}'").fetchall()[0][0].split(";"))
+
+            ids = ";"
+            for i in range(number):
+                hash_i = hashlib.md5(bytes(name + str(num + i), encoding="utf-8")).hexdigest()
+                ids += hash_i + ";"
+            ids += ";"
+
             if num:
-                a = cur.execute(f"select ids from books where name = '{self.name}'").fetchall()
-                self.cur_ids = cur.execute(f"select ids from books where name = '{self.name}'").fetchall()[0][0]
-                self.final_ids = self.cur_ids + self.ids
-                cur.execute(f"update books set ids='{self.final_ids}' where name='{self.name}'")
+                cur_ids = cur.execute(f"select ids from books where name = '{name}'").fetchall()[0][0]
+                final_ids = cur_ids + ids
+
+                cur.execute(f"update books set ids='{final_ids}' where name='{name}'")
                 con.commit()
             else:
                 cur.execute(f"""INSERT INTO books(ids, name, author, year, genre, position)
-                                            VALUES('{str(self.ids)}', '{str(self.name)}',
-                                            '{str(self.author)}', '{str(self.year)}', '{str(self.genres)}', '{str(self.shelf)}')""")
+                                            VALUES('{ids}', '{name}',
+                                            '{author}', '{year}', '{genres}', '{str(shelf)}')""")
                 con.commit()
             self.lb_success.show()
 
