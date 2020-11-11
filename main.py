@@ -12,9 +12,7 @@ def test():
     pass
 
 
-# Github - done by Andrew
-# Fixed contact info name
-class Librarian(QMainWindow):
+class Librarian(QMainWindow):  # основное окно
     def __init__(self):
         super().__init__()
 
@@ -28,6 +26,7 @@ class Librarian(QMainWindow):
         self.btn_new_book.clicked.connect(self.open_new_book)
         self.btn_give_book.clicked.connect(self.open_give_book)
 
+    # функции открытия остальных форм
     def open_client_search(self):
         self.client_search = ClientSearch()
         self.client_search.show()
@@ -49,7 +48,7 @@ class Librarian(QMainWindow):
         self.give_book.show()
 
 
-class ClientSearch(QWidget):
+class ClientSearch(QWidget):  # поиск читателя по базе
     def __init__(self):
         super().__init__()
         uic.loadUi('ClientSearch.ui', self)
@@ -75,7 +74,7 @@ class ClientSearch(QWidget):
         self.close()
 
 
-class BookSearch(QWidget):
+class BookSearch(QWidget):  # поиск книги по базе
     def __init__(self):
         super().__init__()
         uic.loadUi('BookSearch.ui', self)
@@ -85,7 +84,7 @@ class BookSearch(QWidget):
         self.widgets = [self.btn_id, self.lab_id, self.btn_name, self.lab_name, self.le_name,
                         self.btn_author, self.lab_author, self.lab_type, self.btn_type, self.ch_1,
                         self.ch_2, self.ch_3, self.ch_4, self.ch_5, self.ch_6, self.ch_7, self.ch_8, self.ch_9,
-                        self.ch_10, self.lb_nothing]
+                        self.ch_10, self.lb_nothing]  # прятанье "лишних" элементов при открытии
         for el in self.widgets:
             if 'id' not in el.accessibleName():
                 el.hide()
@@ -101,7 +100,7 @@ class BookSearch(QWidget):
         self.btn_type.clicked.connect(self.show_found)
         self.btn_cancel.clicked.connect(self.closer)
 
-    def hider(self):
+    def hider(self):  # функция показа и прятанье элементов в соответствии с режимом поиска
         self.le_name.setText("")
         for el in self.widgets:
             if self.sender().accessibleName() in el.accessibleName():
@@ -109,7 +108,7 @@ class BookSearch(QWidget):
             else:
                 el.hide()
 
-    def show_found(self):
+    def show_found(self):  # работа с базой
         for i in range(self.tableWidget.rowCount()):
             self.tableWidget.removeRow(i)
         requirement = self.le_name.text()
@@ -146,7 +145,7 @@ class BookSearch(QWidget):
         self.close()
 
 
-class NewClient(QWidget):
+class NewClient(QWidget):  # окно добавления нового читателя
     def __init__(self):
         super().__init__()
         uic.loadUi('NewClient.ui', self)
@@ -157,12 +156,12 @@ class NewClient(QWidget):
         self.btn_cancel.clicked.connect(self.closer)
 
     def new_input(self):
-        name_ok = self.check_name(self.le_name.text())
+        name_ok = self.check_name(self.le_name.text())  # вызов проверок соответствия ввода с необходимыми форматами
         date_ok = self.check_birthday(self.le_bday.text())
         address_ok = self.check_address(self.le_address.text())
         contact_ok = self.check_contact(self.le_contact.text())
         if name_ok and date_ok and address_ok and contact_ok:
-            print("here")
+            # Работы с базой, если проверки пройдены
             cur.execute(f"""INSERT INTO reader(id, name, date, address, info)
                         VALUES('{hashlib.md5(bytes(self.le_contact.text(), encoding='utf-8')).hexdigest()}', '{self.le_name.text()}',
                         '{self.le_bday.text()}', '{self.le_address.text()}', '{self.le_contact.text()}')""")
@@ -173,11 +172,11 @@ class NewClient(QWidget):
             self.le_address.clear()
             self.le_contact.clear()
 
-    def check_name(self, name):
+    def check_name(self, name):  # проверка имени:
         try:
             self.lb_success.setText('')
-            if name.strip() != '':
-                if ''.join(name.split()).isalpha():
+            if name.strip() != '':  # на пусткую строку
+                if ''.join(name.split()).isalpha():  # на наличие символов кроме букв и пробелом
                     self.lb_wrong_name.setText('')
                     return True
                 else:
@@ -191,13 +190,13 @@ class NewClient(QWidget):
             self.lb_wrong_name.setText('Неверный формат имени.')
             return False
 
-    def check_birthday(self, bday):
+    def check_birthday(self, bday):  # проверка даты рождения:
         try:
             self.lb_success.setText('')
-            if bday.strip() != '':
-                if len(bday) == 10:
+            if bday.strip() != '':  # на пустую строку
+                if len(bday) == 10:  # на соответствие указаному формату по длине
                     if bday[0:2].isdigit() and bday[3:5].isdigit() and bday[6:].isdigit() and bday[2] == '.' and bday[
-                        5] == '.':
+                        5] == '.':  # на соответствие в целом указаному формату
                         self.lb_wrong_bday.setText('')
                         return True
                     else:
@@ -213,10 +212,10 @@ class NewClient(QWidget):
             self.lb_wrong_bday.setText('Неверный формат даты.')
             return False
 
-    def check_address(self, address):
+    def check_address(self, address):  # проверка адреса:
         try:
             self.lb_wrong_address.setText('')
-            if address.strip() != '':
+            if address.strip() != '':  # на пустую строку
                 return True
             else:
                 raise EmptyLE
@@ -224,10 +223,10 @@ class NewClient(QWidget):
             self.lb_wrong_address.setText('Обязтельное поле.')
             return False
 
-    def check_contact(self, contact):
+    def check_contact(self, contact):  # проверка контактов:
         try:
             self.lb_wrong_contact.setText('')
-            if contact.strip() != '':
+            if contact.strip() != '':  # на пустую строку
                 return True
             else:
                 raise EmptyLE
@@ -250,10 +249,10 @@ class NewBook(QWidget):
                         self.ch_6, self.ch_7, self.ch_8, self.ch_9, self.ch_10, self.lb_author, self.lb_directory,
                         self.lb_name, self.lb_number, self.lb_shelf, self.lb_type, self.lb_wrong_number,
                         self.lb_wrong_year, self.lb_year, self.le_author, self.le_directory, self.le_name,
-                        self.le_number, self.le_shelf, self.le_year]
+                        self.le_number, self.le_shelf, self.le_year]  # сбор элемнтов для "прятанья"
         self.types = [self.ch_1, self.ch_2, self.ch_3, self.ch_4, self.ch_5, self.ch_6, self.ch_7, self.ch_8, self.ch_9,
-                      self.ch_10]
-        for el in self.widgets:
+                      self.ch_10]  # сбор элемнтов для удобного считывания жанров
+        for el in self.widgets:  # прятанье элементов
             if 'form' not in el.accessibleName():
                 el.hide()
         self.lb_wrong_type.hide()
@@ -267,30 +266,30 @@ class NewBook(QWidget):
         self.btn_file_input.clicked.connect(self.input_file)
         self.btn_form_input.clicked.connect(self.input_form)
 
-    def hider(self):
+    def hider(self):  # функция прятанья и показа в соответсвии с выбранным режимом
         for el in self.widgets:
             if self.sender().accessibleName() == el.accessibleName():
                 el.show()
             else:
                 el.hide()
 
-    def input_file(self):
+    def input_file(self):  # добавление книг через уже готовый документ
         pass
         # Катя - предполагается работа с документом
         # Катя - будем запариваться с проверкой верности формата директории?
         # или просто тогда уже найдет или нет?
 
-    def input_form(self):
+    def input_form(self):  # добавление книг вручную
         self.lb_success.hide()
 
-        ok_name = self.check_name(self.le_name.text())
+        ok_name = self.check_name(self.le_name.text())  # вызов проверок полей
         ok_author = self.check_author(self.le_author.text())
         ok_year = self.check_year(self.le_year.text())
         ok_type = self.check_type()
         ok_number = self.check_number(self.le_number.text())
         ok_shelf = self.check_shelf(self.le_shelf.text())
 
-        if ok_name and ok_author and ok_year and ok_type and ok_number and ok_shelf:
+        if ok_name and ok_author and ok_year and ok_type and ok_number and ok_shelf:  # добавление в базу, если проверки пройдены
             name = self.le_name.text()
             author = self.le_author.text()
             year = self.le_year.text()
@@ -326,10 +325,10 @@ class NewBook(QWidget):
                 con.commit()
             self.lb_success.show()
 
-    def check_name(self, name):
+    def check_name(self, name):  # проверка названия книги:
         try:
             self.lb_wrong_name.setText('')
-            if name.strip() != '':
+            if name.strip() != '':  # на пустую строку
                 return True
             else:
                 raise EmptyLE
@@ -337,10 +336,10 @@ class NewBook(QWidget):
             self.lb_wrong_name.setText('Обязательное поле.')
             return False
 
-    def check_author(self, author):
+    def check_author(self, author):  # проверка имени автора книги:
         try:
             self.lb_wrong_author.setText('')
-            if author.strip() != '':
+            if author.strip() != '':  # на пустую строку
                 return True
             else:
                 raise EmptyLE
@@ -348,12 +347,12 @@ class NewBook(QWidget):
             self.lb_wrong_author.setText('Обязательное поле.')
             return False
 
-    def check_year(self, year):
+    def check_year(self, year):  # проверка года издания книги:
         try:
-            if year.strip() != '':
-                if year.isdigit() or year[1:].isdigit() and year[0] == '-':
+            if year.strip() != '':  # на пустую строку
+                if year.isdigit() or year[1:].isdigit() and year[0] == '-':  # на наличие символов кроме цифр
                     year = int(year)
-                    if year <= 0:
+                    if year <= 0:  # на реальность года
                         raise UnrealYear
                     else:
                         self.lb_wrong_year.setText('')
@@ -372,13 +371,12 @@ class NewBook(QWidget):
             self.lb_wrong_year.setText('Допускаются только цифры.')
             return False
 
-    def check_type(self):
+    def check_type(self):  # проверка жанром книги:
         try:
-            ok = False
+            ok = False  # на выбор хотя бы одного
             for el in self.types:
                 if el.isChecked():
                     ok = True
-            print(ok)
             if ok:
                 self.lb_wrong_type.hide()
                 return True
@@ -388,12 +386,12 @@ class NewBook(QWidget):
             self.lb_wrong_type.show()
             return False
 
-    def check_number(self, number):
+    def check_number(self, number):  # проверка количества добавляемых одинаковых книг:
         try:
-            if number.strip() != '':
-                if number.isdigit() or number[1:].isdigit() and number[0] == '-':
+            if number.strip() != '':  # на пустую строку
+                if number.isdigit() or number[1:].isdigit() and number[0] == '-':  # на наличие посторонних символов
                     number = int(number)
-                    if number <= 0:
+                    if number <= 0:  # на натуральность числа
                         raise NotNaturalNumber
                     else:
                         self.lb_wrong_number.setText('')
@@ -413,10 +411,10 @@ class NewBook(QWidget):
             self.lb_wrong_number.setText('Допускаются только цифры.')
             return False
 
-    def check_shelf(self, shelf):
+    def check_shelf(self, shelf):  # проверка номера стеллажа, где книги будут расположены
         try:
             self.lb_wrong_shelf.setText('')
-            if shelf.strip() != '':
+            if shelf.strip() != '':  # на пустую строку
                 return True
             else:
                 raise EmptyLE
@@ -428,7 +426,7 @@ class NewBook(QWidget):
         self.close()
 
 
-class GiveBook(QWidget):
+class GiveBook(QWidget):  # выдача книг
     def __init__(self):
         super().__init__()
         uic.loadUi('GiveBook.ui', self)
@@ -439,19 +437,20 @@ class GiveBook(QWidget):
         self.btn_cancel.clicked.connect(self.closer)
 
     def give(self):
-        ok_book = self.check_book_id(self.le_book_id.text())
+        ok_book = self.check_book_id(self.le_book_id.text())  # вызов проверок
         ok_client = self.check_client_id(self.le_client_id.text())
         if ok_book and ok_client:
-            #происходит добавление в таблицу, что книга выдана
-            #возможен вывод сообщений: "Такого читателя нет в библиотеке."
-            #"Такой книги нет в библиотеке."
-            #"Книга уже выдана другому читателю."
+            # происходит добавление в таблицу, что книга выдана
+            # возможен вывод сообщений: "Такого читателя нет в библиотеке."
+            # "Такой книги нет в библиотеке."
+            # "Книга уже выдана другому читателю."
+            # Наличие книги или читателя в бд библиотеки можно было запихнуть в функции проверок
             self.lb_output.setText('Книга выдана читателю.')
 
-    def check_book_id(self, id):
+    def check_book_id(self, id):  # проверка id книги
         try:
             self.lb_wrong_book_id.setText('')
-            if id.strip() != '':
+            if id.strip() != '':  # на пустую строку
                 return True
             else:
                 raise EmptyLE
@@ -459,10 +458,10 @@ class GiveBook(QWidget):
             self.lb_wrong_book_id.setText('Обязательное поле.')
             return False
 
-    def check_client_id(self, id):
+    def check_client_id(self, id):  # проверка id читателя
         try:
             self.lb_wrong_client_id.setText('')
-            if id.strip() != '':
+            if id.strip() != '':  # на пустую строку
                 return True
             else:
                 raise EmptyLE
@@ -474,6 +473,7 @@ class GiveBook(QWidget):
         self.close()
 
 
+# исключения используемые при проверках
 class WrongBirthDateFormat(Exception):
     pass
 
