@@ -277,15 +277,31 @@ class NewBook(QWidget):
         ok_number = self.check_number(self.le_number.text())
         ok_shelf = self.check_shelf(self.le_shelf.text())
         if ok_name and ok_author and ok_year and ok_type and ok_number and ok_shelf:
-            # self.name = self.le_name.text()
-            # self.author = self.le_author.text()
-            # self.year = self.le_year.text()
-            # self.genres = [i.text() if i.isChecked() else "" for i in self.widgets[2:12]]
-            # self.genres = ";".join(self.genres)
-            # self.genres = ";" + self.genres + ";"
+            self.name = self.le_name.text()
+            self.author = self.le_author.text()
+            self.year = self.le_year.text()
+            self.genres = [i.text() if i.isChecked() else "" for i in self.widgets[2:12]]
+            self.genres = ";".join(self.genres)
+            self.genres = ";" + self.genres + ";"
+            self.number = int(self.le_number.text())
+            self.shelf = self.le_shelf.text()
+            num = len(cur.execute(f"select ids from books where name = {self.name}").fetchall()[0].split(";"))
+            self.ids = ";"
+            for i in range(self.number):
+                self.hash_i = hashlib.md5(bytes(self.name + str(num + i), encoding="utf-8")).hexdigest()
+                self.ids += self.hash_i + ";"
+            self.ids += ";"
+            if num:
+                self.cur_ids = ";".join(cur.execute(f"select ids from books where name = {self.name}").fetchall())
+                self.final_ids = self.cur_ids + self.ids
+                cur.execute(f"update books set ids={self.final_ids} where name={self.name}")
+            else:
+                cur.execute(f"""INSERT INTO books(ids, name, author, year, genre, position)
+                                            VALUES('{self.final_ids}', '{self.name}',
+                                            '{self.author}', '{self.year}', '{self.genres}', '{self.shelf}')""")
 
-            self.lb_success.show()
-            # происходит добавление в базу
+        self.lb_success.show()
+        # происходит добавление в базу
 
     def check_name(self, name):
         try:
