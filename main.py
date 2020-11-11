@@ -202,7 +202,7 @@ class NewBook(QWidget):
     def initUI(self):
         self.widgets = [self.btn_file_input, self.btn_form_input, self.ch_1, self.ch_2, self.ch_3, self.ch_4, self.ch_5,
                         self.ch_6, self.ch_7, self.ch_8, self.ch_9, self.ch_10, self.lb_author, self.lb_directory,
-                        self.lb_name, self.lb_number, self.lb_shelf, self.lb_succses, self.lb_type,
+                        self.lb_name, self.lb_number, self.lb_shelf, self.lb_success, self.lb_type,
                         self.lb_wrong_number, self.lb_wrong_year, self.lb_year, self.le_author, self.le_directory,
                         self.le_name, self.le_number, self.le_shelf, self.le_year]
         for el in self.widgets:
@@ -211,10 +211,9 @@ class NewBook(QWidget):
         self.lb_wrong_type.hide()
         self.rb_form.setChecked(True)
 
-
         self.rb_form.clicked.connect(self.hider)
         self.rb_file.clicked.connect(self.hider)
-        self.btn_cance.clicked.connect(self.closer)
+        self.btn_cancel.clicked.connect(self.closer)
 
         self.btn_file_input.clicked.connect(self.input_file)
         self.btn_form_input.clicked.connect(self.input_form)
@@ -259,15 +258,15 @@ class NewBook(QWidget):
             self.lb_wrong_year.setText('Допускаются только цифры.')
             return False
 
-    def check_number(self, number): #Катя - сделаю
+    def check_number(self, number):  # Катя - сделаю
         pass
 
-    def check_type(self): #Катя - сделаю
+    def check_type(self):  # Катя - сделаю
         pass
 
     def closer(self):
         self.close()
-        # Катя - такой же вопрос как к "отмене" в добавление читателя
+        # Катя - такой же вопрос, как к "отмене" в добавление читателя
 
 
 class WrongBirthDateFormat(Exception):
