@@ -240,10 +240,10 @@ class NewBook(QWidget):
             self.lb_success.show()
             # происходит добавление в базу
 
-    def check_year(self, year):  # Катя - сделала, но не тестировала
+    def check_year(self, year):
         self.lb_success.hide()
         try:
-            if year.isdigit():
+            if year.isdigit() or year[1:].isdigit() and year[0] == '-':
                 year = int(year)
                 if year <= 0:
                     raise UnrealYear
