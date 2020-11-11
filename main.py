@@ -51,6 +51,7 @@ class ClientSearch(QWidget):
         self.initUI()
 
     def initUI(self):
+        self.lb_nothing.hide()
         self.btn_cancel.clicked.connect(self.closer)
         self.btn_search.clicked.connect(self.show_found)
 
@@ -149,7 +150,9 @@ class NewClient(QWidget):
     def new_input(self):
         name_ok = self.check_name(self.le_name.text())
         date_ok = self.check_birthday(self.le_bday.text())
-        if name_ok and date_ok:
+        address_ok = self.check_address(self.le_address.text())
+        contact_ok = self.check_contact(self.le_contact.text())
+        if name_ok and date_ok and address_ok and contact_ok:
             print("here")
             cur.execute(f"""INSERT INTO reader(id, name, date, address, info)
                         VALUES('{hashlib.md5(bytes(self.le_contact.text(), encoding='utf-8')).hexdigest()}', '{self.le_name.text()}',
@@ -164,11 +167,17 @@ class NewClient(QWidget):
     def check_name(self, name):
         try:
             self.lb_success.setText('')
-            if ''.join(name.split()).isalpha():
-                self.lb_wrong_name.setText('')
-                return True
+            if name.strip() != '':
+                if ''.join(name.split()).isalpha():
+                    self.lb_wrong_name.setText('')
+                    return True
+                else:
+                    raise WrongNameFormat
             else:
-                raise WrongNameFormat
+                raise EmptyLE
+        except EmptyLE:
+            self.lb_wrong_name.setText('Обязтельное поле.')
+            return False
         except WrongNameFormat:
             self.lb_wrong_name.setText('Неверный формат имени.')
             return False
@@ -176,22 +185,49 @@ class NewClient(QWidget):
     def check_birthday(self, bday):
         try:
             self.lb_success.setText('')
-            if len(bday) == 10:
-                if bday[0:2].isdigit() and bday[3:5].isdigit() and bday[6:].isdigit() and bday[2] == '.' and bday[
-                    5] == '.':
-                    self.lb_wrong_bday.setText('')
-                    return True
+            if bday.strip() != '':
+                if len(bday) == 10:
+                    if bday[0:2].isdigit() and bday[3:5].isdigit() and bday[6:].isdigit() and bday[2] == '.' and bday[
+                        5] == '.':
+                        self.lb_wrong_bday.setText('')
+                        return True
+                    else:
+                        raise WrongBirthDateFormat
                 else:
                     raise WrongBirthDateFormat
             else:
-                raise WrongBirthDateFormat
+                raise EmptyLE
+        except EmptyLE:
+            self.lb_wrong_bday.setText('Обязтельное поле.')
+            return False
         except WrongBirthDateFormat:
             self.lb_wrong_bday.setText('Неверный формат даты.')
             return False
 
+    def check_address(self, address):
+        try:
+            self.lb_wrong_address.setText('')
+            if address.strip() != '':
+                return True
+            else:
+                raise EmptyLE
+        except EmptyLE:
+            self.lb_wrong_address.setText('Обязтельное поле.')
+            return False
+
+    def check_contact(self, contact):
+        try:
+            self.lb_wrong_contact.setText('')
+            if contact.strip() != '':
+                return True
+            else:
+                raise EmptyLE
+        except EmptyLE:
+            self.lb_wrong_contact.setText('Обязтельное поле.')
+            return False
+
     def closer(self):
         self.close()
-        # Катя - оставим просто закрытие формы, запаришься с отменной добавления или вообще убрать эту кнопку?
 
 
 class NewBook(QWidget):
@@ -234,47 +270,54 @@ class NewBook(QWidget):
         # или просто тогда уже найдет или нет?
 
     def input_form(self):
+        ok_name = self.check_name(self.le_name.text())
+        ok_author = self.check_author(self.le_author.text())
         ok_year = self.check_year(self.le_year.text())
-        ok_number = self.check_number(self.le_number.text())
         ok_type = self.check_type()
-        if ok_year and ok_number and ok_type:
-            self.name = self.le_name.text()
-            self.author = self.le_author.text()
-            self.year = self.le_year.text()
-            self.genres = [i.text() if i.isChecked() else "" for i in self.widgets[2:12]]
-            self.genres = ";".join(self.genres)
-            self.genres = ";" + self.genres + ";"
-            self.number = int(self.le_number.text())
-            self.shelf = self.le_shelf.text()
-            num = len(cur.execute(f"select ids from books where name = {self.name}").fetchall()[0].split(";"))
-            self.ids = ";"
-            for i in range(self.number):
-                self.hash_i = hashlib.md5(bytes(self.name + str(num + i), encoding="utf-8")).hexdigest()
-                self.ids += self.hash_i + ";"
-            self.ids += ";"
-            if num:
-                self.cur_ids = ";".join(cur.execute(f"select ids from books where name = {self.name}").fetchall())
-                self.final_ids = self.cur_ids + self.ids
-                cur.execute(f"update books set ids={self.final_ids} where name={self.name}")
-            else:
-                cur.execute(f"""INSERT INTO books(ids, name, author, year, genre, position)
-                                        VALUES('{self.final_ids}', '{self.name}',
-                                        '{self.author}', '{self.year}', '{self.genres}', '{self.shelf}')""")
+        ok_number = self.check_number(self.le_number.text())
+        ok_shelf = self.check_shelf(self.le_shelf.text())
+        if ok_name and ok_author and ok_year and ok_type and ok_number and ok_shelf:
+            # self.name = self.le_name.text()
+            # self.author = self.le_author.text()
+            # self.year = self.le_year.text()
+            # self.genres = [i.text() if i.isChecked() else "" for i in self.widgets[2:12]]
+            # self.genres = ";".join(self.genres)
+            # self.genres = ";" + self.genres + ";"
+
             self.lb_success.show()
             # происходит добавление в базу
+
+    def check_name(self, name):
+        try:
+            self.lb_wrong_name.setText('')
+            if name.strip() != '':
+                return True
+            else:
+                raise EmptyLE
+        except EmptyLE:
+            self.lb_wrong_name.setText('Обязтельное поле.')
+            return False
+
+    def check_author(self, author):
+        return True
 
     def check_year(self, year):
         self.lb_success.hide()
         try:
-            if year.isdigit() or year[1:].isdigit() and year[0] == '-':
-                year = int(year)
-                if year <= 0:
-                    raise UnrealYear
+            if year.strip() != '':
+                if year.isdigit() or year[1:].isdigit() and year[0] == '-':
+                    year = int(year)
+                    if year <= 0:
+                        raise UnrealYear
+                    else:
+                        self.lb_wrong_year.setText('')
+                        return True
                 else:
-                    self.lb_wrong_year.setText('')
-                    return True
+                    raise WrongYearFormat
             else:
-                raise WrongYearFormat
+                raise EmptyLE
+        except EmptyLE:
+            self.lb_wrong_year.setText('Обязтельное поле.')
         except UnrealYear:
             self.lb_wrong_year.setText('Несуществующий год.')
             return False
@@ -282,12 +325,15 @@ class NewBook(QWidget):
             self.lb_wrong_year.setText('Допускаются только цифры.')
             return False
 
-    def check_number(self, number):  # Катя - сделаю
+    def check_type(self):
         self.lb_success.hide()
         return True
 
-    def check_type(self):  # Катя - сделаю
+    def check_number(self, number):
         self.lb_success.hide()
+        return True
+
+    def check_shelf(self, shelf):
         return True
 
     def closer(self):
@@ -316,6 +362,10 @@ class WrongNumberFormat(Exception):
 
 
 class UnrealNumber(Exception):
+    pass
+
+
+class EmptyLE(Exception):
     pass
 
 
