@@ -26,6 +26,7 @@ class Librarian(QMainWindow):
         self.btn_book_search.clicked.connect(self.open_book_search)
         self.btn_new_client.clicked.connect(self.open_new_client)
         self.btn_new_book.clicked.connect(self.open_new_book)
+        self.btn_give_book.clicked.connect(self.open_give_book)
 
     def open_client_search(self):
         self.client_search = ClientSearch()
@@ -42,6 +43,10 @@ class Librarian(QMainWindow):
     def open_new_book(self):
         self.new_book = NewBook()
         self.new_book.show()
+
+    def open_give_book(self):
+        self.give_book = GiveBook()
+        self.give_book.show()
 
 
 class ClientSearch(QWidget):
@@ -126,7 +131,7 @@ class BookSearch(QWidget):
         for i in range(len(info)):
             if info[i][0]:
                 num_prev = info[i][0].split(";")
-                num_prev = list(filter( lambda b: b != "", num_prev))
+                num_prev = list(filter(lambda b: b != "", num_prev))
                 book_is = str(len(num_prev))
 
             else:
@@ -417,6 +422,52 @@ class NewBook(QWidget):
                 raise EmptyLE
         except EmptyLE:
             self.lb_wrong_shelf.setText('Обязательное поле.')
+            return False
+
+    def closer(self):
+        self.close()
+
+
+class GiveBook(QWidget):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('GiveBook.ui', self)
+        self.initUI()
+
+    def initUI(self):
+        self.btn_give.clicked.connect(self.give)
+        self.btn_cancel.clicked.connect(self.closer)
+
+    def give(self):
+        ok_book = self.check_book_id(self.le_book_id.text())
+        ok_client = self.check_client_id(self.le_client_id.text())
+        if ok_book and ok_client:
+            #происходит добавление в таблицу, что книга выдана
+            #возможен вывод сообщений: "Такого читателя нет в библиотеке."
+            #"Такой книги нет в библиотеке."
+            #"Книга уже выдана другому читателю."
+            self.lb_output.setText('Книга выдана читателю.')
+
+    def check_book_id(self, id):
+        try:
+            self.lb_wrong_book_id.setText('')
+            if id.strip() != '':
+                return True
+            else:
+                raise EmptyLE
+        except EmptyLE:
+            self.lb_wrong_book_id.setText('Обязательное поле.')
+            return False
+
+    def check_client_id(self, id):
+        try:
+            self.lb_wrong_client_id.setText('')
+            if id.strip() != '':
+                return True
+            else:
+                raise EmptyLE
+        except EmptyLE:
+            self.lb_wrong_client_id.setText('Обязательное поле.')
             return False
 
     def closer(self):

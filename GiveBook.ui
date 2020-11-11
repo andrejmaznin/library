@@ -31,7 +31,7 @@
     <string>Введите id книги:</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="le_bok_id">
+  <widget class="QLineEdit" name="le_book_id">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -95,11 +95,11 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_5">
+  <widget class="QLabel" name="lb_output">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>240</y>
+     <y>410</y>
      <width>600</width>
      <height>30</height>
     </rect>
@@ -126,7 +126,7 @@
     <string>Выдать</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="btn_cancel">
    <property name="geometry">
     <rect>
      <x>580</x>
