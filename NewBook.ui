@@ -583,6 +583,22 @@
     <string>Добавить</string>
    </property>
   </widget>
+  <widget class="QLabel" name="lb_wrong_type">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>300</y>
+     <width>201</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>form</string>
+   </property>
+   <property name="text">
+    <string>Выберите хотя бы один жанр</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
