@@ -586,8 +586,8 @@
   <widget class="QLabel" name="lb_wrong_type">
    <property name="geometry">
     <rect>
-     <x>220</x>
-     <y>300</y>
+     <x>490</x>
+     <y>390</y>
      <width>201</width>
      <height>31</height>
     </rect>
@@ -597,6 +597,54 @@
    </property>
    <property name="text">
     <string>Выберите хотя бы один жанр</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lb_wrong_name">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>105</y>
+     <width>170</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>form</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lb_wrong_author">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>185</y>
+     <width>170</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>form</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lb_wrong_shelf">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>535</y>
+     <width>170</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>form</string>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>
