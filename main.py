@@ -108,6 +108,7 @@ class BookSearch(QWidget):
         for i in range(self.tableWidget.rowCount()):
             self.tableWidget.removeRow(i)
         requirement = self.le_name.text()
+        print(requirement)
         if self.rb_id.isChecked():
             info = cur.execute(f"""select * from books where ids like '%{requirement}%'""").fetchall()
         if self.rb_name.isChecked():
@@ -121,9 +122,12 @@ class BookSearch(QWidget):
                 requirement += "'%" + i + "%' and genre like"
             requirement += "'%" + genres[-1] + "%'"
             info = cur.execute(f"select * from books where genre like {requirement}").fetchall()
+        print(info)
         for i in range(len(info)):
             if info[i][0]:
-                book_is = str(len(info[i][0].split(";")))
+                num_prev = info[i][0].split(";")
+                num_prev = list(filter( lambda b: b != "", num_prev))
+                book_is = str(len(num_prev))
 
             else:
                 book_is = "Нет в наличии"
