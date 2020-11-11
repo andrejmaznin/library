@@ -596,7 +596,7 @@
     <string>form</string>
    </property>
    <property name="text">
-    <string>Выберите хотя бы один жанр</string>
+    <string>Укажите хотя бы один жанр.</string>
    </property>
   </widget>
   <widget class="QLabel" name="lb_wrong_name">

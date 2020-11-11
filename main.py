@@ -242,6 +242,8 @@ class NewBook(QWidget):
                         self.lb_name, self.lb_number, self.lb_shelf, self.lb_type, self.lb_wrong_number,
                         self.lb_wrong_year, self.lb_year, self.le_author, self.le_directory, self.le_name,
                         self.le_number, self.le_shelf, self.le_year]
+        self.types = [self.ch_1, self.ch_2, self.ch_3, self.ch_4, self.ch_5, self.ch_6, self.ch_7, self.ch_8, self.ch_9,
+                      self.ch_10]
         for el in self.widgets:
             if 'form' not in el.accessibleName():
                 el.hide()
@@ -270,6 +272,7 @@ class NewBook(QWidget):
         # или просто тогда уже найдет или нет?
 
     def input_form(self):
+        self.lb_success.hide()
         ok_name = self.check_name(self.le_name.text())
         ok_author = self.check_author(self.le_author.text())
         ok_year = self.check_year(self.le_year.text())
@@ -304,9 +307,7 @@ class NewBook(QWidget):
                                             VALUES('{str(self.ids)}', '{str(self.name)}',
                                             '{str(self.author)}', '{str(self.year)}', '{str(self.genres)}', '{str(self.shelf)}')""")
                 con.commit()
-        self.lb_success.show()
-
-        # происходит добавление в базу
+            self.lb_success.show()
 
     def check_name(self, name):
         try:
@@ -320,10 +321,17 @@ class NewBook(QWidget):
             return False
 
     def check_author(self, author):
-        return True
+        try:
+            self.lb_wrong_author.setText('')
+            if author.strip() != '':
+                return True
+            else:
+                raise EmptyLE
+        except EmptyLE:
+            self.lb_wrong_author.setText('Обязательное поле.')
+            return False
 
     def check_year(self, year):
-        self.lb_success.hide()
         try:
             if year.strip() != '':
                 if year.isdigit() or year[1:].isdigit() and year[0] == '-':
@@ -339,6 +347,7 @@ class NewBook(QWidget):
                 raise EmptyLE
         except EmptyLE:
             self.lb_wrong_year.setText('Обязтельное поле.')
+            return False
         except UnrealYear:
             self.lb_wrong_year.setText('Несуществующий год.')
             return False
@@ -347,19 +356,59 @@ class NewBook(QWidget):
             return False
 
     def check_type(self):
-        self.lb_success.hide()
-        return True
+        try:
+            ok = False
+            for el in self.types:
+                if el.isChecked():
+                    ok = True
+            print(ok)
+            if ok:
+                self.lb_wrong_type.hide()
+                return True
+            else:
+                raise NoTypes
+        except NoTypes:
+            self.lb_wrong_type.show()
+            return False
 
     def check_number(self, number):
-        self.lb_success.hide()
-        return True
+        try:
+            if number.strip() != '':
+                if number.isdigit() or number[1:].isdigit() and number[0] == '-':
+                    number = int(number)
+                    if number <= 0:
+                        raise NotNaturalNumber
+                    else:
+                        self.lb_wrong_number.setText('')
+                        return True
+                else:
+                    pass
+                    raise WrongNumberFormat
+            else:
+                raise EmptyLE
+        except EmptyLE:
+            self.lb_wrong_number.setText('Обязтельное поле.')
+            return False
+        except NotNaturalNumber:
+            self.lb_wrong_number.setText('Не натуральное число.')
+            return False
+        except WrongNumberFormat:
+            self.lb_wrong_number.setText('Допускаются только цифры.')
+            return False
 
     def check_shelf(self, shelf):
-        return True
+        try:
+            self.lb_wrong_shelf.setText('')
+            if shelf.strip() != '':
+                return True
+            else:
+                raise EmptyLE
+        except EmptyLE:
+            self.lb_wrong_shelf.setText('Обязательное поле.')
+            return False
 
     def closer(self):
         self.close()
-        # Катя - такой же вопрос, как к "отмене" в добавление читателя
 
 
 class WrongBirthDateFormat(Exception):
@@ -382,11 +431,15 @@ class WrongNumberFormat(Exception):
     pass
 
 
-class UnrealNumber(Exception):
+class NotNaturalNumber(Exception):
     pass
 
 
 class EmptyLE(Exception):
+    pass
+
+
+class NoTypes(Exception):
     pass
 
 
