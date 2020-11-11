@@ -271,7 +271,7 @@
     <rect>
      <x>20</x>
      <y>100</y>
-     <width>81</width>
+     <width>100</width>
      <height>20</height>
     </rect>
    </property>
@@ -282,7 +282,7 @@
     <string>type</string>
    </property>
    <property name="text">
-    <string>Type 1</string>
+    <string>Биография</string>
    </property>
   </widget>
   <widget class="QCheckBox" name="ch_2">
@@ -301,32 +301,13 @@
     <string>type</string>
    </property>
    <property name="text">
-    <string>Type 2</string>
+    <string>Детектив</string>
    </property>
   </widget>
   <widget class="QCheckBox" name="ch_3">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>160</y>
-     <width>81</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="cursor">
-    <cursorShape>PointingHandCursor</cursorShape>
-   </property>
-   <property name="accessibleName">
-    <string>type</string>
-   </property>
-   <property name="text">
-    <string>Type 3</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="ch_4">
-   <property name="geometry">
-    <rect>
-     <x>150</x>
+     <x>120</x>
      <y>100</y>
      <width>81</width>
      <height>20</height>
@@ -339,13 +320,51 @@
     <string>type</string>
    </property>
    <property name="text">
-    <string>Type 4</string>
+    <string>Драма</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="ch_4">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>130</y>
+     <width>120</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="accessibleName">
+    <string>type</string>
+   </property>
+   <property name="text">
+    <string>Исторический</string>
    </property>
   </widget>
   <widget class="QCheckBox" name="ch_5">
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>230</x>
+     <y>100</y>
+     <width>81</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="accessibleName">
+    <string>type</string>
+   </property>
+   <property name="text">
+    <string>Комедия</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="ch_6">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
      <y>130</y>
      <width>81</width>
      <height>20</height>
@@ -358,33 +377,14 @@
     <string>type</string>
    </property>
    <property name="text">
-    <string>Type 5</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="ch_6">
-   <property name="geometry">
-    <rect>
-     <x>150</x>
-     <y>160</y>
-     <width>81</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="cursor">
-    <cursorShape>PointingHandCursor</cursorShape>
-   </property>
-   <property name="accessibleName">
-    <string>type</string>
-   </property>
-   <property name="text">
-    <string>Type 6</string>
+    <string>Научный</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btn_type">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>190</y>
+     <y>160</y>
      <width>90</width>
      <height>30</height>
     </rect>
@@ -405,7 +405,7 @@
      <x>20</x>
      <y>250</y>
      <width>500</width>
-     <height>400</height>
+     <height>431</height>
     </rect>
    </property>
    <property name="gridStyle">
@@ -425,6 +425,28 @@
    <column>
     <property name="text">
      <string>Автор</string>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Год выпуска</string>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Номер стеллажа</string>
     </property>
     <property name="font">
      <font>
@@ -470,6 +492,83 @@
    </property>
    <property name="text">
     <string>Отмена</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="ch_7">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>100</y>
+     <width>81</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>type</string>
+   </property>
+   <property name="text">
+    <string>Триллер</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="ch_8">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>130</y>
+     <width>81</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>type</string>
+   </property>
+   <property name="text">
+    <string>Ужасы</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="ch_9">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>100</y>
+     <width>120</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>type</string>
+   </property>
+   <property name="text">
+    <string>Фантастика</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="ch_10">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>130</y>
+     <width>81</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>type</string>
+   </property>
+   <property name="text">
+    <string>Фэнтези</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lb_nothing">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>220</y>
+     <width>300</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Ничего не найдено.</string>
    </property>
   </widget>
  </widget>
