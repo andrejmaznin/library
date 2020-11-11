@@ -116,7 +116,7 @@
   <widget class="QPushButton" name="btn_give">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>650</y>
      <width>90</width>
      <height>30</height>
