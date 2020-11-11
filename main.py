@@ -51,6 +51,7 @@ class ClientSearch(QWidget):
         self.initUI()
 
     def initUI(self):
+        self.lb_nothing.hide()
         self.btn_cancel.clicked.connect(self.closer)
         self.btn_search.clicked.connect(self.show_found)
 
@@ -191,7 +192,6 @@ class NewClient(QWidget):
 
     def closer(self):
         self.close()
-        # Катя - оставим просто закрытие формы, запаришься с отменной добавления или вообще убрать эту кнопку?
 
 
 class NewBook(QWidget):
