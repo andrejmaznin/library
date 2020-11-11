@@ -237,6 +237,13 @@ class NewBook(QWidget):
         ok_number = self.check_number(self.le_number.text())
         ok_type = self.check_type()
         if ok_year and ok_number and ok_type:
+            self.name = self.le_name.text()
+            self.author = self.le_author.text()
+            self.year = self.le_year.text()
+            self.genres = [i.text() if i.isChecked() else "" for i in self.widgets[2:12]]
+            self.genres = ";".join(self.genres)
+            self.genres = ";" + self.genres + ";"
+
             self.lb_success.show()
             # происходит добавление в базу
 
