@@ -280,27 +280,32 @@ class NewBook(QWidget):
             self.name = self.le_name.text()
             self.author = self.le_author.text()
             self.year = self.le_year.text()
-            self.genres = [i.text() if i.isChecked() else "" for i in self.widgets[2:12]]
-            self.genres = ";".join(self.genres)
-            self.genres = ";" + self.genres + ";"
+            self.genres = [i.text().lower() if i.isChecked() else '' for i in self.widgets[2:12]]
+            self.genres = ";".join(list(set(self.genres)))
             self.number = int(self.le_number.text())
             self.shelf = self.le_shelf.text()
-            num = len(cur.execute(f"select ids from books where name = {self.name}").fetchall()[0].split(";"))
+            t = cur.execute(f"select ids from books where name = '{self.name}'").fetchall()
+            num = 0
+            if t:
+                num = len(cur.execute(f"select ids from books where name = '{self.name}'").fetchall()[0][0].split(";"))
             self.ids = ";"
             for i in range(self.number):
                 self.hash_i = hashlib.md5(bytes(self.name + str(num + i), encoding="utf-8")).hexdigest()
                 self.ids += self.hash_i + ";"
             self.ids += ";"
             if num:
-                self.cur_ids = ";".join(cur.execute(f"select ids from books where name = {self.name}").fetchall())
+                a = cur.execute(f"select ids from books where name = '{self.name}'").fetchall()
+                self.cur_ids = cur.execute(f"select ids from books where name = '{self.name}'").fetchall()[0][0]
                 self.final_ids = self.cur_ids + self.ids
-                cur.execute(f"update books set ids={self.final_ids} where name={self.name}")
+                cur.execute(f"update books set ids='{self.final_ids}' where name='{self.name}'")
+                con.commit()
             else:
                 cur.execute(f"""INSERT INTO books(ids, name, author, year, genre, position)
-                                            VALUES('{self.final_ids}', '{self.name}',
-                                            '{self.author}', '{self.year}', '{self.genres}', '{self.shelf}')""")
-
+                                            VALUES('{str(self.ids)}', '{str(self.name)}',
+                                            '{str(self.author)}', '{str(self.year)}', '{str(self.genres)}', '{str(self.shelf)}')""")
+                con.commit()
         self.lb_success.show()
+
         # происходит добавление в базу
 
     def check_name(self, name):
@@ -311,7 +316,7 @@ class NewBook(QWidget):
             else:
                 raise EmptyLE
         except EmptyLE:
-            self.lb_wrong_name.setText('Обязтельное поле.')
+            self.lb_wrong_name.setText('Обязательное поле.')
             return False
 
     def check_author(self, author):
@@ -388,7 +393,6 @@ class EmptyLE(Exception):
 if __name__ == '__main__':
     con = sqlite3.connect("books_db.sqlite")
     cur = con.cursor()
-
     app = QApplication(sys.argv)
     ex = Librarian()
     ex.show()
