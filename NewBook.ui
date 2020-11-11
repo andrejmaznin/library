@@ -527,7 +527,7 @@
     <string>file</string>
    </property>
    <property name="text">
-    <string>Введите директорию файла:</string>
+    <string>Введите путь к файлу:</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="le_directory">
@@ -561,7 +561,7 @@
     <string>file_form</string>
    </property>
    <property name="text">
-    <string/>
+    <string>Операция выполнена успешно.</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btn_file_input">
