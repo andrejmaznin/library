@@ -277,7 +277,7 @@ class NewBook(QWidget):
 
     def input_form(self):
         self.lb_success.hide()
-        
+
         ok_name = self.check_name(self.le_name.text())
         ok_author = self.check_author(self.le_author.text())
         ok_year = self.check_year(self.le_year.text())
