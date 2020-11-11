@@ -150,7 +150,9 @@ class NewClient(QWidget):
     def new_input(self):
         name_ok = self.check_name(self.le_name.text())
         date_ok = self.check_birthday(self.le_bday.text())
-        if name_ok and date_ok:
+        address_ok = self.check_address(self.le_address.text())
+        contact_ok = self.check_contact(self.le_contact.text())
+        if name_ok and date_ok and address_ok and contact_ok:
             print("here")
             cur.execute(f"""INSERT INTO reader(id, name, date, address, info)
                         VALUES('{hashlib.md5(bytes(self.le_contact.text(), encoding='utf-8')).hexdigest()}', '{self.le_name.text()}',
@@ -165,11 +167,17 @@ class NewClient(QWidget):
     def check_name(self, name):
         try:
             self.lb_success.setText('')
-            if ''.join(name.split()).isalpha():
-                self.lb_wrong_name.setText('')
-                return True
+            if name.strip() != '':
+                if ''.join(name.split()).isalpha():
+                    self.lb_wrong_name.setText('')
+                    return True
+                else:
+                    raise WrongNameFormat
             else:
-                raise WrongNameFormat
+                raise EmptyLE
+        except EmptyLE:
+            self.lb_wrong_name.setText('Обязтельное поле.')
+            return False
         except WrongNameFormat:
             self.lb_wrong_name.setText('Неверный формат имени.')
             return False
@@ -177,17 +185,45 @@ class NewClient(QWidget):
     def check_birthday(self, bday):
         try:
             self.lb_success.setText('')
-            if len(bday) == 10:
-                if bday[0:2].isdigit() and bday[3:5].isdigit() and bday[6:].isdigit() and bday[2] == '.' and bday[
-                    5] == '.':
-                    self.lb_wrong_bday.setText('')
-                    return True
+            if bday.strip() != '':
+                if len(bday) == 10:
+                    if bday[0:2].isdigit() and bday[3:5].isdigit() and bday[6:].isdigit() and bday[2] == '.' and bday[
+                        5] == '.':
+                        self.lb_wrong_bday.setText('')
+                        return True
+                    else:
+                        raise WrongBirthDateFormat
                 else:
                     raise WrongBirthDateFormat
             else:
-                raise WrongBirthDateFormat
+                raise EmptyLE
+        except EmptyLE:
+            self.lb_wrong_bday.setText('Обязтельное поле.')
+            return False
         except WrongBirthDateFormat:
             self.lb_wrong_bday.setText('Неверный формат даты.')
+            return False
+
+    def check_address(self, address):
+        try:
+            self.lb_wrong_address.setText('')
+            if address.strip() != '':
+                return True
+            else:
+                raise EmptyLE
+        except EmptyLE:
+            self.lb_wrong_address.setText('Обязтельное поле.')
+            return False
+
+    def check_contact(self, contact):
+        try:
+            self.lb_wrong_contact.setText('')
+            if contact.strip() != '':
+                return True
+            else:
+                raise EmptyLE
+        except EmptyLE:
+            self.lb_wrong_contact.setText('Обязтельное поле.')
             return False
 
     def closer(self):
@@ -301,6 +337,10 @@ class WrongNumberFormat(Exception):
 
 
 class UnrealNumber(Exception):
+    pass
+
+
+class EmptyLE(Exception):
     pass
 
 
