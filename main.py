@@ -116,35 +116,48 @@ class BookSearch(QWidget):  # поиск книги по базе
     def show_found(self):  # работа с базой
         for i in range(self.tableWidget.rowCount()):
             self.tableWidget.removeRow(i)
+            self.tableWidget.removeRow(i - 1)
+
         requirement = self.le_name.text()
+        info = 0
         if self.rb_id.isChecked():
             info = cur.execute(f"""select * from books where ids like '%{requirement}%'""").fetchall()
         if self.rb_name.isChecked():
-            info = cur.execute(f"""select * from books where name like '%{requirement.lower()}%'""").fetchall()
+            info = cur.execute(f"""select * from books where name like '%{requirement}%'""").fetchall()
         if self.rb_author.isChecked():
-            info = cur.execute(f"""select * from books where lower(author) like '%{requirement.lower()}%'""").fetchall()
+            info = cur.execute(f"""select * from books where author like '%{requirement}%'""").fetchall()
         if self.rb_type.isChecked():
-            genres = [i.text().lower() if i.isChecked() else "" for i in self.widgets[11:]]
+            print("here")
+            genres = []
+            for i in self.widgets[11:-1]:
+                if i.isChecked():
+                    genres.append(i.text().lower())
+            print(genres)
             requirement = ""
             for i in genres[:-1]:
                 requirement += "'%" + i + "%' and genre like"
             requirement += "'%" + genres[-1] + "%'"
             info = cur.execute(f"select * from books where genre like {requirement}").fetchall()
-        print(*info, sep="\n")
+
+        print(len(info))
+        for i in range(len(info)):
+            self.tableWidget.insertRow(i)
         for i in range(len(info)):
             if info[i][0]:
                 num_prev = info[i][0].split(";")
                 num_prev = list(filter(lambda b: b != "", num_prev))
                 book_is = str(len(num_prev))
-
             else:
                 book_is = "Нет в наличии"
-            self.tableWidget.insertRow(i)
+
+            # отображение найденного в таблице
             self.tableWidget.setItem(i, 0, QTableWidgetItem(info[i][1]))
             self.tableWidget.setItem(i, 1, QTableWidgetItem(info[i][2]))
             self.tableWidget.setItem(i, 2, QTableWidgetItem(str(info[i][3])))
             self.tableWidget.setItem(i, 3, QTableWidgetItem(info[i][4]))
             self.tableWidget.setItem(i, 4, QTableWidgetItem(str(info[i][-1])))
+            self.tableWidget.setItem(i, 5, QTableWidgetItem(book_is))
+            self.tableWidget.setItem(i, 6, QTableWidgetItem(info[i][0]))
 
     def closer(self):
         self.close()
@@ -307,15 +320,13 @@ class NewBook(QWidget):
 
             t = cur.execute(f"select ids from books where name = '{name}'").fetchall()
             num = 0
-
+            ids = ""
             if t:
                 num = len(cur.execute(f"select ids from books where name = '{name}'").fetchall()[0][0].split(";"))
-
-            ids = ";"
+                ids = ";"
             for i in range(number):
                 hash_i = hashlib.md5(bytes(name + str(num + i), encoding="utf-8")).hexdigest()[:10]
                 ids += hash_i + ";"
-            ids += ";"
 
             if num:
                 cur_ids = cur.execute(f"select ids from books where name = '{name}'").fetchall()[0][0]
