@@ -472,7 +472,9 @@ class GiveBook(QWidget):  # выдача книг
             # Наличие книги или читателя в бд библиотеки можно было запихнуть в функции проверок
             id_to_give = self.le_book_id.text()
             client_to_give = self.le_client_id.text()
+            print(1)
             cur_ids = cur.execute(f"select ids from books where ids like '%{id_to_give}%'").fetchall()[0][0].split(";")
+            print(1)
             con.commit()
             cur_ids.remove(id_to_give)
             cur_ids = ";".join(cur_ids)
@@ -487,10 +489,9 @@ class GiveBook(QWidget):  # выдача книг
 
     def check_book_id(self, id):  # проверка id книги
         try:
-
             self.lb_wrong_book_id.setText('')
             if id.strip() != '':  # на пустую строку
-                if cur.execute(f"select ids from books where ids like '%{id.strip()}%'").fetchall():
+                if cur.execute(f"select ids from books where ids like '%{id.strip()};%' or ids like '%;{id.strip()}%'").fetchall():
                     return True
                 else:
                     raise NoSuchID
