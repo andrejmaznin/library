@@ -292,10 +292,22 @@ class NewBook(QWidget):
                 el.hide()
 
     def input_file(self):  # добавление книг через уже готовый документ
-        pass
-        # Катя - предполагается работа с документом
-        # Катя - будем запариваться с проверкой верности формата директории?
-        # или просто тогда уже найдет или нет?
+        path = self.le_directory.text()
+        con_input = sqlite3.connect(path)
+        cur_input = con_input.cursor()
+        info = cur_input.execute("select * from books").fetchall()
+        for i in info:
+            if cur.execute(f"select * from books where name = '{info[i][1]}'").fetchall():
+                ids = cur.execute(f"select ids from books where name='{info[i][1]}'").fetchall()[0][0]
+                ids_2 = cur_input.execute(f"select ids from books where name = '{info[i][1]}'").fetchall()[0][0]
+                ids_final = ids + ';' + ids_2
+                cur.execute(f"update books set ids='{ids_final}' where name = '{info[i][1]}'")
+                con.commit()
+            else:
+                cur.execute(f"""insert into books(ids, name, author, year, genre, position)
+                                            VALUES('{info[i][0]}', '{info[i][1]}',
+                                            '{info[i][2]}', '{info[i][3]}', '{info[i][4]}', '{str(info[i][5])}')""")
+                con.commit()
 
     def input_form(self):  # добавление книг вручную
         self.lb_success.hide()
@@ -378,7 +390,7 @@ class NewBook(QWidget):
             else:
                 raise EmptyLE
         except EmptyLE:
-            self.lb_wrong_year.setText('Обязтельное поле.')
+            self.lb_wrong_year.setText('Обязательное поле.')
             return False
         except UnrealYear:
             self.lb_wrong_year.setText('Несуществующий год.')
@@ -572,6 +584,8 @@ class NoTypes(Exception):
 if __name__ == '__main__':
     con = sqlite3.connect("books_db.sqlite")
     cur = con.cursor()
+    a = cur.execute("select ids from books where name='Горе от ума'").fetchall()
+    print(a)
     app = QApplication(sys.argv)
     ex = Librarian()
     ex.show()
