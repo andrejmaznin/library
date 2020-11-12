@@ -127,19 +127,16 @@ class BookSearch(QWidget):  # поиск книги по базе
         if self.rb_author.isChecked():
             info = cur.execute(f"""select * from books where author like '%{requirement}%'""").fetchall()
         if self.rb_type.isChecked():
-            print("here")
             genres = []
             for i in self.widgets[11:-1]:
                 if i.isChecked():
                     genres.append(i.text().lower())
-            print(genres)
             requirement = ""
             for i in genres[:-1]:
                 requirement += "'%" + i + "%' and genre like"
             requirement += "'%" + genres[-1] + "%'"
             info = cur.execute(f"select * from books where genre like {requirement}").fetchall()
 
-        print(len(info))
         for i in range(len(info)):
             self.tableWidget.insertRow(i)
         for i in range(len(info)):
@@ -473,17 +470,37 @@ class GiveBook(QWidget):  # выдача книг
             # "Такой книги нет в библиотеке."
             # "Книга уже выдана другому читателю."
             # Наличие книги или читателя в бд библиотеки можно было запихнуть в функции проверок
+            id_to_give = self.le_book_id.text()
+            client_to_give = self.le_client_id.text()
+            cur_ids = cur.execute(f"select ids from books where ids like '%{id_to_give}%'").fetchall()[0][0].split(";")
+            con.commit()
+            cur_ids.remove(id_to_give)
+            cur_ids = ";".join(cur_ids)
+            cur.execute(f"update books set ids='{cur_ids}'")
+            con.commit()
+            print(cur_ids)
+            print(id_to_give, client_to_give)
+            client_name = cur.execute(f"select name from reader where id='{client_to_give}'").fetchall()[0][0]
+            cur.execute(f"insert into given(id, name) values('{id_to_give}', '{client_name}')")
+            con.commit()
             self.lb_output.setText('Книга выдана читателю.')
 
     def check_book_id(self, id):  # проверка id книги
         try:
+
             self.lb_wrong_book_id.setText('')
             if id.strip() != '':  # на пустую строку
-                return True
+                if cur.execute(f"select ids from books where ids like '%{id.strip()}%'").fetchall():
+                    return True
+                else:
+                    raise NoSuchID
             else:
                 raise EmptyLE
         except EmptyLE:
             self.lb_wrong_book_id.setText('Обязательное поле.')
+            return False
+        except NoSuchID:
+            self.lb_wrong_book_id.setText('Такого id нет')
             return False
 
     def check_client_id(self, id):  # проверка id читателя
@@ -577,6 +594,10 @@ class EmptyLE(Exception):  # ошибка: пустое поле ввода
     pass
 
 
+class NoSuchID(Exception):
+    pass
+
+
 class NoTypes(Exception):
     pass
 
@@ -584,8 +605,7 @@ class NoTypes(Exception):
 if __name__ == '__main__':
     con = sqlite3.connect("books_db.sqlite")
     cur = con.cursor()
-    a = cur.execute("select ids from books where name='Горе от ума'").fetchall()
-    print(a)
+
     app = QApplication(sys.argv)
     ex = Librarian()
     ex.show()
