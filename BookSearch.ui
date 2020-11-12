@@ -435,7 +435,7 @@
    </column>
    <column>
     <property name="text">
-     <string>Год выпуска</string>
+     <string>Год написания</string>
     </property>
     <property name="font">
      <font>
