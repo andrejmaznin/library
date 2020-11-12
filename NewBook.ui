@@ -147,7 +147,7 @@
     <string>form</string>
    </property>
    <property name="text">
-    <string>Введите номер года выпуска:</string>
+    <string>Введите год написания/перевода книги:</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="le_year">
