@@ -117,11 +117,10 @@ class BookSearch(QWidget):  # поиск книги по базе
         for i in range(self.tableWidget.rowCount()):
             self.tableWidget.removeRow(i)
         requirement = self.le_name.text()
-        print(requirement)
         if self.rb_id.isChecked():
             info = cur.execute(f"""select * from books where ids like '%{requirement}%'""").fetchall()
         if self.rb_name.isChecked():
-            info = cur.execute(f"""select * from books where lower(name) like '%{requirement.lower()}%'""").fetchall()
+            info = cur.execute(f"""select * from books where name like '%{requirement.lower()}%'""").fetchall()
         if self.rb_author.isChecked():
             info = cur.execute(f"""select * from books where lower(author) like '%{requirement.lower()}%'""").fetchall()
         if self.rb_type.isChecked():
@@ -131,7 +130,7 @@ class BookSearch(QWidget):  # поиск книги по базе
                 requirement += "'%" + i + "%' and genre like"
             requirement += "'%" + genres[-1] + "%'"
             info = cur.execute(f"select * from books where genre like {requirement}").fetchall()
-        print(info)
+        print(*info, sep="\n")
         for i in range(len(info)):
             if info[i][0]:
                 num_prev = info[i][0].split(";")
@@ -143,8 +142,9 @@ class BookSearch(QWidget):  # поиск книги по базе
             self.tableWidget.insertRow(i)
             self.tableWidget.setItem(i, 0, QTableWidgetItem(info[i][1]))
             self.tableWidget.setItem(i, 1, QTableWidgetItem(info[i][2]))
-            self.tableWidget.setItem(i, 2, QTableWidgetItem(book_is))
-            self.tableWidget.setItem(i, 3, QTableWidgetItem(" ".join(info[i][0].split(";"))))
+            self.tableWidget.setItem(i, 2, QTableWidgetItem(str(info[i][3])))
+            self.tableWidget.setItem(i, 3, QTableWidgetItem(info[i][4]))
+            self.tableWidget.setItem(i, 4, QTableWidgetItem(str(info[i][-1])))
 
     def closer(self):
         self.close()
@@ -168,7 +168,7 @@ class NewClient(QWidget):  # окно добавления нового чита
         if name_ok and date_ok and address_ok and contact_ok:
             # Работы с базой, если проверки пройдены
             cur.execute(f"""INSERT INTO reader(id, name, date, address, info)
-                        VALUES('{hashlib.md5(bytes(self.le_contact.text(), encoding='utf-8')).hexdigest()}', '{self.le_name.text()}',
+                        VALUES('{hashlib.md5(bytes(self.le_contact.text(), encoding='utf-8')).hexdigest()[:10]}', '{self.le_name.text()}',
                         '{self.le_bday.text()}', '{self.le_address.text()}', '{self.le_contact.text()}')""")
             self.lb_success.setText('Читатель успешно добавлен.')
             con.commit()
@@ -313,7 +313,7 @@ class NewBook(QWidget):
 
             ids = ";"
             for i in range(number):
-                hash_i = hashlib.md5(bytes(name + str(num + i), encoding="utf-8")).hexdigest()
+                hash_i = hashlib.md5(bytes(name + str(num + i), encoding="utf-8")).hexdigest()[:10]
                 ids += hash_i + ";"
             ids += ";"
 
