@@ -476,17 +476,13 @@ class GiveBook(QWidget):  # выдача книг
             # Наличие книги или читателя в бд библиотеки можно было запихнуть в функции проверок
             id_to_give = self.le_book_id.text()
             client_to_give = self.le_client_id.text()
-            print(1)
             cur_ids = cur.execute(f"select ids from books where ids like '%{id_to_give}%'").fetchall()[0][0].split(";")
-            print(1)
             con.commit()
             position = cur_ids.index(id_to_give)
             cur_ids[position] += "/given/"
             cur_ids = ";".join(cur_ids)
             cur.execute(f"update books set ids='{cur_ids}'")
             con.commit()
-            print(cur_ids)
-            print(id_to_give, client_to_give)
             client_name = cur.execute(f"select name from reader where id='{client_to_give}'").fetchall()[0][0]
             cur.execute(f"insert into given(id, name) values('{id_to_give}', '{client_name}')")
             con.commit()
@@ -544,6 +540,17 @@ class ReturnBook(QWidget):  # сдача книг
             # "Такой книги нет в библиотеке."
             # "У данного читателя не было такой книги." или "Данная книга не была у этого читателя." (равнозначные сообщения)
             # Наличие книги или читателя в бд библиотеки можно было запихнуть в функции проверок
+            id_return = self.le_book_id.text()
+            reader_return = self.le_client_id.text()
+            cur_ids = cur.execute(f"select ids from books where ids='{id_return}/given/'").fetchall()[0][0].split(";")
+            position = cur_ids.index(id_return + "/given/")
+            cur_ids[position] = id_return
+            cur_ids = ";".join(cur_ids)
+            
+
+            if cur_ids:
+                print(cur_ids)
+
             self.lb_output.setText('Сдача произведена успешно, книга может быть помещена на полку.')
 
     def check_book_id(self, id):  # проверка id книги
@@ -612,7 +619,7 @@ class NoTypes(Exception):
 if __name__ == '__main__':
     con = sqlite3.connect("books_db.sqlite")
     cur = con.cursor()
-
+    print(cur.execute("select ids from books").fetchall())
     app = QApplication(sys.argv)
     ex = Librarian()
     ex.show()
