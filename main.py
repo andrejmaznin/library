@@ -129,7 +129,9 @@ class BookSearch(QWidget):  # поиск книги по базе
 
         requirement = self.le_name.text()
         info = 0
-        if self.rb_id.isChecked() and self.check_le(requirement):
+        if self.rb_all.isChecked():
+            info = cur.execute("select * from books").fetchall()
+        if self.rb_id.isChecked()  and self.check_le(requirement):
             info = cur.execute(f"""select * from books where ids like '%{requirement}%'""").fetchall()
         if self.rb_name.isChecked() and self.check_le(requirement):
             info = cur.execute(f"""select * from books where name like '%{requirement}%'""").fetchall()
@@ -148,8 +150,15 @@ class BookSearch(QWidget):  # поиск книги по базе
                 info = cur.execute(f"select * from books where genre like {requirement}").fetchall()
             else:
                 info = cur.execute("select * from books").fetchall()
-        if self.rb_all.isChecked():
-            info = cur.execute(f"""select * from books where ids like '%{requirement}%'""").fetchall()
+
+                 for i in range(len(info)):
+            self.tableWidget.insertRow(i)
+        for i in range(len(info)):
+            if info[i][0]:
+
+                num_prev = str(info[i][0]).split(";")
+                num_prev = list(filter(lambda b: b != "" and "/given/" not in b, num_prev))
+                book_is = str(len(num_prev))
 
         if info != 0:
             for i in range(len(info)):
