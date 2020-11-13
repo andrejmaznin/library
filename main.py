@@ -89,7 +89,7 @@ class BookSearch(QWidget):  # поиск книги по базе
         self.widgets = [self.btn_id, self.lab_id, self.btn_name, self.lab_name, self.le_name,
                         self.btn_author, self.lab_author, self.lab_type, self.btn_type, self.ch_1,
                         self.ch_2, self.ch_3, self.ch_4, self.ch_5, self.ch_6, self.ch_7, self.ch_8, self.ch_9,
-                        self.ch_10, self.lb_nothing]  # прятанье "лишних" элементов при открытии
+                        self.ch_10, self.lb_nothing, self.lab_all]  # прятанье "лишних" элементов при открытии
         for el in self.widgets:
             if 'id' not in el.accessibleName():
                 el.hide()
@@ -99,10 +99,12 @@ class BookSearch(QWidget):  # поиск книги по базе
         self.rb_name.clicked.connect(self.hider)
         self.rb_author.clicked.connect(self.hider)
         self.rb_type.clicked.connect(self.hider)
+        self.rb_all.clicked.connect(self.hider)
         self.btn_author.clicked.connect(self.show_found)
         self.btn_id.clicked.connect(self.show_found)
         self.btn_name.clicked.connect(self.show_found)
         self.btn_type.clicked.connect(self.show_found)
+        self.rb_all.clicked.connect(self.show_found)
         self.btn_cancel.clicked.connect(self.closer)
 
     def hider(self):  # функция показа и прятанье элементов в соответствии с режимом поиска
@@ -140,6 +142,8 @@ class BookSearch(QWidget):  # поиск книги по базе
                 info = cur.execute(f"select * from books where genre like {requirement}").fetchall()
             else:
                 info = cur.execute("select * from books").fetchall()
+        if self.rb_all.isChecked():
+            info = cur.execute(f"""select * from books where ids like '%{requirement}%'""").fetchall()
         for i in range(len(info)):
             self.tableWidget.insertRow(i)
         for i in range(len(info)):

@@ -582,6 +582,49 @@
     <string>Ничего не найдено.</string>
    </property>
   </widget>
+  <widget class="QRadioButton" name="rb_all">
+   <property name="geometry">
+    <rect>
+     <x>500</x>
+     <y>15</y>
+     <width>200</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="accessibleName">
+    <string>all</string>
+   </property>
+   <property name="text">
+    <string>Отобразить все книги
+ в библиотеке</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lab_all">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>60</y>
+     <width>500</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>11</pointsize>
+    </font>
+   </property>
+   <property name="accessibleName">
+    <string>all</string>
+   </property>
+   <property name="text">
+    <string>Отображение всего списка книг.</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
