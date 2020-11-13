@@ -139,7 +139,7 @@ class BookSearch(QWidget):  # поиск книги по базе
             info = cur.execute(f"""select * from books where author like '%{requirement}%'""").fetchall()
         if self.rb_type.isChecked() and self.check_genre():
             genres = []
-            for i in self.widgets[9:-2]:
+            for i in self.genres:
                 if i.isChecked():
                     genres.append(i.text().lower())
             requirement = ""
