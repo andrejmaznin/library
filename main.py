@@ -115,6 +115,7 @@ class BookSearch(QWidget):  # поиск книги по базе
 
     def show_found(self):  # работа с базой
         for i in range(self.tableWidget.rowCount()):
+            self.tableWidget.removeRow(i + 1)
             self.tableWidget.removeRow(i)
             self.tableWidget.removeRow(i - 1)
 
@@ -141,10 +142,10 @@ class BookSearch(QWidget):  # поиск книги по базе
                 info = cur.execute("select * from books").fetchall()
         for i in range(len(info)):
             self.tableWidget.insertRow(i)
-
         for i in range(len(info)):
             if info[i][0]:
-                num_prev = info[i][0].split(";")
+
+                num_prev = str(info[i][0]).split(";")
                 num_prev = list(filter(lambda b: b != "" and "/given/" not in b, num_prev))
                 book_is = str(len(num_prev))
             else:
@@ -158,7 +159,7 @@ class BookSearch(QWidget):  # поиск книги по базе
             self.tableWidget.setItem(i, 4, QTableWidgetItem(str(info[i][-1])))
             self.tableWidget.setItem(i, 5, QTableWidgetItem(book_is))
             self.tableWidget.setItem(i, 6, QTableWidgetItem(
-                ";".join(list(filter(lambda b: "/given/" not in b, info[i][0].split(";"))))))
+                ";".join(list(filter(lambda b: "/given/" not in b, str(info[i][0]).split(";"))))))
 
     def closer(self):
         self.close()
