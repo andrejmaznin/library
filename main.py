@@ -123,6 +123,8 @@ class BookSearch(QWidget):  # поиск книги по базе
 
         requirement = self.le_name.text()
         info = 0
+        if self.rb_all.isChecked():
+            info = cur.execute("select * from books").fetchall()
         if self.rb_id.isChecked():
             info = cur.execute(f"""select * from books where ids like '%{requirement}%'""").fetchall()
         if self.rb_name.isChecked():
