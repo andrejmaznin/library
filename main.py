@@ -145,7 +145,7 @@ class BookSearch(QWidget):  # поиск книги по базе
         for i in range(len(info)):
             if info[i][0]:
                 num_prev = info[i][0].split(";")
-                num_prev = list(filter(lambda b: b != "", num_prev))
+                num_prev = list(filter(lambda b: b != "" and "/given/" not in b, num_prev))
                 book_is = str(len(num_prev))
             else:
                 book_is = "Нет в наличии"
@@ -542,26 +542,35 @@ class ReturnBook(QWidget):  # сдача книг
             # Наличие книги или читателя в бд библиотеки можно было запихнуть в функции проверок
             id_return = self.le_book_id.text()
             reader_return = self.le_client_id.text()
-            cur_ids = cur.execute(f"select ids from books where ids='{id_return}/given/'").fetchall()[0][0].split(";")
-            position = cur_ids.index(id_return + "/given/")
-            cur_ids[position] = id_return
-            cur_ids = ";".join(cur_ids)
-            
+            cur_ids = cur.execute(f"select ids from books where ids like '%{id_return}/given/%'").fetchall()[0][
+                0].split(";")
 
             if cur_ids:
-                print(cur_ids)
+                position = cur_ids.index(id_return + "/given/")
+                cur_ids[position] = id_return
+                cur_ids = ";".join(cur_ids)
+                cur.execute(f"update books set ids='{cur_ids}' where ids like '%{id_return}/given/%'")
+                con.commit()
 
             self.lb_output.setText('Сдача произведена успешно, книга может быть помещена на полку.')
 
     def check_book_id(self, id):  # проверка id книги
         try:
             self.lb_wrong_book_id.setText('')
-            if id.strip() != '':  # на пустую строку
-                return True
+            if id.strip() != '':
+                if cur.execute(
+                        f"select ids from books where ids like '%{id.strip()};%' or ids like '%;{id.strip()}%'").fetchall():
+                    return True
+                else:
+                    raise NoSuchID
+                # на пустую строку
             else:
                 raise EmptyLE
         except EmptyLE:
             self.lb_wrong_book_id.setText('Обязательное поле.')
+            return False
+        except NoSuchID:
+            self.lb_wrong_book_id.setText('Такого id нет')
             return False
 
     def check_client_id(self, id):  # проверка id читателя
