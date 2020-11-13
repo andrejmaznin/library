@@ -475,13 +475,18 @@ class GiveBook(QWidget):  # выдача книг
             # "Книга уже выдана другому читателю."
             # Наличие книги или читателя в бд библиотеки можно было запихнуть в функции проверок
             id_to_give = self.le_book_id.text()
+
             client_to_give = self.le_client_id.text()
-            cur_ids = cur.execute(f"select ids from books where ids like '%{id_to_give}%'").fetchall()[0][0].split(";")
-            con.commit()
+            cur_ids = str(cur.execute(f"select ids from books where ids like '%{id_to_give}%'").fetchall()[0][0]).split(
+                ";")
+            if type(cur_ids) != list:
+                cur_ids = [cur_ids]
+
             position = cur_ids.index(id_to_give)
             cur_ids[position] += "/given/"
             cur_ids = ";".join(cur_ids)
-            cur.execute(f"update books set ids='{cur_ids}'")
+
+            cur.execute(f"update books set ids='{cur_ids}' where ids like '%{id_to_give}%'")
             con.commit()
             client_name = cur.execute(f"select name from reader where id='{client_to_give}'").fetchall()[0][0]
             cur.execute(f"insert into given(id, name) values('{id_to_give}', '{client_name}')")
@@ -492,8 +497,9 @@ class GiveBook(QWidget):  # выдача книг
         try:
             self.lb_wrong_book_id.setText('')
             if id.strip() != '':  # на пустую строку
+
                 if cur.execute(
-                        f"select ids from books where ids like '%{id.strip()};%' or ids like '%;{id.strip()}%'").fetchall():
+                        f"select ids from books where ids like '%{id}%'").fetchall():
                     return True
                 else:
                     raise NoSuchID
@@ -540,6 +546,7 @@ class ReturnBook(QWidget):  # сдача книг
             # "Такой книги нет в библиотеке."
             # "У данного читателя не было такой книги." или "Данная книга не была у этого читателя." (равнозначные сообщения)
             # Наличие книги или читателя в бд библиотеки можно было запихнуть в функции проверок
+
             id_return = self.le_book_id.text()
             reader_return = self.le_client_id.text()
             cur_ids = cur.execute(f"select ids from books where ids like '%{id_return}/given/%'").fetchall()[0][
@@ -551,15 +558,16 @@ class ReturnBook(QWidget):  # сдача книг
                 cur_ids = ";".join(cur_ids)
                 cur.execute(f"update books set ids='{cur_ids}' where ids like '%{id_return}/given/%'")
                 con.commit()
-
+                cur.execute(f"delete from given where id='{id_return}'")
+                con.commit()
             self.lb_output.setText('Сдача произведена успешно, книга может быть помещена на полку.')
 
     def check_book_id(self, id):  # проверка id книги
         try:
             self.lb_wrong_book_id.setText('')
             if id.strip() != '':
-                if cur.execute(
-                        f"select ids from books where ids like '%{id.strip()};%' or ids like '%;{id.strip()}%'").fetchall():
+
+                if cur.execute(f"select ids from books where ids like '%{id.strip()}/given/%'").fetchall():
                     return True
                 else:
                     raise NoSuchID
@@ -628,7 +636,6 @@ class NoTypes(Exception):
 if __name__ == '__main__':
     con = sqlite3.connect("books_db.sqlite")
     cur = con.cursor()
-    print(cur.execute("select ids from books").fetchall())
     app = QApplication(sys.argv)
     ex = Librarian()
     ex.show()
