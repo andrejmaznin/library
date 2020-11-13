@@ -157,7 +157,8 @@ class BookSearch(QWidget):  # поиск книги по базе
             self.tableWidget.setItem(i, 3, QTableWidgetItem(info[i][4]))
             self.tableWidget.setItem(i, 4, QTableWidgetItem(str(info[i][-1])))
             self.tableWidget.setItem(i, 5, QTableWidgetItem(book_is))
-            self.tableWidget.setItem(i, 6, QTableWidgetItem(info[i][0]))
+            self.tableWidget.setItem(i, 6, QTableWidgetItem(
+                ";".join(list(filter(lambda b: "/given/" not in b, info[i][0].split(";"))))))
 
     def closer(self):
         self.close()
@@ -479,7 +480,8 @@ class GiveBook(QWidget):  # выдача книг
             cur_ids = cur.execute(f"select ids from books where ids like '%{id_to_give}%'").fetchall()[0][0].split(";")
             print(1)
             con.commit()
-            cur_ids.remove(id_to_give)
+            position = cur_ids.index(id_to_give)
+            cur_ids[position] += "/given/"
             cur_ids = ";".join(cur_ids)
             cur.execute(f"update books set ids='{cur_ids}'")
             con.commit()
