@@ -89,7 +89,10 @@ class BookSearch(QWidget):  # поиск книги по базе
         self.widgets = [self.btn_id, self.lab_id, self.btn_name, self.lab_name, self.le_name,
                         self.btn_author, self.lab_author, self.lab_type, self.btn_type, self.ch_1,
                         self.ch_2, self.ch_3, self.ch_4, self.ch_5, self.ch_6, self.ch_7, self.ch_8, self.ch_9,
-                        self.ch_10, self.lb_nothing, self.lab_all]  # прятанье "лишних" элементов при открытии
+                        self.ch_10, self.lb_nothing, self.lab_all, self.lb_perc, self.lb_no_g,
+                        self.lb_empty]  # прятанье "лишних" элементов при открытии
+        self.genres = [self.ch_1, self.ch_2, self.ch_3, self.ch_4, self.ch_5, self.ch_6, self.ch_7, self.ch_8,
+                       self.ch_9, self.ch_10, ]
         for el in self.widgets:
             if 'id' not in el.accessibleName():
                 el.hide()
@@ -116,20 +119,23 @@ class BookSearch(QWidget):  # поиск книги по базе
                 el.hide()
 
     def show_found(self):  # работа с базой
-        for i in range(self.tableWidget.rowCount()):
+        self.lb_perc.hide()
+        self.lb_no_g.hide()
+        self.lb_empty.hide()
+        for i in range(self.tableWidget.rowCount()):  # чистка таблицы перед отображением новых данных
             self.tableWidget.removeRow(i + 1)
             self.tableWidget.removeRow(i)
             self.tableWidget.removeRow(i - 1)
 
         requirement = self.le_name.text()
         info = 0
-        if self.rb_id.isChecked():
+        if self.rb_id.isChecked() and self.check_le(requirement):
             info = cur.execute(f"""select * from books where ids like '%{requirement}%'""").fetchall()
-        if self.rb_name.isChecked():
+        if self.rb_name.isChecked() and self.check_le(requirement):
             info = cur.execute(f"""select * from books where name like '%{requirement}%'""").fetchall()
-        if self.rb_author.isChecked():
+        if self.rb_author.isChecked() and self.check_le(requirement):
             info = cur.execute(f"""select * from books where author like '%{requirement}%'""").fetchall()
-        if self.rb_type.isChecked():
+        if self.rb_type.isChecked() and self.check_genre():
             genres = []
             for i in self.widgets[11:-1]:
                 if i.isChecked():
@@ -144,26 +150,58 @@ class BookSearch(QWidget):  # поиск книги по базе
                 info = cur.execute("select * from books").fetchall()
         if self.rb_all.isChecked():
             info = cur.execute(f"""select * from books where ids like '%{requirement}%'""").fetchall()
-        for i in range(len(info)):
-            self.tableWidget.insertRow(i)
-        for i in range(len(info)):
-            if info[i][0]:
 
-                num_prev = str(info[i][0]).split(";")
-                num_prev = list(filter(lambda b: b != "" and "/given/" not in b, num_prev))
-                book_is = str(len(num_prev))
+        if info != 0:
+            for i in range(len(info)):
+                self.tableWidget.insertRow(i)
+            for i in range(len(info)):
+                if info[i][0]:
+
+                    num_prev = str(info[i][0]).split(";")
+                    num_prev = list(filter(lambda b: b != "" and "/given/" not in b, num_prev))
+                    book_is = str(len(num_prev))
+                else:
+                    book_is = "Нет в наличии"
+
+                # отображение найденного в таблице
+                self.tableWidget.setItem(i, 0, QTableWidgetItem(info[i][1]))
+                self.tableWidget.setItem(i, 1, QTableWidgetItem(info[i][2]))
+                self.tableWidget.setItem(i, 2, QTableWidgetItem(str(info[i][3])))
+                self.tableWidget.setItem(i, 3, QTableWidgetItem(info[i][4]))
+                self.tableWidget.setItem(i, 4, QTableWidgetItem(str(info[i][-1])))
+                self.tableWidget.setItem(i, 5, QTableWidgetItem(book_is))
+                self.tableWidget.setItem(i, 6, QTableWidgetItem(
+                    ";".join(list(filter(lambda b: "/given/" not in b, str(info[i][0]).split(";"))))))
+
+    def check_le(self, text):
+        try:
+            if text.strip() != '':
+                if '%' not in text:
+                    return True
+                else:
+                    raise PercIn
             else:
-                book_is = "Нет в наличии"
+                raise EmptyLE
+        except PercIn:
+            self.lb_perc.show()
+            return False
+        except EmptyLE:
+            self.lb_empty.show()
+            return False
 
-            # отображение найденного в таблице
-            self.tableWidget.setItem(i, 0, QTableWidgetItem(info[i][1]))
-            self.tableWidget.setItem(i, 1, QTableWidgetItem(info[i][2]))
-            self.tableWidget.setItem(i, 2, QTableWidgetItem(str(info[i][3])))
-            self.tableWidget.setItem(i, 3, QTableWidgetItem(info[i][4]))
-            self.tableWidget.setItem(i, 4, QTableWidgetItem(str(info[i][-1])))
-            self.tableWidget.setItem(i, 5, QTableWidgetItem(book_is))
-            self.tableWidget.setItem(i, 6, QTableWidgetItem(
-                ";".join(list(filter(lambda b: "/given/" not in b, str(info[i][0]).split(";"))))))
+    def check_genre(self):
+        try:
+            not_ok = True
+            for el in self.genres:
+                if el.isChecked():
+                    not_ok = False
+            if not_ok:
+                raise NoTypes
+            else:
+                return True
+        except NoTypes:
+            self.lb_no_g.show()
+            return False
 
     def closer(self):
         self.close()
@@ -635,6 +673,10 @@ class NoSuchID(Exception):
 
 
 class NoTypes(Exception):
+    pass
+
+
+class PercIn(Exception):
     pass
 
 

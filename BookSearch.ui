@@ -625,6 +625,45 @@
     <string>Отображение всего списка книг.</string>
    </property>
   </widget>
+  <widget class="QLabel" name="lb_perc">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>130</y>
+     <width>500</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Знак % не учитывается в запросах. Составьте запрос без него.</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lb_empty">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>130</y>
+     <width>181</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Введите запрос.</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lb_no_g">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>170</y>
+     <width>221</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Выберите хотя бы один жанр.</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
