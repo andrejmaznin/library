@@ -144,8 +144,6 @@ class BookSearch(QWidget):  # поиск книги по базе
                 info = cur.execute(f"select * from books where genre like {requirement}").fetchall()
             else:
                 info = cur.execute("select * from books").fetchall()
-        if self.rb_all.isChecked():
-            info = cur.execute(f"""select * from books where ids like '%{requirement}%'""").fetchall()
         for i in range(len(info)):
             self.tableWidget.insertRow(i)
         for i in range(len(info)):
