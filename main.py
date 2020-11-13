@@ -132,13 +132,16 @@ class BookSearch(QWidget):  # поиск книги по базе
                 if i.isChecked():
                     genres.append(i.text().lower())
             requirement = ""
-            for i in genres[:-1]:
-                requirement += "'%" + i + "%' and genre like"
-            requirement += "'%" + genres[-1] + "%'"
-            info = cur.execute(f"select * from books where genre like {requirement}").fetchall()
-
+            if genres:
+                for i in genres[:-1]:
+                    requirement += "'%" + i + "%' and genre like"
+                requirement += "'%" + genres[-1] + "%'"
+                info = cur.execute(f"select * from books where genre like {requirement}").fetchall()
+            else:
+                info = cur.execute("select * from books").fetchall()
         for i in range(len(info)):
             self.tableWidget.insertRow(i)
+
         for i in range(len(info)):
             if info[i][0]:
                 num_prev = info[i][0].split(";")
@@ -491,7 +494,8 @@ class GiveBook(QWidget):  # выдача книг
         try:
             self.lb_wrong_book_id.setText('')
             if id.strip() != '':  # на пустую строку
-                if cur.execute(f"select ids from books where ids like '%{id.strip()};%' or ids like '%;{id.strip()}%'").fetchall():
+                if cur.execute(
+                        f"select ids from books where ids like '%{id.strip()};%' or ids like '%;{id.strip()}%'").fetchall():
                     return True
                 else:
                     raise NoSuchID
