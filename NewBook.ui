@@ -87,6 +87,9 @@
    <property name="accessibleName">
     <string>form</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Введите название книги:</string>
    </property>
@@ -104,7 +107,7 @@
     <string>form</string>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(255, 255, 255);</string>
+    <string notr="true">background-color: rgb(176, 176, 176);</string>
    </property>
   </widget>
   <widget class="QLabel" name="lb_author">
@@ -144,7 +147,7 @@
     <string>form</string>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(255, 255, 255);</string>
+    <string notr="true">background-color: rgb(176, 176, 176);</string>
    </property>
   </widget>
   <widget class="QLabel" name="lb_year">
@@ -184,7 +187,7 @@
     <string>form</string>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(255, 255, 255);</string>
+    <string notr="true">background-color: rgb(176, 176, 176);</string>
    </property>
   </widget>
   <widget class="QLabel" name="lb_type">
@@ -468,7 +471,7 @@
     <string>form</string>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(255, 255, 255);</string>
+    <string notr="true">background-color: rgb(176, 176, 176);</string>
    </property>
   </widget>
   <widget class="QLabel" name="lb_shelf">
@@ -508,7 +511,7 @@
     <string>form</string>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(255, 255, 255);</string>
+    <string notr="true">background-color: rgb(176, 176, 176);</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btn_form_input">
@@ -564,6 +567,9 @@
    <property name="accessibleName">
     <string>form</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
+   </property>
    <property name="text">
     <string/>
    </property>
@@ -579,6 +585,9 @@
    </property>
    <property name="accessibleName">
     <string>form</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
    </property>
    <property name="text">
     <string/>
@@ -621,7 +630,7 @@
     <string>file</string>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(255, 255, 255);</string>
+    <string notr="true">background-color: rgb(176, 176, 176);</string>
    </property>
   </widget>
   <widget class="QLabel" name="lb_success">
@@ -702,6 +711,9 @@
    <property name="accessibleName">
     <string>form</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
+   </property>
    <property name="text">
     <string/>
    </property>
@@ -718,6 +730,9 @@
    <property name="accessibleName">
     <string>form</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
+   </property>
    <property name="text">
     <string/>
    </property>
@@ -733,6 +748,9 @@
    </property>
    <property name="accessibleName">
     <string>form</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
    </property>
    <property name="text">
     <string/>
