@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Библиотека: поиск читателя</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(70, 70, 70);</string>
+  </property>
   <widget class="QLabel" name="label_client_name">
    <property name="geometry">
     <rect>
@@ -27,6 +30,9 @@
      <pointsize>11</pointsize>
     </font>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Введите имя читателя:</string>
    </property>
@@ -39,6 +45,9 @@
      <width>501</width>
      <height>30</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(176, 176, 176);</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btn_search">
@@ -53,6 +62,9 @@
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(51, 153, 153);</string>
+   </property>
    <property name="text">
     <string>Поиск</string>
    </property>
@@ -65,6 +77,10 @@
      <width>501</width>
      <height>521</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(176, 176, 176);
+</string>
    </property>
    <column>
     <property name="text">
@@ -124,6 +140,9 @@
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(51, 153, 153);</string>
+   </property>
    <property name="text">
     <string>Закрыть</string>
    </property>
@@ -141,6 +160,9 @@
     <font>
      <pointsize>9</pointsize>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
    </property>
    <property name="text">
     <string>Ничего не найдено.</string>
