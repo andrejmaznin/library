@@ -336,20 +336,20 @@ class NewBook(QWidget):
                 el.hide()
 
     def input_file(self):  # добавление книг через уже готовый документ
-        self.le_success.hide()
-        self.le_error.setText('')
-        if self.check_directory():
+        self.lb_success.hide()
+        self.lb_error.setText('')
+        if self.check_directory(self.le_directory.text()):
             path = self.le_directory.text()
             con_input = sqlite3.connect(path)
             cur_input = con_input.cursor()
             info = cur_input.execute("select * from books").fetchall()
 
-            # for i in range(len(info)):
-            #     cur.execute(f"""insert into books(ids, name, author, year, genre, position)
-            #                                     VALUES('{info[i][0]}', '{info[i][1]}',
-            #                                     '{info[i][2]}', '{info[i][3]}', '{info[i][4]}', '{str(info[i][5])}')""")
-            #     con.commit()
-            self.le_success.show()
+            for i in range(len(info)):
+                cur.execute(f"""insert into books(ids, name, author, year, genre, position)
+                                                VALUES('{info[i][0]}', '{info[i][1]}',
+                                                '{info[i][2]}', '{info[i][3]}', '{info[i][4]}', '{str(info[i][5])}')""")
+                con.commit()
+            self.lb_success.show()
 
     def input_form(self):  # добавление книг вручную
         self.lb_success.hide()
@@ -395,7 +395,7 @@ class NewBook(QWidget):
                 con.commit()
             self.lb_success.show()
 
-    def check_directory(self, ):
+    def check_directory(self, text):
         try:
             if text.strip() != '':
                 if text.split('.')[-1] == 'sqlite':
@@ -527,10 +527,6 @@ class GiveBook(QWidget):  # выдача книг
         ok_client = self.check_client_id(self.le_client_id.text())
         if ok_book and ok_client:
             # происходит добавление в таблицу, что книга выдана
-            # возможен вывод сообщений: "Такого читателя нет в библиотеке."
-            # "Такой книги нет в библиотеке."
-            # "Книга уже выдана другому читателю."
-            # Наличие книги или читателя в бд библиотеки можно было запихнуть в функции проверок
             id_to_give = self.le_book_id.text()
 
             client_to_give = self.le_client_id.text()
@@ -599,11 +595,6 @@ class ReturnBook(QWidget):  # сдача книг
         ok_client = self.check_client_id(self.le_client_id.text())
         if ok_book and ok_client:
             # происходит удаление из таблицы вадачи
-            # возможен вывод сообщений: "Такого читателя нет в библиотеке."
-            # "Такой книги нет в библиотеке."
-            # "У данного читателя не было такой книги." или "Данная книга не была у этого читателя." (равнозначные сообщения)
-            # Наличие книги или читателя в бд библиотеки можно было запихнуть в функции проверок
-
             id_return = self.le_book_id.text()
             reader_return = self.le_client_id.text()
             cur_ids = cur.execute(f"select ids from books where ids like '%{id_return}/given/%'").fetchall()[0][
