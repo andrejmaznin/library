@@ -309,12 +309,12 @@ class NewBook(QWidget):
     def initUI(self):
         self.widgets = [self.btn_file_input, self.btn_form_input, self.ch_1, self.ch_2, self.ch_3, self.ch_4, self.ch_5,
                         self.ch_6, self.ch_7, self.ch_8, self.ch_9, self.ch_10, self.lb_author, self.lb_directory,
-                        self.lb_name, self.lb_number, self.lb_shelf, self.lb_type, self.lb_wrong_number,
+                        self.lb_name, self.lb_number, self.lb_shelf, self.lb_type,
                         self.lb_wrong_year, self.lb_year, self.le_author, self.le_directory, self.le_name,
                         self.le_number, self.le_shelf, self.le_year]  # сбор элемнтов для "прятанья"
         self.types = [self.ch_1, self.ch_2, self.ch_3, self.ch_4, self.ch_5, self.ch_6, self.ch_7, self.ch_8, self.ch_9,
                       self.ch_10]  # сбор элемнтов для удобного считывания жанров
-        self.errors = [self.lb_wrong_author, self.lb_wrong_name,
+        self.errors = [self.lb_wrong_author, self.lb_wrong_name, self.lb_wrong_number, self.lb_error,
                        self.lb_wrong_number, self.lb_wrong_shelf, self.lb_wrong_type, self.lb_wrong_year]
         for el in self.widgets:  # прятанье элементов
             if 'form' not in el.accessibleName():
