@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Библиотека: регситрация читателя</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(70, 70, 70);</string>
+  </property>
   <widget class="QLabel" name="lb_upper">
    <property name="geometry">
     <rect>
@@ -26,6 +29,9 @@
     <font>
      <pointsize>11</pointsize>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>Все поля обязательны для ввода.</string>
@@ -44,6 +50,9 @@
     <font>
      <pointsize>10</pointsize>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>Введите ФИО (допускаются буквы любого алфавита и пробелы):</string>
@@ -72,6 +81,9 @@
     <font>
      <pointsize>10</pointsize>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>Введите дату рождения в формате дд.мм.гггг</string>
@@ -104,6 +116,9 @@
      <kerning>false</kerning>
     </font>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Введите адрес:</string>
    </property>
@@ -130,6 +145,9 @@
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(51, 153, 153);</string>
+   </property>
    <property name="text">
     <string>Ввод</string>
    </property>
@@ -145,6 +163,9 @@
    </property>
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(51, 153, 153);</string>
    </property>
    <property name="text">
     <string>Закрыть</string>
@@ -163,6 +184,9 @@
     <font>
      <pointsize>10</pointsize>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>Введите контактную информацию (номер телефона, email):</string>
@@ -187,6 +211,9 @@
      <height>30</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
+   </property>
    <property name="text">
     <string/>
    </property>
@@ -199,6 +226,9 @@
      <width>150</width>
      <height>30</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
    </property>
    <property name="text">
     <string/>
@@ -218,6 +248,9 @@
      <pointsize>12</pointsize>
     </font>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(170, 255, 127);</string>
+   </property>
    <property name="text">
     <string/>
    </property>
@@ -231,6 +264,9 @@
      <height>30</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
+   </property>
    <property name="text">
     <string/>
    </property>
@@ -243,6 +279,9 @@
      <width>150</width>
      <height>30</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
    </property>
    <property name="text">
     <string/>
