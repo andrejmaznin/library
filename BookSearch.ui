@@ -16,6 +16,9 @@
   <property name="accessibleName">
    <string/>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(70, 70, 70);</string>
+  </property>
   <widget class="QRadioButton" name="rb_id">
    <property name="geometry">
     <rect>
@@ -35,6 +38,9 @@
    </property>
    <property name="accessibleName">
     <string>id</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>По id книги</string>
@@ -60,6 +66,9 @@
    <property name="accessibleName">
     <string>name</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>По названию</string>
    </property>
@@ -83,6 +92,9 @@
    </property>
    <property name="accessibleName">
     <string>author</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>По автору</string>
@@ -108,6 +120,9 @@
    <property name="accessibleName">
     <string>type</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>По жанру</string>
    </property>
@@ -128,6 +143,9 @@
    </property>
    <property name="accessibleName">
     <string>id</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>Введите id книги:</string>
@@ -150,6 +168,9 @@
    <property name="accessibleName">
     <string>name</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255)</string>
+   </property>
    <property name="text">
     <string>Введите название книги:</string>
    </property>
@@ -170,6 +191,9 @@
    </property>
    <property name="accessibleName">
     <string>author</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>Введите имя автора:</string>
@@ -192,6 +216,9 @@
    <property name="accessibleName">
     <string>type</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Отметьте необходимые жанры:</string>
    </property>
@@ -210,6 +237,9 @@
    </property>
    <property name="accessibleName">
     <string>id</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(51, 153, 153);</string>
    </property>
    <property name="text">
     <string>Поиск</string>
@@ -230,6 +260,9 @@
    <property name="accessibleName">
     <string>name</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(51, 153, 153);</string>
+   </property>
    <property name="text">
     <string>Поиск</string>
    </property>
@@ -249,6 +282,9 @@
    <property name="accessibleName">
     <string>author</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(51, 153, 153);</string>
+   </property>
    <property name="text">
     <string>Поиск</string>
    </property>
@@ -265,6 +301,9 @@
    <property name="accessibleName">
     <string>name_author_id</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);</string>
+   </property>
   </widget>
   <widget class="QCheckBox" name="ch_1">
    <property name="geometry">
@@ -280,6 +319,9 @@
    </property>
    <property name="accessibleName">
     <string>type</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>Биография</string>
@@ -300,6 +342,9 @@
    <property name="accessibleName">
     <string>type</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Детектив</string>
    </property>
@@ -318,6 +363,9 @@
    </property>
    <property name="accessibleName">
     <string>type</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>Драма</string>
@@ -338,6 +386,9 @@
    <property name="accessibleName">
     <string>type</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Исторический</string>
    </property>
@@ -356,6 +407,9 @@
    </property>
    <property name="accessibleName">
     <string>type</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>Комедия</string>
@@ -376,6 +430,9 @@
    <property name="accessibleName">
     <string>type</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Научный</string>
    </property>
@@ -395,6 +452,9 @@
    <property name="accessibleName">
     <string>type</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(51, 153, 153);</string>
+   </property>
    <property name="text">
     <string>Поиск</string>
    </property>
@@ -407,6 +467,11 @@
      <width>500</width>
      <height>461</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);
+selection-background-color: rgb(255, 255, 255);
+border-color: rgb(255, 255, 255)</string>
    </property>
    <property name="gridStyle">
     <enum>Qt::SolidLine</enum>
@@ -501,6 +566,9 @@
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(51, 153, 153);</string>
+   </property>
    <property name="text">
     <string>Закрыть</string>
    </property>
@@ -516,6 +584,9 @@
    </property>
    <property name="accessibleName">
     <string>type</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>Триллер</string>
@@ -533,6 +604,9 @@
    <property name="accessibleName">
     <string>type</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Ужасы</string>
    </property>
@@ -548,6 +622,9 @@
    </property>
    <property name="accessibleName">
     <string>type</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>Фантастика</string>
@@ -565,6 +642,9 @@
    <property name="accessibleName">
     <string>type</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Фэнтези</string>
    </property>
@@ -577,6 +657,9 @@
      <width>300</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0,0);</string>
    </property>
    <property name="text">
     <string>Ничего не найдено.</string>
@@ -598,6 +681,9 @@
    </property>
    <property name="accessibleName">
     <string>all</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>Отобразить все книги
@@ -621,6 +707,9 @@
    <property name="accessibleName">
     <string>all</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Отображение всего списка книг.</string>
    </property>
@@ -633,6 +722,9 @@
      <width>500</width>
      <height>21</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0,0);</string>
    </property>
    <property name="text">
     <string>Знак % не учитывается в запросах. Составьте запрос без него.</string>
@@ -647,6 +739,9 @@
      <height>16</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0,0);</string>
+   </property>
    <property name="text">
     <string>Введите запрос.</string>
    </property>
@@ -659,6 +754,9 @@
      <width>221</width>
      <height>16</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0,0);</string>
    </property>
    <property name="text">
     <string>Выберите хотя бы один жанр.</string>
