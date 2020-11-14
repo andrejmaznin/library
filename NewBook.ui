@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Библиотека: поступление книг</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(70, 70, 70)</string>
+  </property>
   <widget class="QRadioButton" name="rb_form">
    <property name="geometry">
     <rect>
@@ -32,6 +35,9 @@
    </property>
    <property name="accessibleName">
     <string>form</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>Ручное добавление данных</string>
@@ -56,6 +62,9 @@
    </property>
    <property name="accessibleName">
     <string>file</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>Выбрать файл с данными </string>
@@ -94,6 +103,9 @@
    <property name="accessibleName">
     <string>form</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);</string>
+   </property>
   </widget>
   <widget class="QLabel" name="lb_author">
    <property name="geometry">
@@ -112,6 +124,9 @@
    <property name="accessibleName">
     <string>form</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Введите имя автора:</string>
    </property>
@@ -127,6 +142,9 @@
    </property>
    <property name="accessibleName">
     <string>form</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);</string>
    </property>
   </widget>
   <widget class="QLabel" name="lb_year">
@@ -146,6 +164,9 @@
    <property name="accessibleName">
     <string>form</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Введите год написания/перевода книги:</string>
    </property>
@@ -161,6 +182,9 @@
    </property>
    <property name="accessibleName">
     <string>form</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);</string>
    </property>
   </widget>
   <widget class="QLabel" name="lb_type">
@@ -179,6 +203,9 @@
    </property>
    <property name="accessibleName">
     <string>form</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>Выберите жанры книги:</string>
@@ -199,6 +226,9 @@
    <property name="accessibleName">
     <string>form</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Биография</string>
    </property>
@@ -217,6 +247,9 @@
    </property>
    <property name="accessibleName">
     <string>form</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>Детектив</string>
@@ -237,6 +270,9 @@
    <property name="accessibleName">
     <string>form</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Драма</string>
    </property>
@@ -255,6 +291,9 @@
    </property>
    <property name="accessibleName">
     <string>form</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>Исторический</string>
@@ -275,6 +314,9 @@
    <property name="accessibleName">
     <string>form</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Комедия</string>
    </property>
@@ -293,6 +335,9 @@
    </property>
    <property name="accessibleName">
     <string>form</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>Научный</string>
@@ -313,6 +358,9 @@
    <property name="accessibleName">
     <string>form</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Триллер</string>
    </property>
@@ -331,6 +379,9 @@
    </property>
    <property name="accessibleName">
     <string>form</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>Ужасы</string>
@@ -351,6 +402,9 @@
    <property name="accessibleName">
     <string>form</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Фантастика</string>
    </property>
@@ -369,6 +423,9 @@
    </property>
    <property name="accessibleName">
     <string>form</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
     <string>Фэнтези</string>
@@ -391,6 +448,9 @@
    <property name="accessibleName">
     <string>form</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Введите количество одинаковых книги:</string>
    </property>
@@ -406,6 +466,9 @@
    </property>
    <property name="accessibleName">
     <string>form</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);</string>
    </property>
   </widget>
   <widget class="QLabel" name="lb_shelf">
@@ -425,6 +488,9 @@
    <property name="accessibleName">
     <string>form</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Введите номер стеллажа, где будут хранится книги:</string>
    </property>
@@ -440,6 +506,9 @@
    </property>
    <property name="accessibleName">
     <string>form</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btn_form_input">
@@ -457,6 +526,9 @@
    <property name="accessibleName">
     <string>form</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(51, 153, 153);</string>
+   </property>
    <property name="text">
     <string>Добавить</string>
    </property>
@@ -472,6 +544,9 @@
    </property>
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(51, 153, 153)</string>
    </property>
    <property name="text">
     <string>Закрыть</string>
@@ -526,6 +601,9 @@
    <property name="accessibleName">
     <string>file</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Введите путь к файлу:</string>
    </property>
@@ -541,6 +619,9 @@
    </property>
    <property name="accessibleName">
     <string>file</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);</string>
    </property>
   </widget>
   <widget class="QLabel" name="lb_success">
@@ -559,6 +640,9 @@
    </property>
    <property name="accessibleName">
     <string>file_form</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(170, 255, 127);</string>
    </property>
    <property name="text">
     <string>Операция выполнена успешно.</string>
@@ -579,6 +663,9 @@
    <property name="accessibleName">
     <string>file</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(51, 153, 153)</string>
+   </property>
    <property name="text">
     <string>Добавить</string>
    </property>
@@ -594,6 +681,10 @@
    </property>
    <property name="accessibleName">
     <string>form</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);
+</string>
    </property>
    <property name="text">
     <string>Укажите хотя бы один жанр.</string>
@@ -655,6 +746,9 @@
      <width>600</width>
      <height>15</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
    </property>
    <property name="text">
     <string/>
