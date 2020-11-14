@@ -474,7 +474,7 @@
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
    <property name="text">
-    <string>Отмена</string>
+    <string>Закрыть</string>
    </property>
   </widget>
   <widget class="QLabel" name="lb_wrong_year">
@@ -642,6 +642,19 @@
    </property>
    <property name="accessibleName">
     <string>form</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lb_error">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>130</y>
+     <width>600</width>
+     <height>15</height>
+    </rect>
    </property>
    <property name="text">
     <string/>

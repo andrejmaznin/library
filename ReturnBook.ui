@@ -136,7 +136,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Отмена</string>
+    <string>Закрыть</string>
    </property>
   </widget>
  </widget>

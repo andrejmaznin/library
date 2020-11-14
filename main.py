@@ -336,22 +336,20 @@ class NewBook(QWidget):
                 el.hide()
 
     def input_file(self):  # добавление книг через уже готовый документ
-        path = self.le_directory.text()
-        con_input = sqlite3.connect(path)
-        cur_input = con_input.cursor()
-        info = cur_input.execute("select * from books").fetchall()
-        for i in info:
-            if cur.execute(f"select * from books where name = '{info[i][1]}'").fetchall():
-                ids = cur.execute(f"select ids from books where name='{info[i][1]}'").fetchall()[0][0]
-                ids_2 = cur_input.execute(f"select ids from books where name = '{info[i][1]}'").fetchall()[0][0]
-                ids_final = ids + ';' + ids_2
-                cur.execute(f"update books set ids='{ids_final}' where name = '{info[i][1]}'")
-                con.commit()
-            else:
-                cur.execute(f"""insert into books(ids, name, author, year, genre, position)
-                                            VALUES('{info[i][0]}', '{info[i][1]}',
-                                            '{info[i][2]}', '{info[i][3]}', '{info[i][4]}', '{str(info[i][5])}')""")
-                con.commit()
+        self.le_success.hide()
+        self.le_error.setText('')
+        if self.check_directory():
+            path = self.le_directory.text()
+            con_input = sqlite3.connect(path)
+            cur_input = con_input.cursor()
+            info = cur_input.execute("select * from books").fetchall()
+
+            # for i in range(len(info)):
+            #     cur.execute(f"""insert into books(ids, name, author, year, genre, position)
+            #                                     VALUES('{info[i][0]}', '{info[i][1]}',
+            #                                     '{info[i][2]}', '{info[i][3]}', '{info[i][4]}', '{str(info[i][5])}')""")
+            #     con.commit()
+            self.le_success.show()
 
     def input_form(self):  # добавление книг вручную
         self.lb_success.hide()
@@ -396,6 +394,22 @@ class NewBook(QWidget):
                                             '{author}', '{year}', '{genres}', '{str(shelf)}')""")
                 con.commit()
             self.lb_success.show()
+
+    def check_directory(self, ):
+        try:
+            if text.strip() != '':
+                if text.split('.')[-1] == 'sqlite':
+                    return True
+                else:
+                    raise WrongDataFormat
+            else:
+                raise EmptyLE
+        except EmptyLE:
+            self.lb_error.setText('Введите путь.')
+            return False
+        except WrongDataFormat:
+            self.lb_error.setText('Неподдерживаемый формат базы.')
+            return False
 
     def check_name(self, name):  # проверка названия книги:
         try:
@@ -680,9 +694,14 @@ class PercIn(Exception):
     pass
 
 
+class WrongDataFormat(Exception):
+    pass
+
+
 if __name__ == '__main__':
     con = sqlite3.connect("books_db.sqlite")
     cur = con.cursor()
+
     app = QApplication(sys.argv)
     ex = Librarian()
     ex.show()
