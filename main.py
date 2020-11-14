@@ -110,6 +110,13 @@ class BookSearch(QWidget):  # поиск книги по базе
         self.rb_all.clicked.connect(self.show_found)
         self.btn_cancel.clicked.connect(self.closer)
 
+        self.tableWidget.itemClicked.connect(self.open_give_book)
+
+    def open_give_book(self):
+        print(self.sender().currentRow(), self.sender().currentColumn())
+        self.give_book = GiveBook()
+        self.give_book.show()
+
     def hider(self):  # функция показа и прятанье элементов в соответствии с режимом поиска
         self.le_name.setText("")
         for el in self.widgets:
@@ -150,7 +157,6 @@ class BookSearch(QWidget):  # поиск книги по базе
                 info = cur.execute(f"select * from books where genre like {requirement}").fetchall()
             else:
                 info = cur.execute("select * from books").fetchall()
-
         if info != 0:
             for i in range(len(info)):
                 self.tableWidget.insertRow(i)
