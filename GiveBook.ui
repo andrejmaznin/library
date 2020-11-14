@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Библиотека: выдача книги</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(70, 70, 70);</string>
+  </property>
   <widget class="QLabel" name="lb_boo_id">
    <property name="geometry">
     <rect>
@@ -27,6 +30,9 @@
      <pointsize>10</pointsize>
     </font>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Введите id книги:</string>
    </property>
@@ -39,6 +45,9 @@
      <width>500</width>
      <height>30</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(176, 176, 176);</string>
    </property>
   </widget>
   <widget class="QLabel" name="lb_client_id">
@@ -55,6 +64,9 @@
      <pointsize>10</pointsize>
     </font>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Введите id читателя:</string>
    </property>
@@ -68,6 +80,9 @@
      <height>30</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(176, 176, 176);</string>
+   </property>
   </widget>
   <widget class="QLabel" name="lb_wrong_book_id">
    <property name="geometry">
@@ -77,6 +92,9 @@
      <width>150</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
    </property>
    <property name="text">
     <string/>
@@ -90,6 +108,9 @@
      <width>150</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
    </property>
    <property name="text">
     <string/>
@@ -109,6 +130,9 @@
      <pointsize>11</pointsize>
     </font>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(170, 255, 127);</string>
+   </property>
    <property name="text">
     <string/>
    </property>
@@ -122,6 +146,9 @@
      <height>30</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(51, 153, 153);</string>
+   </property>
    <property name="text">
     <string>Выдать</string>
    </property>
@@ -134,6 +161,9 @@
      <width>90</width>
      <height>30</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(51, 153, 153);</string>
    </property>
    <property name="text">
     <string>Закрыть</string>
