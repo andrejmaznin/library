@@ -23,6 +23,9 @@
   <property name="windowTitle">
    <string>Библиотека</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <property name="palette">
     <palette>
@@ -176,7 +179,7 @@
     <property name="geometry">
      <rect>
       <x>95</x>
-      <y>80</y>
+      <y>110</y>
       <width>150</width>
       <height>150</height>
      </rect>
@@ -212,7 +215,7 @@
     <property name="geometry">
      <rect>
       <x>275</x>
-      <y>80</y>
+      <y>110</y>
       <width>150</width>
       <height>150</height>
      </rect>
@@ -249,7 +252,7 @@
     <property name="geometry">
      <rect>
       <x>455</x>
-      <y>80</y>
+      <y>110</y>
       <width>150</width>
       <height>150</height>
      </rect>
@@ -273,7 +276,7 @@
     <property name="geometry">
      <rect>
       <x>95</x>
-      <y>260</y>
+      <y>290</y>
       <width>150</width>
       <height>150</height>
      </rect>
@@ -297,7 +300,7 @@
     <property name="geometry">
      <rect>
       <x>275</x>
-      <y>260</y>
+      <y>290</y>
       <width>150</width>
       <height>150</height>
      </rect>
@@ -330,7 +333,7 @@
     <property name="geometry">
      <rect>
       <x>455</x>
-      <y>260</y>
+      <y>290</y>
       <width>150</width>
       <height>150</height>
      </rect>
@@ -359,6 +362,22 @@
      <string>Вернуть книгу</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>176</x>
+      <y>30</y>
+      <width>348</width>
+      <height>46</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>library img.png</pixmap>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -372,6 +391,8 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="test.qrc"/>
+ </resources>
  <connections/>
 </ui>
