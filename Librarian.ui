@@ -192,7 +192,8 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <family>Gabriola</family>
+      <pointsize>14</pointsize>
      </font>
     </property>
     <property name="cursor">
@@ -222,7 +223,8 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <family>Gabriola</family>
+      <pointsize>14</pointsize>
       <stylestrategy>PreferDefault</stylestrategy>
      </font>
     </property>
@@ -259,7 +261,8 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <family>Gabriola</family>
+      <pointsize>14</pointsize>
      </font>
     </property>
     <property name="cursor">
@@ -283,7 +286,8 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <family>Gabriola</family>
+      <pointsize>14</pointsize>
      </font>
     </property>
     <property name="cursor">
@@ -313,7 +317,8 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <family>Gabriola</family>
+      <pointsize>14</pointsize>
      </font>
     </property>
     <property name="cursor">
@@ -346,7 +351,8 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <family>Gabriola</family>
+      <pointsize>14</pointsize>
      </font>
     </property>
     <property name="cursor">
@@ -365,15 +371,15 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>190</x>
+      <x>210</x>
       <y>30</y>
-      <width>321</width>
+      <width>291</width>
       <height>51</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <family>D3 Digitalism</family>
+      <family>Gabriola</family>
       <pointsize>36</pointsize>
      </font>
     </property>
@@ -381,7 +387,7 @@
      <string notr="true">color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
-     <string>LIBRARY</string>
+     <string>БИБЛИОТЕКА</string>
     </property>
    </widget>
   </widget>
