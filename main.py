@@ -318,21 +318,24 @@ class NewBook(QWidget):
                         self.lb_name, self.lb_number, self.lb_shelf, self.lb_type,
                         self.lb_wrong_year, self.lb_year, self.le_author, self.le_directory, self.le_name,
                         self.le_number, self.le_shelf, self.le_year]  # сбор элемнтов для "прятанья"
+
         self.types = [self.ch_1, self.ch_2, self.ch_3, self.ch_4, self.ch_5, self.ch_6, self.ch_7, self.ch_8, self.ch_9,
                       self.ch_10]  # сбор элемнтов для удобного считывания жанров
+
         self.errors = [self.lb_wrong_author, self.lb_wrong_name, self.lb_wrong_number, self.lb_error,
                        self.lb_wrong_number, self.lb_wrong_shelf, self.lb_wrong_type, self.lb_wrong_year]
+
         for el in self.widgets:  # прятанье элементов
             if 'form' not in el.accessibleName():
                 el.hide()
         self.lb_wrong_type.hide()
         self.lb_success.hide()
-        self.rb_form.setChecked(True)
 
+        self.rb_form.setChecked(True)
         self.rb_form.clicked.connect(self.hider)
         self.rb_file.clicked.connect(self.hider)
-        self.btn_cancel.clicked.connect(self.closer)
 
+        self.btn_cancel.clicked.connect(self.closer)
         self.btn_file_input.clicked.connect(self.input_file)
         self.btn_form_input.clicked.connect(self.input_form)
 
@@ -381,29 +384,12 @@ class NewBook(QWidget):
 
             number = int(self.le_number.text())
             shelf = self.le_shelf.text()
-
-            t = cur.execute(f"select ids from books where name = '{name}'").fetchall()
-            num = 0
-            ids = ""
-            if t:
-                num = len(cur.execute(f"select ids from books where name = '{name}'").fetchall()[0][0].split(";"))
-                ids = ";"
             for i in range(number):
-                hash_i = hashlib.md5(bytes(name + str(num + i), encoding="utf-8")).hexdigest()[:10]
-                ids += hash_i + ";"
-
-            if num:
-                cur_ids = cur.execute(f"select ids from books where name = '{name}'").fetchall()[0][0]
-                final_ids = cur_ids + ids
-
-                cur.execute(f"update books set ids='{final_ids}' where name='{name}'")
+                cur.execute(f"""INSERT INTO books(name, author, year, genre, position)
+                                                VALUES('{name}',
+                                                '{author}', '{year}', '{genres}', '{str(shelf)}')""")
                 con.commit()
-            else:
-                cur.execute(f"""INSERT INTO books(ids, name, author, year, genre, position)
-                                            VALUES('{ids}', '{name}',
-                                            '{author}', '{year}', '{genres}', '{str(shelf)}')""")
-                con.commit()
-            self.lb_success.show()
+        self.lb_success.show()
 
     def check_directory(self, text):
         try:
