@@ -115,6 +115,7 @@ class BookSearch(QWidget):  # поиск книги по базе
     def open_give_book(self):
         print(self.sender().currentRow(), self.sender().currentColumn())
         self.give_book = GiveBook()
+        # self.give_book.le_book_id.setText(self.tableWidget(self.sender().currentRow(), self.sender().currentColumn()).text())
         self.give_book.show()
 
     def hider(self):  # функция показа и прятанье элементов в соответствии с режимом поиска
@@ -139,7 +140,7 @@ class BookSearch(QWidget):  # поиск книги по базе
         if self.rb_all.isChecked():
             info = cur.execute("select * from books").fetchall()
         if self.rb_id.isChecked() and self.check_le(requirement):
-            info = cur.execute(f"""select * from books where ids like '%{requirement}%'""").fetchall()
+            info = cur.execute(f"""select * from books where ids = {requirement}""").fetchall()
         if self.rb_name.isChecked() and self.check_le(requirement):
             info = cur.execute(f"""select * from books where name like '%{requirement}%'""").fetchall()
         if self.rb_author.isChecked() and self.check_le(requirement):
@@ -162,22 +163,17 @@ class BookSearch(QWidget):  # поиск книги по базе
                 self.tableWidget.insertRow(i)
             for i in range(len(info)):
                 if info[i][0]:
-
-                    num_prev = str(info[i][0]).split(";")
-                    num_prev = list(filter(lambda b: b != "" and "/given/" not in b, num_prev))
-                    book_is = str(len(num_prev))
+                    book_is = "1"
                 else:
                     book_is = "Нет в наличии"
-
                 # отображение найденного в таблице
                 self.tableWidget.setItem(i, 0, QTableWidgetItem(info[i][1]))
                 self.tableWidget.setItem(i, 1, QTableWidgetItem(info[i][2]))
                 self.tableWidget.setItem(i, 2, QTableWidgetItem(str(info[i][3])))
                 self.tableWidget.setItem(i, 3, QTableWidgetItem(info[i][4]))
-                self.tableWidget.setItem(i, 4, QTableWidgetItem(str(info[i][-1])))
+                self.tableWidget.setItem(i, 4, QTableWidgetItem(str(info[i][5])))
                 self.tableWidget.setItem(i, 5, QTableWidgetItem(book_is))
-                self.tableWidget.setItem(i, 6, QTableWidgetItem(
-                    ";".join(list(filter(lambda b: "/given/" not in b, str(info[i][0]).split(";"))))))
+                self.tableWidget.setItem(i, 6, QTableWidgetItem(str(info[i][0]) if info[i][6] != "TRUE" else "Выдана"))
 
     def check_le(self, text):
         try:
@@ -230,8 +226,8 @@ class NewClient(QWidget):  # окно добавления нового чита
         contact_ok = self.check_contact(self.le_contact.text())
         if name_ok and date_ok and address_ok and contact_ok:
             # Работы с базой, если проверки пройдены
-            cur.execute(f"""INSERT INTO reader(id, name, date, address, info)
-                        VALUES('{hashlib.md5(bytes(self.le_contact.text(), encoding='utf-8')).hexdigest()[:10]}', '{self.le_name.text()}',
+            cur.execute(f"""INSERT INTO reader(name, date, address, info)
+                        VALUES('{self.le_name.text()}',
                         '{self.le_bday.text()}', '{self.le_address.text()}', '{self.le_contact.text()}')""")
             self.lb_success.setText('Читатель успешно добавлен.')
             con.commit()
