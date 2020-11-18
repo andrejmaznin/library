@@ -1012,7 +1012,7 @@ border-color: rgb(176, 176, 176)</string>
      <string notr="true">color: rgb(255, 0,0);</string>
     </property>
     <property name="text">
-     <string/>
+     <string>Ничего не найдено.</string>
     </property>
    </widget>
    <widget class="QLabel" name="lb_no_g">
