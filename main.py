@@ -4,7 +4,7 @@ import pymysql
 import hashlib
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QWidget, QTableWidget, QTableWidgetItem
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QRadioButton
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QRadioButton, QListWidgetItem
 from PyQt5.QtWidgets import QMainWindow, QLabel, QLineEdit
 
 
@@ -382,11 +382,17 @@ class NewBook(QWidget):
 
             number = int(self.le_number.text())
             shelf = self.le_shelf.text()
+            ids = []
             for i in range(number):
                 cur.execute(f"""INSERT INTO books(name, author, year, genre, position)
                                                 VALUES('{name}',
                                                 '{author}', '{year}', '{genres}', '{str(shelf)}')""")
                 con.commit()
+                a = cur.execute(f"select ids from books where name='{name}'").fetchall()[i][0]
+                ids.append(a)
+            for i in range(len(ids)):
+                self.listWidget.addItem(QListWidgetItem(str(ids[i])))
+
         self.lb_success.show()
 
     def check_directory(self, text):
