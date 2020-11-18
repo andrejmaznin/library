@@ -61,20 +61,41 @@ class ClientSearch(QWidget):  # поиск читателя по базе
 
     def initUI(self):
         self.lb_nothing.hide()
+        self.lb_p.hide()
+        self.lb_e.hide()
         self.btn_cancel.clicked.connect(self.closer)
         self.btn_search.clicked.connect(self.show_found)
 
     def show_found(self):
+        self.lb_p.hide()
+        self.lb_e.hide()
         name = self.lineEdit_name.text()
-        found = cur.execute(f"""SELECT * FROM reader where name like '%{name}%' order by name""").fetchall()
-        for i in found:
-            print(i)
-            rowPosition = self.table_clients.rowCount()
-            self.table_clients.insertRow(rowPosition)
-            self.table_clients.setItem(rowPosition, 0, QTableWidgetItem(str(i[0])))
-            self.table_clients.setItem(rowPosition, 1, QTableWidgetItem(i[1]))
-            self.table_clients.setItem(rowPosition, 2, QTableWidgetItem(i[4]))
-            self.table_clients.setItem(rowPosition, 3, QTableWidgetItem(str(i[3])))
+        if self.check_le(name):
+            found = cur.execute(f"""SELECT * FROM reader where name like '%{name}%' order by name""").fetchall()
+            for i in found:
+                print(i)
+                rowPosition = self.table_clients.rowCount()
+                self.table_clients.insertRow(rowPosition)
+                self.table_clients.setItem(rowPosition, 0, QTableWidgetItem(str(i[0])))
+                self.table_clients.setItem(rowPosition, 1, QTableWidgetItem(i[1]))
+                self.table_clients.setItem(rowPosition, 2, QTableWidgetItem(i[4]))
+                self.table_clients.setItem(rowPosition, 3, QTableWidgetItem(str(i[3])))
+
+    def check_le(self, text):
+        try:
+            if text.strip() != '':
+                if '%' not in text:
+                    return True
+                else:
+                    raise PercIn
+            else:
+                raise EmptyLE
+        except PercIn:
+            self.lb_p.show()
+            return False
+        except EmptyLE:
+            self.lb_e.show()
+            return False
 
     def closer(self):
         self.close()
