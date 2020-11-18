@@ -581,7 +581,8 @@ class GiveBook(QWidget):  # выдача книг
         self.table_books.itemClicked.connect(self.set_book_id)
 
     def set_book_id(self):
-        pass
+        self.lb_book_id.setText("Выдать книгу: " + self.table_books.item(self.sender().currentRow(), 6).text())
+        self.lb_client_id.setText("Читателю: " + self.table_clients.item(self.sender().currentRow(), 0).text())
 
     def set_client_id(self):
         pass
