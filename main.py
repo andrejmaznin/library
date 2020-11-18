@@ -65,15 +65,16 @@ class ClientSearch(QWidget):  # поиск читателя по базе
         self.btn_search.clicked.connect(self.show_found)
 
     def show_found(self):
-        self.name = self.lineEdit_name.text()
-        self.found = cur.execute(f"""SELECT * FROM reader where name like '%{self.name}%'""").fetchall()
-        for self.i in self.found:
+        name = self.lineEdit_name.text()
+        found = cur.execute(f"""SELECT * FROM reader where name like '%{name}%'""").fetchall()
+        for i in found:
+            print(i)
             rowPosition = self.table_clients.rowCount()
             self.table_clients.insertRow(rowPosition)
-            self.table_clients.setItem(rowPosition, 0, QTableWidgetItem(self.i[0]))
-            self.table_clients.setItem(rowPosition, 1, QTableWidgetItem(self.i[1]))
-            self.table_clients.setItem(rowPosition, 2, QTableWidgetItem(self.i[4]))
-            self.table_clients.setItem(rowPosition, 3, QTableWidgetItem(str(self.i[3])))
+            self.table_clients.setItem(rowPosition, 0, QTableWidgetItem(str(i[0])))
+            self.table_clients.setItem(rowPosition, 1, QTableWidgetItem(i[1]))
+            self.table_clients.setItem(rowPosition, 2, QTableWidgetItem(i[4]))
+            self.table_clients.setItem(rowPosition, 3, QTableWidgetItem(str(i[3])))
 
     def closer(self):
         self.close()
@@ -113,10 +114,11 @@ class BookSearch(QWidget):  # поиск книги по базе
         self.tableWidget.itemClicked.connect(self.open_give_book)
 
     def open_give_book(self):
-        print(self.sender().currentRow(), self.sender().currentColumn())
-        self.give_book = GiveBook()
-        # self.give_book.le_book_id.setText(self.tableWidget(self.sender().currentRow(), self.sender().currentColumn()).text())
-        self.give_book.show()
+        if self.tableWidget.item(self.sender().currentRow(), 6).text() != "Выдана":
+            self.give_book = GiveBook()
+            self.give_book.le_book_id.setText(self.tableWidget.item(self.sender().currentRow(), 6).text())
+            self.give_book.show()
+
 
     def hider(self):  # функция показа и прятанье элементов в соответствии с режимом поиска
         self.le_name.setText("")
@@ -295,7 +297,7 @@ class NewClient(QWidget):  # окно добавления нового чита
             else:
                 raise EmptyLE
         except EmptyLE:
-            self.lb_wrong_contact.setText('Обязтельное поле.')
+            self.lb_wrong_contact.setText('Обязательное поле.')
             return False
 
     def closer(self):
@@ -522,16 +524,8 @@ class GiveBook(QWidget):  # выдача книг
             id_to_give = self.le_book_id.text()
 
             client_to_give = self.le_client_id.text()
-            cur_ids = str(cur.execute(f"select ids from books where ids like '%{id_to_give}%'").fetchall()[0][0]).split(
-                ";")
-            if type(cur_ids) != list:
-                cur_ids = [cur_ids]
 
-            position = cur_ids.index(id_to_give)
-            cur_ids[position] += "/given/"
-            cur_ids = ";".join(cur_ids)
-
-            cur.execute(f"update books set ids='{cur_ids}' where ids like '%{id_to_give}%'")
+            cur.execute(f"update books set given='TRUE' where ids='{id_to_give}'")
             con.commit()
             client_name = cur.execute(f"select name from reader where id='{client_to_give}'").fetchall()[0][0]
             cur.execute(f"insert into given(id, name) values('{id_to_give}', '{client_name}')")
