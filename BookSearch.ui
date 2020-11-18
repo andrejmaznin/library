@@ -761,6 +761,22 @@ border-color: rgb(176, 176, 176)</string>
     <string>Выберите хотя бы один жанр.</string>
    </property>
   </widget>
+  <widget class="QLabel" name="lb_id_not_num">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>130</y>
+     <width>181</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0,0);</string>
+   </property>
+   <property name="text">
+    <string>Допускаются только цифры.</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
