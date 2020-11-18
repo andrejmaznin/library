@@ -119,7 +119,6 @@ class BookSearch(QWidget):  # поиск книги по базе
             self.give_book.le_book_id.setText(self.tableWidget.item(self.sender().currentRow(), 6).text())
             self.give_book.show()
 
-
     def hider(self):  # функция показа и прятанье элементов в соответствии с режимом поиска
         self.le_name.setText("")
         for el in self.widgets:
@@ -139,6 +138,7 @@ class BookSearch(QWidget):  # поиск книги по базе
 
         requirement = self.le_name.text()
         info = 0
+
         if self.rb_all.isChecked():
             info = cur.execute("select * from books").fetchall()
         if self.rb_id.isChecked() and self.check_le(requirement):
@@ -515,6 +515,26 @@ class GiveBook(QWidget):  # выдача книг
     def initUI(self):
         self.btn_give.clicked.connect(self.give)
         self.btn_cancel.clicked.connect(self.closer)
+        print(1)
+        self.btn_search.clicked.connect(self.show_found)
+        print(1)
+        self.table_clients.itemClicked.connect(self.add_reader_name)
+        print(1)
+
+    def add_reader_name(self):
+        self.le_client_id.setText(self.table_clients.item(0, self.sender().currentRow()).text())
+
+    def show_found(self):
+        name = self.lineEdit_name.text()
+        found = cur.execute(f"""SELECT * FROM reader where name like '%{name}%'""").fetchall()
+        for i in found:
+            print(i)
+            rowPosition = self.table_clients.rowCount()
+            self.table_clients.insertRow(rowPosition)
+            self.table_clients.setItem(rowPosition, 0, QTableWidgetItem(str(i[0])))
+            self.table_clients.setItem(rowPosition, 1, QTableWidgetItem(i[1]))
+            self.table_clients.setItem(rowPosition, 2, QTableWidgetItem(i[4]))
+            self.table_clients.setItem(rowPosition, 3, QTableWidgetItem(str(i[3])))
 
     def give(self):
         ok_book = self.check_book_id(self.le_book_id.text())  # вызов проверок
