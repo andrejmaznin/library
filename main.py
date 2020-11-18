@@ -111,14 +111,6 @@ class BookSearch(QWidget):  # поиск книги по базе
         self.rb_all.clicked.connect(self.show_found)
         self.btn_cancel.clicked.connect(self.closer)
 
-        self.tableWidget.itemClicked.connect(self.open_give_book)
-
-    def open_give_book(self):
-        if self.tableWidget.item(self.sender().currentRow(), 6).text() != "Выдана":
-            self.give_book = GiveBook()
-            self.give_book.le_book_id.setText(self.tableWidget.item(self.sender().currentRow(), 6).text())
-            self.give_book.show()
-
     def hider(self):  # функция показа и прятанье элементов в соответствии с режимом поиска
         self.le_name.setText("")
         for el in self.widgets:
@@ -530,18 +522,20 @@ class GiveBook(QWidget):  # выдача книг
         self.initUI()
 
     def initUI(self):
-        self.btn_give.clicked.connect(self.give)
+        self.book_s.hide()
+        self.client_s.hide()
+        self.initBookSearch()
+        self.initClientSearch()
+        self.btn_book_choose.clicked.connect(self.show_book_search)
+        self.btn_client_choose.clicked.connect(self.show_client_search)
+
+    def initClientSearch(self):
+        self.lb_nothing.hide()
         self.btn_cancel.clicked.connect(self.closer)
-        print(1)
-        self.btn_search.clicked.connect(self.show_found)
-        print(1)
-        self.table_clients.itemClicked.connect(self.add_reader_name)
-        print(1)
+        self.btn_search.clicked.connect(self.show_found_client)
+        self.table_clients.itemClicked.connect(self.set_client_id)
 
-    def add_reader_name(self):
-        self.le_client_id.setText(self.table_clients.item(0, self.sender().currentRow()).text())
-
-    def show_found(self):
+    def show_found_client(self):
         name = self.lineEdit_name.text()
         found = cur.execute(f"""SELECT * FROM reader where name like '%{name}%'""").fetchall()
         for i in found:
@@ -553,50 +547,150 @@ class GiveBook(QWidget):  # выдача книг
             self.table_clients.setItem(rowPosition, 2, QTableWidgetItem(i[4]))
             self.table_clients.setItem(rowPosition, 3, QTableWidgetItem(str(i[3])))
 
-    def give(self):
-        ok_book = self.check_book_id(self.le_book_id.text())  # вызов проверок
-        ok_client = self.check_client_id(self.le_client_id.text())
-        if ok_book and ok_client:
-            # происходит добавление в таблицу, что книга выдана
-            id_to_give = self.le_book_id.text()
+    def initBookSearch(self):
+        self.widgets = [self.btn_id, self.lab_id, self.btn_name, self.lab_name, self.le_name,
+                        self.btn_author, self.lab_author, self.lab_type, self.btn_type, self.ch_1,
+                        self.ch_2, self.ch_3, self.ch_4, self.ch_5, self.ch_6, self.ch_7, self.ch_8, self.ch_9,
+                        self.ch_10, self.lb_nothing, self.lab_all, self.lb_perc, self.lb_no_g,
+                        self.lb_empty, self.lb_id_not_num]  # прятанье "лишних" элементов при открытии
+        self.genres = [self.ch_1, self.ch_2, self.ch_3, self.ch_4, self.ch_5, self.ch_6, self.ch_7, self.ch_8,
+                       self.ch_9, self.ch_10, ]
+        for el in self.widgets:
+            if 'id' not in el.accessibleName():
+                el.hide()
+        self.rb_id.setChecked(True)
 
-            client_to_give = self.le_client_id.text()
+        self.rb_id.clicked.connect(self.hider)
+        self.rb_name.clicked.connect(self.hider)
+        self.rb_author.clicked.connect(self.hider)
+        self.rb_type.clicked.connect(self.hider)
+        self.rb_all.clicked.connect(self.hider)
+        self.btn_author.clicked.connect(self.show_found)
+        self.btn_id.clicked.connect(self.show_found)
+        self.btn_name.clicked.connect(self.show_found)
+        self.btn_type.clicked.connect(self.show_found)
+        self.rb_all.clicked.connect(self.show_found)
+        self.btn_cancel.clicked.connect(self.closer)
 
-            cur.execute(f"update books set given='TRUE' where ids='{id_to_give}'")
-            con.commit()
-            client_name = cur.execute(f"select name from reader where id='{client_to_give}'").fetchall()[0][0]
-            cur.execute(f"insert into given(id, name) values('{id_to_give}', '{client_name}')")
-            con.commit()
-            self.lb_output.setText('Книга выдана читателю.')
+        self.table_books.itemClicked.connect(self.set_book_id)
 
-    def check_book_id(self, id):  # проверка id книги
+    def set_book_id(self):
+        pass
+
+    def set_client_id(self):
+        pass
+
+    def show_book_search(self):
+        self.book_s.show()
+        self.client_s.hide()
+
+    def show_client_search(self):
+        self.book_s.hide()
+        self.client_s.show()
+
+    def hider(self):  # функция показа и прятанье элементов в соответствии с режимом поиска
+        self.le_name.setText("")
+        for el in self.widgets:
+            if self.sender().accessibleName() in el.accessibleName():
+                el.show()
+            else:
+                el.hide()
+
+    def show_found(self):  # работа с базой
+        self.lb_perc.hide()
+        self.lb_no_g.hide()
+        self.lb_empty.hide()
+        self.lb_id_not_num.hide()
+        for i in range(self.tableWidget.rowCount()):  # чистка таблицы перед отображением новых данных
+            self.tableWidget.removeRow(i + 1)
+            self.tableWidget.removeRow(i)
+            self.tableWidget.removeRow(i - 1)
+
+        requirement = self.le_name.text()
+        info = 0
+
+        if self.rb_all.isChecked():
+            info = cur.execute("select * from books").fetchall()
+        if self.rb_id.isChecked() and self.check_id(requirement):
+            info = cur.execute(f"""select * from books where ids = {requirement}""").fetchall()
+        if self.rb_name.isChecked() and self.check_le(requirement):
+            info = cur.execute(f"""select * from books where name like '%{requirement}%'""").fetchall()
+        if self.rb_author.isChecked() and self.check_le(requirement):
+            info = cur.execute(f"""select * from books where author like '%{requirement}%'""").fetchall()
+        if self.rb_type.isChecked() and self.check_genre():
+            genres = []
+            for i in self.genres:
+                if i.isChecked():
+                    genres.append(i.text().lower())
+            requirement = ""
+            if genres:
+                for i in genres[:-1]:
+                    requirement += "'%" + i + "%' and genre like"
+                requirement += "'%" + genres[-1] + "%'"
+                info = cur.execute(f"select * from books where genre like {requirement}").fetchall()
+            else:
+                info = cur.execute("select * from books").fetchall()
+        if info != 0:
+            for i in range(len(info)):
+                self.tableWidget.insertRow(i)
+            for i in range(len(info)):
+                if info[i][0]:
+                    book_is = "1"
+                else:
+                    book_is = "Нет в наличии"
+                # отображение найденного в таблице
+                self.tableWidget.setItem(i, 0, QTableWidgetItem(info[i][1]))
+                self.tableWidget.setItem(i, 1, QTableWidgetItem(info[i][2]))
+                self.tableWidget.setItem(i, 2, QTableWidgetItem(str(info[i][3])))
+                self.tableWidget.setItem(i, 3, QTableWidgetItem(info[i][4]))
+                self.tableWidget.setItem(i, 4, QTableWidgetItem(str(info[i][5])))
+                self.tableWidget.setItem(i, 5, QTableWidgetItem(book_is))
+                self.tableWidget.setItem(i, 6, QTableWidgetItem(str(info[i][0]) if info[i][6] != "TRUE" else "Выдана"))
+
+    def check_le(self, text):
         try:
-            self.lb_wrong_book_id.setText('')
-            if id.strip() != '':  # на пустую строку
-
-                if cur.execute(
-                        f"select ids from books where ids like '%{id}%'").fetchall():
+            if text.strip() != '':
+                if '%' not in text:
                     return True
                 else:
-                    raise NoSuchID
+                    raise PercIn
             else:
                 raise EmptyLE
-        except EmptyLE:
-            self.lb_wrong_book_id.setText('Обязательное поле.')
+        except PercIn:
+            self.lb_perc.show()
             return False
-        except NoSuchID:
-            self.lb_wrong_book_id.setText('Такого id нет')
+        except EmptyLE:
+            self.lb_empty.show()
             return False
 
-    def check_client_id(self, id):  # проверка id читателя
+    def check_id(self, id):
         try:
-            self.lb_wrong_client_id.setText('')
-            if id.strip() != '':  # на пустую строку
-                return True
+            if id.strip() != '':
+                if id.isdigit():
+                    return True
+                else:
+                    raise IdIsNotDigit
             else:
                 raise EmptyLE
+        except IdIsNotDigit:
+            self.lb_id_not_num.show()
+            return False
         except EmptyLE:
-            self.lb_wrong_client_id.setText('Обязательное поле.')
+            self.lb_empty.show()
+            return False
+
+    def check_genre(self):
+        try:
+            not_ok = True
+            for el in self.genres:
+                if el.isChecked():
+                    not_ok = False
+            if not_ok:
+                raise NoTypes
+            else:
+                return True
+        except NoTypes:
+            self.lb_no_g.show()
             return False
 
     def closer(self):

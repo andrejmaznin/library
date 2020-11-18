@@ -16,111 +16,11 @@
   <property name="styleSheet">
    <string notr="true">background-color: rgb(70, 70, 70);</string>
   </property>
-  <widget class="QLabel" name="lb_boo_id">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>20</y>
-     <width>500</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color: rgb(255, 255, 255);</string>
-   </property>
-   <property name="text">
-    <string>Введите id книги:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="le_book_id">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>60</y>
-     <width>500</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgb(176, 176, 176);</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="lb_client_id">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>100</y>
-     <width>500</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color: rgb(255, 255, 255);</string>
-   </property>
-   <property name="text">
-    <string>Введите id читателя:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="le_client_id">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>140</y>
-     <width>500</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgb(176, 176, 176);</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="lb_wrong_book_id">
-   <property name="geometry">
-    <rect>
-     <x>530</x>
-     <y>70</y>
-     <width>150</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color: rgb(255, 0, 0);</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="lb_wrong_client_id">
-   <property name="geometry">
-    <rect>
-     <x>530</x>
-     <y>150</y>
-     <width>150</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color: rgb(255, 0, 0);</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QLabel" name="lb_output">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>410</y>
+     <x>10</x>
+     <y>120</y>
      <width>600</width>
      <height>30</height>
     </rect>
@@ -169,117 +69,953 @@
     <string>Закрыть</string>
    </property>
   </widget>
-  <widget class="QTableWidget" name="table_clients">
+  <widget class="QLabel" name="lb_book_id">
    <property name="geometry">
     <rect>
-     <x>700</x>
-     <y>110</y>
-     <width>501</width>
-     <height>521</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgb(176, 176, 176);
-</string>
-   </property>
-   <column>
-    <property name="text">
-     <string>id читателя</string>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>имя</string>
-    </property>
-    <property name="font">
-     <font>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>адрес</string>
-    </property>
-    <property name="font">
-     <font>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>контакты</string>
-    </property>
-    <property name="font">
-     <font>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-   </column>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit_name">
-   <property name="geometry">
-    <rect>
-     <x>700</x>
-     <y>60</y>
-     <width>501</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgb(176, 176, 176);</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_client_name">
-   <property name="geometry">
-    <rect>
-     <x>700</x>
+     <x>20</x>
      <y>20</y>
-     <width>301</width>
+     <width>500</width>
      <height>30</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>11</pointsize>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="styleSheet">
     <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
-    <string>Введите имя читателя для выдачи:</string>
+    <string>Выдать книгу:</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="btn_search">
+  <widget class="QLabel" name="lb_client_id">
    <property name="geometry">
     <rect>
-     <x>1210</x>
+     <x>20</x>
      <y>60</y>
-     <width>90</width>
+     <width>500</width>
      <height>30</height>
     </rect>
    </property>
-   <property name="cursor">
-    <cursorShape>PointingHandCursor</cursorShape>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
+   <property name="text">
+    <string>Читателю:</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_book_choose">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>20</y>
+     <width>90</width>
+     <height>30</height>
+    </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">background-color: rgb(51, 153, 153);</string>
    </property>
    <property name="text">
-    <string>Поиск</string>
+    <string>Выбрать</string>
    </property>
+  </widget>
+  <widget class="QPushButton" name="btn_client_choose">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>60</y>
+     <width>90</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(51, 153, 153);</string>
+   </property>
+   <property name="text">
+    <string>Выбарть</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="client_s" native="true">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>650</x>
+     <y>20</y>
+     <width>611</width>
+     <height>621</height>
+    </rect>
+   </property>
+   <widget class="QLabel" name="label_client_name">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>301</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Введите имя читателя для выдачи:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_name">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>501</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(176, 176, 176);</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_search">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>40</y>
+      <width>90</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(51, 153, 153);</string>
+    </property>
+    <property name="text">
+     <string>Поиск</string>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="table_clients">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>501</width>
+      <height>521</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(176, 176, 176);
+</string>
+    </property>
+    <column>
+     <property name="text">
+      <string>id читателя</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>имя</string>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>адрес</string>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>контакты</string>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+    </column>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="book_s" native="true">
+   <property name="geometry">
+    <rect>
+     <x>650</x>
+     <y>20</y>
+     <width>620</width>
+     <height>625</height>
+    </rect>
+   </property>
+   <widget class="QRadioButton" name="rb_id">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>100</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="accessibleName">
+     <string>id</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>По id книги</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="rb_name">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>0</y>
+      <width>120</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="accessibleName">
+     <string>name</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>По названию</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="rb_author">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>0</y>
+      <width>100</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="accessibleName">
+     <string>author</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>По автору</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="rb_type">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>0</y>
+      <width>100</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="accessibleName">
+     <string>type</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>По жанру</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="rb_all">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>0</y>
+      <width>200</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="accessibleName">
+     <string>all</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Отобразить все книги
+ в библиотеке</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lab_all">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>500</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="accessibleName">
+     <string>all</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Отображение всего списка книг.</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lab_author">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>500</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="accessibleName">
+     <string>author</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Введите имя автора:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lab_type">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>500</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="accessibleName">
+     <string>type</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Отметьте необходимые жанры:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lab_id">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>500</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="accessibleName">
+     <string>id</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Введите id книги:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lab_name">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>500</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="accessibleName">
+     <string>name</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255)</string>
+    </property>
+    <property name="text">
+     <string>Введите название книги:</string>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="table_books">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>180</y>
+      <width>500</width>
+      <height>431</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(176, 176, 176);
+border-color: rgb(176, 176, 176)</string>
+    </property>
+    <property name="gridStyle">
+     <enum>Qt::SolidLine</enum>
+    </property>
+    <column>
+     <property name="text">
+      <string>Название</string>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Автор</string>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Год написания</string>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Жанры</string>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string notr="true">Стеллаж</string>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>В наличие</string>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Доступные id</string>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+    </column>
+   </widget>
+   <widget class="QLineEdit" name="le_name">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>75</y>
+      <width>500</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>name_author_id</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(176, 176, 176);</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="ch_4">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>100</y>
+      <width>120</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="accessibleName">
+     <string>type</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Исторический</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="ch_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>81</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="accessibleName">
+     <string>type</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Детектив</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="ch_9">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>70</y>
+      <width>120</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>type</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Фантастика</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="ch_10">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>100</y>
+      <width>81</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>type</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Фэнтези</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="ch_5">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>70</y>
+      <width>81</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="accessibleName">
+     <string>type</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Комедия</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="ch_3">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>70</y>
+      <width>81</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="accessibleName">
+     <string>type</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Драма</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="ch_7">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>70</y>
+      <width>81</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>type</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Триллер</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="ch_8">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>100</y>
+      <width>81</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>type</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Ужасы</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="ch_6">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>100</y>
+      <width>81</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="accessibleName">
+     <string>type</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Научный</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="ch_1">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>70</y>
+      <width>100</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="accessibleName">
+     <string>type</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Биография</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_author">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>75</y>
+      <width>90</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="accessibleName">
+     <string>author</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(51, 153, 153);</string>
+    </property>
+    <property name="text">
+     <string>Поиск</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_type">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>130</y>
+      <width>90</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="accessibleName">
+     <string>type</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(51, 153, 153);</string>
+    </property>
+    <property name="text">
+     <string>Поиск</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_id">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>75</y>
+      <width>90</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="accessibleName">
+     <string>id</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(51, 153, 153);</string>
+    </property>
+    <property name="text">
+     <string>Поиск</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_name">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>75</y>
+      <width>90</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="accessibleName">
+     <string>name</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(51, 153, 153);</string>
+    </property>
+    <property name="text">
+     <string>Поиск</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lb_nothing">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>160</y>
+      <width>300</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 0,0);</string>
+    </property>
+    <property name="text">
+     <string>Ничего не найдено.</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lb_no_g">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>145</y>
+      <width>221</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 0,0);</string>
+    </property>
+    <property name="text">
+     <string>Выберите хотя бы один жанр.</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lb_empty">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>181</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 0,0);</string>
+    </property>
+    <property name="text">
+     <string>Введите запрос.</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lb_id_not_num">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>181</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 0,0);</string>
+    </property>
+    <property name="text">
+     <string>Допускаются только цифры.</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lb_perc">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>500</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 0,0);</string>
+    </property>
+    <property name="text">
+     <string>Знак % не учитывается в запросах. Составьте запрос без него.</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>
