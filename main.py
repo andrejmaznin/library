@@ -66,7 +66,7 @@ class ClientSearch(QWidget):  # поиск читателя по базе
 
     def show_found(self):
         name = self.lineEdit_name.text()
-        found = cur.execute(f"""SELECT * FROM reader where name like '%{name}%'""").fetchall()
+        found = cur.execute(f"""SELECT * FROM reader where name like '%{name}%' order by name""").fetchall()
         for i in found:
             print(i)
             rowPosition = self.table_clients.rowCount()
