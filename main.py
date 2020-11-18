@@ -557,22 +557,24 @@ class GiveBook(QWidget):  # выдача книг
         self.book_s.hide()
         self.client_s.hide()
         self.initBookSearch()
-        print(1)
         self.initClientSearch()
-        print(1)
+        self.btn_give.clicked.connect(self.give)
         self.btn_book_choose.clicked.connect(self.show_book_search)
-        print(1)
         self.btn_client_choose.clicked.connect(self.show_client_search)
 
     def initClientSearch(self):
         self.lb_nothing_2.hide()
-        print(1)
         self.lb_p.hide()
         self.lb_e.hide()
-        print(1)
         self.btn_cancel.clicked.connect(self.closer)
         self.btn_search.clicked.connect(self.show_found_client)
         self.table_clients.itemClicked.connect(self.set_client_id)
+
+    def give(self):
+        cur.execute(f"insert into given(id, name) values({self.book_id}, {self.client_id})")
+        cur.execute(f"update books set given=TRUE where ids={self.book_id}")
+        self.lb_output.setText("Успешно")
+        con.commit()
 
     def check_name(self, text):
         try:
@@ -601,7 +603,6 @@ class GiveBook(QWidget):  # выдача книг
         if self.check_name(name):
             found = cur.execute(f"""SELECT * FROM reader where name like '%{name}%' order by name""").fetchall()
             for i in found:
-                print(i)
                 rowPosition = self.table_clients.rowCount()
                 self.table_clients.insertRow(rowPosition)
                 self.table_clients.setItem(rowPosition, 0, QTableWidgetItem(str(i[0])))
@@ -637,9 +638,12 @@ class GiveBook(QWidget):  # выдача книг
         self.table_books.itemClicked.connect(self.set_book_id)
 
     def set_book_id(self):
+        self.book_id = self.table_books.item(self.sender().currentRow(), 6).text()
+
         self.lb_book_id.setText("Выдать книгу: " + self.table_books.item(self.sender().currentRow(), 6).text())
 
     def set_client_id(self):
+        self.client_id = self.table_clients.item(self.sender().currentRow(), 0).text()
         self.lb_client_id.setText("Читателю: " + self.table_clients.item(self.sender().currentRow(), 0).text())
 
     def show_book_search(self):
