@@ -91,7 +91,7 @@ class BookSearch(QWidget):  # поиск книги по базе
                         self.btn_author, self.lab_author, self.lab_type, self.btn_type, self.ch_1,
                         self.ch_2, self.ch_3, self.ch_4, self.ch_5, self.ch_6, self.ch_7, self.ch_8, self.ch_9,
                         self.ch_10, self.lb_nothing, self.lab_all, self.lb_perc, self.lb_no_g,
-                        self.lb_empty]  # прятанье "лишних" элементов при открытии
+                        self.lb_empty, self.lb_id_not_num]  # прятанье "лишних" элементов при открытии
         self.genres = [self.ch_1, self.ch_2, self.ch_3, self.ch_4, self.ch_5, self.ch_6, self.ch_7, self.ch_8,
                        self.ch_9, self.ch_10, ]
         for el in self.widgets:
@@ -131,6 +131,7 @@ class BookSearch(QWidget):  # поиск книги по базе
         self.lb_perc.hide()
         self.lb_no_g.hide()
         self.lb_empty.hide()
+        self.lb_id_not_num.hide()
         for i in range(self.tableWidget.rowCount()):  # чистка таблицы перед отображением новых данных
             self.tableWidget.removeRow(i + 1)
             self.tableWidget.removeRow(i)
@@ -141,7 +142,7 @@ class BookSearch(QWidget):  # поиск книги по базе
 
         if self.rb_all.isChecked():
             info = cur.execute("select * from books").fetchall()
-        if self.rb_id.isChecked() and self.check_le(requirement):
+        if self.rb_id.isChecked() and self.check_id(requirement):
             info = cur.execute(f"""select * from books where ids = {requirement}""").fetchall()
         if self.rb_name.isChecked() and self.check_le(requirement):
             info = cur.execute(f"""select * from books where name like '%{requirement}%'""").fetchall()
@@ -188,6 +189,22 @@ class BookSearch(QWidget):  # поиск книги по базе
                 raise EmptyLE
         except PercIn:
             self.lb_perc.show()
+            return False
+        except EmptyLE:
+            self.lb_empty.show()
+            return False
+
+    def check_id(self, id):
+        try:
+            if id.strip() != '':
+                if id.isdigit():
+                    return True
+                else:
+                    raise IdIsNotDigit
+            else:
+                raise EmptyLE
+        except IdIsNotDigit:
+            self.lb_id_not_num.show()
             return False
         except EmptyLE:
             self.lb_empty.show()
@@ -698,6 +715,10 @@ class PercIn(Exception):
 
 
 class WrongDataFormat(Exception):
+    pass
+
+
+class IdIsNotDigit(Exception):
     pass
 
 
