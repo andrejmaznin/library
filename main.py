@@ -65,6 +65,11 @@ class ClientSearch(QWidget):  # поиск читателя по базе
         self.btn_search.clicked.connect(self.show_found)
 
     def show_found(self):
+        for i in range(self.table_clients.rowCount()):  # чистка таблицы перед отображением новых данных
+            self.table_clients.removeRow(i + 1)
+            self.table_clients.removeRow(i)
+            self.table_clients.removeRow(i - 1)
+
         name = self.lineEdit_name.text()
         found = cur.execute(f"""SELECT * FROM reader where name like '%{name}%' order by name""").fetchall()
         for i in found:
@@ -542,6 +547,10 @@ class GiveBook(QWidget):  # выдача книг
         self.table_clients.itemClicked.connect(self.set_client_id)
 
     def show_found_client(self):
+        for i in range(self.table_clients.rowCount()):  # чистка таблицы перед отображением новых данных
+            self.table_clients.removeRow(i + 1)
+            self.table_clients.removeRow(i)
+            self.table_clients.removeRow(i - 1)
         name = self.lineEdit_name.text()
         found = cur.execute(f"""SELECT * FROM reader where name like '%{name}%'""").fetchall()
         for i in found:
@@ -582,10 +591,9 @@ class GiveBook(QWidget):  # выдача книг
 
     def set_book_id(self):
         self.lb_book_id.setText("Выдать книгу: " + self.table_books.item(self.sender().currentRow(), 6).text())
-        self.lb_client_id.setText("Читателю: " + self.table_clients.item(self.sender().currentRow(), 0).text())
 
     def set_client_id(self):
-        pass
+        self.lb_client_id.setText("Читателю: " + self.table_clients.item(self.sender().currentRow(), 0).text())
 
     def show_book_search(self):
         self.book_s.show()
@@ -608,10 +616,10 @@ class GiveBook(QWidget):  # выдача книг
         self.lb_no_g.hide()
         self.lb_empty.hide()
         self.lb_id_not_num.hide()
-        for i in range(self.tableWidget.rowCount()):  # чистка таблицы перед отображением новых данных
-            self.tableWidget.removeRow(i + 1)
-            self.tableWidget.removeRow(i)
-            self.tableWidget.removeRow(i - 1)
+        for i in range(self.table_books.rowCount()):  # чистка таблицы перед отображением новых данных
+            self.table_books.removeRow(i + 1)
+            self.table_books.removeRow(i)
+            self.table_books.removeRow(i - 1)
 
         requirement = self.le_name.text()
         info = 0
@@ -619,7 +627,10 @@ class GiveBook(QWidget):  # выдача книг
         if self.rb_all.isChecked():
             info = cur.execute("select * from books").fetchall()
         if self.rb_id.isChecked() and self.check_id(requirement):
-            info = cur.execute(f"""select * from books where ids = {requirement}""").fetchall()
+            if requirement:
+                info = cur.execute(f"""select * from books where ids = {requirement}""").fetchall()
+            else:
+                info = []
         if self.rb_name.isChecked() and self.check_le(requirement):
             info = cur.execute(f"""select * from books where name like '%{requirement}%'""").fetchall()
         if self.rb_author.isChecked() and self.check_le(requirement):
@@ -639,20 +650,20 @@ class GiveBook(QWidget):  # выдача книг
                 info = cur.execute("select * from books").fetchall()
         if info != 0:
             for i in range(len(info)):
-                self.tableWidget.insertRow(i)
+                self.table_books.insertRow(i)
             for i in range(len(info)):
                 if info[i][0]:
                     book_is = "1"
                 else:
                     book_is = "Нет в наличии"
                 # отображение найденного в таблице
-                self.tableWidget.setItem(i, 0, QTableWidgetItem(info[i][1]))
-                self.tableWidget.setItem(i, 1, QTableWidgetItem(info[i][2]))
-                self.tableWidget.setItem(i, 2, QTableWidgetItem(str(info[i][3])))
-                self.tableWidget.setItem(i, 3, QTableWidgetItem(info[i][4]))
-                self.tableWidget.setItem(i, 4, QTableWidgetItem(str(info[i][5])))
-                self.tableWidget.setItem(i, 5, QTableWidgetItem(book_is))
-                self.tableWidget.setItem(i, 6, QTableWidgetItem(str(info[i][0]) if info[i][6] != "TRUE" else "Выдана"))
+                self.table_books.setItem(i, 0, QTableWidgetItem(info[i][1]))
+                self.table_books.setItem(i, 1, QTableWidgetItem(info[i][2]))
+                self.table_books.setItem(i, 2, QTableWidgetItem(str(info[i][3])))
+                self.table_books.setItem(i, 3, QTableWidgetItem(info[i][4]))
+                self.table_books.setItem(i, 4, QTableWidgetItem(str(info[i][5])))
+                self.table_books.setItem(i, 5, QTableWidgetItem(book_is))
+                self.table_books.setItem(i, 6, QTableWidgetItem(str(info[i][0]) if info[i][6] != "TRUE" else "Выдана"))
 
     def check_le(self, text):
         try:
