@@ -779,11 +779,9 @@ class ReturnBook(QWidget):  # сдача книг
 
     def returner(self):
         ok_book = self.check_book_id(self.le_book_id.text())  # вызов проверок
-        ok_client = self.check_client_id(self.le_client_id.text())
-        if ok_book and ok_client:
+        if ok_book:
             # происходит удаление из таблицы вадачи
             id_return = self.le_book_id.text()
-            reader_return = self.le_client_id.text()
             cur_ids = cur.execute(f"select ids from books where ids like '%{id_return}/given/%'").fetchall()[0][
                 0].split(";")
 
