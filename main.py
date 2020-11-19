@@ -783,11 +783,9 @@ class ReturnBook(QWidget):  # сдача книг
 
     def returner(self):
         ok_book = self.check_book_id(self.le_book_id.text())  # вызов проверок
-        ok_client = self.check_client_id(self.le_client_id.text())
-        if ok_book and ok_client:
+        if ok_book:
             # происходит удаление из таблицы вадачи
             id_return = self.le_book_id.text()
-            reader_return = self.le_client_id.text()
             cur_ids = cur.execute(f"select ids from books where ids like '%{id_return}/given/%'").fetchall()[0][
                 0].split(";")
 
@@ -818,17 +816,6 @@ class ReturnBook(QWidget):  # сдача книг
             return False
         except NoSuchID:
             self.lb_wrong_book_id.setText('Такого id нет')
-            return False
-
-    def check_client_id(self, id):  # проверка id читателя
-        try:
-            self.lb_wrong_client_id.setText('')
-            if id.strip() != '':  # на пустую строку
-                return True
-            else:
-                raise EmptyLE
-        except EmptyLE:
-            self.lb_wrong_client_id.setText('Обязательное поле.')
             return False
 
     def closer(self):

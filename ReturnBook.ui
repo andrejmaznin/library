@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Библиотека: сдача книги</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(70, 70, 70)</string>
+  </property>
   <widget class="QLabel" name="lb_book_id">
    <property name="geometry">
     <rect>
@@ -27,6 +30,9 @@
      <pointsize>10</pointsize>
     </font>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Введите id книги:</string>
    </property>
@@ -40,33 +46,8 @@
      <height>30</height>
     </rect>
    </property>
-  </widget>
-  <widget class="QLabel" name="lb_client_id">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>100</y>
-     <width>500</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Введите id читателя:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="le_client_id">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>140</y>
-     <width>500</width>
-     <height>30</height>
-    </rect>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(176, 176, 176);</string>
    </property>
   </widget>
   <widget class="QLabel" name="lb_wrong_book_id">
@@ -78,18 +59,8 @@
      <height>20</height>
     </rect>
    </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="lb_wrong_client_id">
-   <property name="geometry">
-    <rect>
-     <x>530</x>
-     <y>150</y>
-     <width>150</width>
-     <height>20</height>
-    </rect>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
    </property>
    <property name="text">
     <string/>
@@ -99,7 +70,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>410</y>
+     <y>110</y>
      <width>600</width>
      <height>30</height>
     </rect>
@@ -108,6 +79,9 @@
     <font>
      <pointsize>11</pointsize>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(170, 255, 127);</string>
    </property>
    <property name="text">
     <string/>
@@ -122,6 +96,9 @@
      <height>30</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(51, 153, 153)</string>
+   </property>
    <property name="text">
     <string>Вернуть</string>
    </property>
@@ -134,6 +111,9 @@
      <width>90</width>
      <height>30</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(51, 153, 153)</string>
    </property>
    <property name="text">
     <string>Закрыть</string>
