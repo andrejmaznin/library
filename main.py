@@ -639,9 +639,10 @@ class GiveBook(QWidget):  # выдача книг
         self.table_books.itemClicked.connect(self.set_book_id)
 
     def set_book_id(self):
-        self.book_id = self.table_books.item(self.sender().currentRow(), 6).text()
+        self.book_id = self.table_books.item(self.sender().currentRow(), 5).text()
+        print(self.book_id)
         if self.book_id != "Выдана":
-            self.lb_book_id.setText("Выдать книгу: " + self.table_books.item(self.sender().currentRow(), 6).text())
+            self.lb_book_id.setText("Выдать книгу: " + self.table_books.item(self.sender().currentRow(), 5).text())
 
     def set_client_id(self):
         self.client_id = self.table_clients.item(self.sender().currentRow(), 0).text()
@@ -701,21 +702,24 @@ class GiveBook(QWidget):  # выдача книг
             else:
                 info = cur.execute("select * from books").fetchall()
         if info != 0:
+            j = 0
             for i in range(len(info)):
-                self.table_books.insertRow(i)
+                if not info[i][6]:
+                    self.table_books.insertRow(j)
+                    j += 1
+            j = 0
+
             for i in range(len(info)):
-                if info[i][0]:
-                    book_is = "1"
-                else:
-                    book_is = "Нет в наличии"
-                # отображение найденного в таблице
-                self.table_books.setItem(i, 0, QTableWidgetItem(info[i][1]))
-                self.table_books.setItem(i, 1, QTableWidgetItem(info[i][2]))
-                self.table_books.setItem(i, 2, QTableWidgetItem(str(info[i][3])))
-                self.table_books.setItem(i, 3, QTableWidgetItem(info[i][4]))
-                self.table_books.setItem(i, 4, QTableWidgetItem(str(info[i][5])))
-                self.table_books.setItem(i, 5, QTableWidgetItem(book_is if info[i][6] != 1 else "Выдана"))
-                self.table_books.setItem(i, 6, QTableWidgetItem(str(info[i][0]) if info[i][6] != 1 else "Выдана"))
+                if info[i][6] != 1:
+                    # отображение найденного в таблице
+                    print(j)
+                    self.table_books.setItem(j, 0, QTableWidgetItem(info[i][1]))
+                    self.table_books.setItem(j, 1, QTableWidgetItem(info[i][2]))
+                    self.table_books.setItem(j, 2, QTableWidgetItem(str(info[i][3])))
+                    self.table_books.setItem(j, 3, QTableWidgetItem(info[i][4]))
+                    self.table_books.setItem(j, 4, QTableWidgetItem(str(info[i][5])))
+                    self.table_books.setItem(j, 5, QTableWidgetItem(str(info[i][0]) if info[i][6] != 1 else "Выдана"))
+                    j += 1
 
     def check_le(self, text):
         try:
