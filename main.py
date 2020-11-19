@@ -713,8 +713,8 @@ class GiveBook(QWidget):  # выдача книг
                 self.table_books.setItem(i, 2, QTableWidgetItem(str(info[i][3])))
                 self.table_books.setItem(i, 3, QTableWidgetItem(info[i][4]))
                 self.table_books.setItem(i, 4, QTableWidgetItem(str(info[i][5])))
-                self.table_books.setItem(i, 5, QTableWidgetItem(book_is))
-                self.table_books.setItem(i, 6, QTableWidgetItem(str(info[i][0]) if info[i][6] != "TRUE" else "Выдана"))
+                self.table_books.setItem(i, 5, QTableWidgetItem(book_is if info[i][6] != 1 else "Выдана"))
+                self.table_books.setItem(i, 6, QTableWidgetItem(str(info[i][0]) if info[i][6] != 1 else "Выдана"))
 
     def check_le(self, text):
         try:
