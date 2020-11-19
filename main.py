@@ -78,7 +78,6 @@ class ClientSearch(QWidget):  # поиск читателя по базе
         if self.check_name(name):
             found = cur.execute(f"""SELECT * FROM reader where name like '%{name}%' order by name""").fetchall()
             for i in found:
-                print(i)
                 rowPosition = self.table_clients.rowCount()
                 self.table_clients.insertRow(rowPosition)
                 self.table_clients.setItem(rowPosition, 0, QTableWidgetItem(str(i[0])))
@@ -712,7 +711,6 @@ class GiveBook(QWidget):  # выдача книг
             for i in range(len(info)):
                 if info[i][6] != 1:
                     # отображение найденного в таблице
-                    print(j)
                     self.table_books.setItem(j, 0, QTableWidgetItem(info[i][1]))
                     self.table_books.setItem(j, 1, QTableWidgetItem(info[i][2]))
                     self.table_books.setItem(j, 2, QTableWidgetItem(str(info[i][3])))
