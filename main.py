@@ -571,10 +571,11 @@ class GiveBook(QWidget):  # выдача книг
         self.table_clients.itemClicked.connect(self.set_client_id)
 
     def give(self):
-        cur.execute(f"insert into given(id, name) values({self.book_id}, {self.client_id})")
-        cur.execute(f"update books set given=TRUE where ids={self.book_id}")
-        self.lb_output.setText("Успешно")
-        con.commit()
+        if not cur.execute(f"select * from given where id={self.book_id}").fetchall():
+            cur.execute(f"insert into given(id, name) values({self.book_id}, {self.client_id})")
+            cur.execute(f"update books set given=TRUE where ids={self.book_id}")
+            self.lb_output.setText("Успешно")
+            con.commit()
 
     def check_name(self, text):
         try:
@@ -639,8 +640,8 @@ class GiveBook(QWidget):  # выдача книг
 
     def set_book_id(self):
         self.book_id = self.table_books.item(self.sender().currentRow(), 6).text()
-
-        self.lb_book_id.setText("Выдать книгу: " + self.table_books.item(self.sender().currentRow(), 6).text())
+        if self.book_id != "Выдана":
+            self.lb_book_id.setText("Выдать книгу: " + self.table_books.item(self.sender().currentRow(), 6).text())
 
     def set_client_id(self):
         self.client_id = self.table_clients.item(self.sender().currentRow(), 0).text()
