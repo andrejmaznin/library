@@ -65,6 +65,7 @@ class ClientSearch(QWidget):  # поиск читателя по базе
         self.lb_e.hide()
         self.btn_cancel.clicked.connect(self.closer)
         self.btn_search.clicked.connect(self.show_found)
+        self.table_clients.itemClicked.connect(self.open_profile)
 
     def show_found(self):
         for i in range(self.table_clients.rowCount()):  # чистка таблицы перед отображением новых данных
@@ -104,6 +105,11 @@ class ClientSearch(QWidget):  # поиск читателя по базе
 
     def closer(self):
         self.close()
+
+    def open_profile(self):
+        id = self.table_clients.item(self.sender().currentRow(), 1).text()
+        self.profile = ClientProfile(id)
+        self.profile.show()
 
 
 class BookSearch(QWidget):  # поиск книги по базе
@@ -808,7 +814,6 @@ class ReturnBook(QWidget):  # сдача книг
                     return True
                 else:
                     raise NoSuchID
-                # на пустую строку
             else:
                 raise EmptyLE
         except EmptyLE:
@@ -817,6 +822,20 @@ class ReturnBook(QWidget):  # сдача книг
         except NoSuchID:
             self.lb_wrong_book_id.setText('Такого id нет')
             return False
+
+    def closer(self):
+        self.close()
+
+
+class ClientProfile(QWidget):
+    def __init__(self, id):
+        super().__init__()
+        uic.loadUi('ClientProfile.ui', self)
+        self.initUI(id)
+
+    def initUI(self, id):
+        # выставление данных читателя в форме, а также книг в таблице, если такие у него есть
+        self.btn_cancel.clicked.connect(self.closer)
 
     def closer(self):
         self.close()
