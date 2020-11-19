@@ -814,17 +814,6 @@ class ReturnBook(QWidget):  # сдача книг
             self.lb_wrong_book_id.setText('Такого id нет')
             return False
 
-    def check_client_id(self, id):  # проверка id читателя
-        try:
-            self.lb_wrong_client_id.setText('')
-            if id.strip() != '':  # на пустую строку
-                return True
-            else:
-                raise EmptyLE
-        except EmptyLE:
-            self.lb_wrong_client_id.setText('Обязательное поле.')
-            return False
-
     def closer(self):
         self.close()
 
