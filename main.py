@@ -2,11 +2,13 @@ import sys
 import sqlite3
 import pymysql
 import hashlib
+import traceback
+
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QWidget, QTableWidget, QTableWidgetItem
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QRadioButton, QListWidgetItem
 from PyQt5.QtWidgets import QMainWindow, QLabel, QLineEdit
-from datetime import datetime, date, time
+from datetime import datetime, date, time, timedelta
 
 
 def test():
@@ -61,31 +63,27 @@ class ClientSearch(QWidget):  # поиск читателя по базе
         self.initUI()
 
     def initUI(self):
+        print(1)
         self.lb_nothing.hide()
         self.lb_p.hide()
         self.lb_e.hide()
         self.btn_cancel.clicked.connect(self.closer)
         self.btn_search.clicked.connect(self.show_found)
         self.table_clients.itemClicked.connect(self.open_profile)
-
-    def show_found(self):
-        for i in range(self.table_clients.rowCount()):  # чистка таблицы перед отображением новых данных
-            self.table_clients.removeRow(i + 1)
-            self.table_clients.removeRow(i)
-            self.table_clients.removeRow(i - 1)
-
+        print(1)
         self.lb_p.hide()
         self.lb_e.hide()
+
+    def show_found(self):
         name = self.lineEdit_name.text()
         if self.check_name(name):
             found = cur.execute(f"""SELECT * FROM reader where name like '%{name}%' order by name""").fetchall()
-            for i in found:
-                rowPosition = self.table_clients.rowCount()
-                self.table_clients.insertRow(rowPosition)
-                self.table_clients.setItem(rowPosition, 0, QTableWidgetItem(str(i[0])))
-                self.table_clients.setItem(rowPosition, 1, QTableWidgetItem(i[1]))
-                self.table_clients.setItem(rowPosition, 2, QTableWidgetItem(i[4]))
-                self.table_clients.setItem(rowPosition, 3, QTableWidgetItem(str(i[3])))
+            self.table_clients.setRowCount(len(found))
+            for i in range(len(found)):
+                self.table_clients.setItem(i, 0, QTableWidgetItem(str(found[i][0])))
+                self.table_clients.setItem(i, 1, QTableWidgetItem(found[i][1]))
+                self.table_clients.setItem(i, 2, QTableWidgetItem(found[i][4]))
+                self.table_clients.setItem(i, 3, QTableWidgetItem(str(found[i][3])))
 
     def check_name(self, text):
         try:
@@ -212,22 +210,20 @@ class BookSearch(QWidget):  # поиск книги по базе
                 info = cur.execute(f"select * from books where genre like {requirement}").fetchall()
             else:
                 info = cur.execute("select * from books").fetchall()
-        if info != 0:
-            for i in range(len(info)):
-                self.tableWidget.insertRow(i)
-            for i in range(len(info)):
-                if info[i][0]:
-                    book_is = "1"
-                else:
-                    book_is = "Нет в наличии"
+        self.tableWidget.setRowCount(len(info))
+        for i in range(len(info)):
+            if info[i][0]:
+                book_is = "1"
+            else:
+                book_is = "Нет в наличии"
                 # отображение найденного в таблице
-                self.tableWidget.setItem(i, 0, QTableWidgetItem(info[i][1]))
-                self.tableWidget.setItem(i, 1, QTableWidgetItem(info[i][2]))
-                self.tableWidget.setItem(i, 2, QTableWidgetItem(str(info[i][3])))
-                self.tableWidget.setItem(i, 3, QTableWidgetItem(info[i][4]))
-                self.tableWidget.setItem(i, 4, QTableWidgetItem(str(info[i][5])))
-                self.tableWidget.setItem(i, 5, QTableWidgetItem(book_is))
-                self.tableWidget.setItem(i, 6, QTableWidgetItem(str(info[i][0]) if info[i][6] != "TRUE" else "Выдана"))
+            self.tableWidget.setItem(i, 0, QTableWidgetItem(info[i][1]))
+            self.tableWidget.setItem(i, 1, QTableWidgetItem(info[i][2]))
+            self.tableWidget.setItem(i, 2, QTableWidgetItem(str(info[i][3])))
+            self.tableWidget.setItem(i, 3, QTableWidgetItem(info[i][4]))
+            self.tableWidget.setItem(i, 4, QTableWidgetItem(str(info[i][5])))
+            self.tableWidget.setItem(i, 5, QTableWidgetItem(book_is))
+            self.tableWidget.setItem(i, 6, QTableWidgetItem(str(info[i][0]) if info[i][6] != "TRUE" else "Выдана"))
 
     def check_le(self, text):
         try:
@@ -605,9 +601,9 @@ class GiveBook(QWidget):  # выдача книг
 
     def give(self):
         if not cur.execute(f"select * from given where id={self.book_id}").fetchall():
-            ret = datetime.date(datetime.now()) + date(0, 0, 14)
+            ret = datetime.date(datetime.now()) + timedelta(days=14)
             cur.execute(
-                f"insert into given(id, name, given, return) values({self.book_id}, {self.client_id}, '{datetime.now().strftime('%d.%m.%Y')}', '{ret}')")
+                f"insert into given(id, name, given, return) values({self.book_id}, {self.client_id}, '{datetime.now().strftime('%d.%m.%Y')}', '{ret.strftime('%d.%m.%Y')}')")
             cur.execute(f"update books set given=TRUE where ids={self.book_id}")
             self.lb_output.setText("Успешно")
             con.commit()
@@ -705,8 +701,6 @@ class GiveBook(QWidget):  # выдача книг
         self.lb_empty.hide()
         self.lb_id_not_num.hide()
         self.table_books.clearContents()
-        for i in range(self.table_books.rowCount()):
-            self.table_books.removeRow(i)
 
         requirement = self.le_name.text()
         info = []
@@ -736,10 +730,9 @@ class GiveBook(QWidget):  # выдача книг
             else:
                 info = cur.execute("select * from books").fetchall()
         j = 0
-        for i in range(len(info)):
-            if not info[i][6]:
-                self.table_books.insertRow(j)
-                j += 1
+        info2 = list(filter(lambda b: b[6] != 1, info))
+        self.table_books.setRowCount(len(info2))
+
         j = 0
         for i in range(len(info)):
             if info[i][6] != 1:
