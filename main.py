@@ -9,7 +9,6 @@ from PyQt5.QtWidgets import QMainWindow, QLabel, QLineEdit
 from datetime import datetime, date, time
 
 
-
 def test():
     pass
 
@@ -110,6 +109,35 @@ class ClientSearch(QWidget):  # поиск читателя по базе
     def open_profile(self):
         id = self.table_clients.item(self.sender().currentRow(), 1).text()
         self.profile = ClientProfile(id)
+        id = self.table_clients.item(self.sender().currentRow(), 0).text()
+        self.profile.lb_name.setText(self.table_clients.item(self.sender().currentRow(), 1).text())
+        self.profile.lb_id.setText("id: " + id)
+        self.profile.lb_date.setText(
+            "Дата рождения: " + cur.execute(f"select date from reader where id={id}").fetchall()[0][0])
+        self.profile.lb_address.setText("Адрес: " + self.table_clients.item(self.sender().currentRow(), 2).text())
+        self.profile.lb_contact.setText(
+            "Контактная информация: " + self.table_clients.item(self.sender().currentRow(), 3).text())
+        info = cur.execute(f"select * from given where name={id}").fetchall()
+        for i in range(len(info)):
+            self.profile.table_books.insertRow(i)
+        for i in range(len(info)):
+            self.profile.table_books.setItem(i, 0, QTableWidgetItem(str(info[i][0])))
+            self.profile.table_books.setItem(i, 1,
+                                             QTableWidgetItem(cur.execute(
+                                                 f"select name from books where ids={info[i][0]}").fetchall()[0][0]))
+            self.profile.table_books.setItem(i, 2, QTableWidgetItem(info[i][2]))
+            self.profile.table_books.setItem(i, 3, QTableWidgetItem(info[i][3]))
+            ret = list(map(int, info[0][3].split(".")))
+            given = list(map(int, info[0][2].split(".")))
+
+            if datetime.date(datetime.now()) > date(ret[2], ret[1], ret[0]):
+                print(datetime.date(datetime.now()))
+                print(date(ret[2], ret[1], ret[0]))
+                status = "Просрочена"
+            else:
+                status = "Выдана"
+            self.profile.table_books.setItem(i, 4, QTableWidgetItem(status))
+
         self.profile.show()
 
 
@@ -142,6 +170,8 @@ class BookSearch(QWidget):  # поиск книги по базе
         self.btn_name.clicked.connect(self.show_found)
         self.btn_type.clicked.connect(self.show_found)
         self.rb_all.clicked.connect(self.show_found)
+        for i in range(self.tableWidget.rowCount()):  # чистка таблицы перед отображением новых данных
+            self.tableWidget.removeRow(i)
         self.btn_cancel.clicked.connect(self.closer)
 
     def hider(self):  # функция показа и прятанье элементов в соответствии с режимом поиска
@@ -157,10 +187,6 @@ class BookSearch(QWidget):  # поиск книги по базе
         self.lb_no_g.hide()
         self.lb_empty.hide()
         self.lb_id_not_num.hide()
-        for i in range(self.tableWidget.rowCount()):  # чистка таблицы перед отображением новых данных
-            self.tableWidget.removeRow(i + 1)
-            self.tableWidget.removeRow(i)
-            self.tableWidget.removeRow(i - 1)
 
         requirement = self.le_name.text()
         info = 0
@@ -579,8 +605,9 @@ class GiveBook(QWidget):  # выдача книг
 
     def give(self):
         if not cur.execute(f"select * from given where id={self.book_id}").fetchall():
+            ret = datetime.date(datetime.now()) + date(0, 0, 14)
             cur.execute(
-                f"insert into given(id, name, given) values({self.book_id}, {self.client_id}, '{datetime.now().strftime('%d.%m.%y')}')")
+                f"insert into given(id, name, given, return) values({self.book_id}, {self.client_id}, '{datetime.now().strftime('%d.%m.%Y')}', '{ret}')")
             cur.execute(f"update books set given=TRUE where ids={self.book_id}")
             self.lb_output.setText("Успешно")
             con.commit()
@@ -677,13 +704,12 @@ class GiveBook(QWidget):  # выдача книг
         self.lb_no_g.hide()
         self.lb_empty.hide()
         self.lb_id_not_num.hide()
-        for i in range(self.table_books.rowCount()):  # чистка таблицы перед отображением новых данных
-            self.table_books.removeRow(i + 1)
+        self.table_books.clearContents()
+        for i in range(self.table_books.rowCount()):
             self.table_books.removeRow(i)
-            self.table_books.removeRow(i - 1)
 
         requirement = self.le_name.text()
-        info = 0
+        info = []
 
         if self.rb_all.isChecked():
             info = cur.execute("select * from books").fetchall()
@@ -709,24 +735,22 @@ class GiveBook(QWidget):  # выдача книг
                 info = cur.execute(f"select * from books where genre like {requirement}").fetchall()
             else:
                 info = cur.execute("select * from books").fetchall()
-        if info != 0:
-            j = 0
-            for i in range(len(info)):
-                if not info[i][6]:
-                    self.table_books.insertRow(j)
-                    j += 1
-            j = 0
-
-            for i in range(len(info)):
-                if info[i][6] != 1:
-                    # отображение найденного в таблице
-                    self.table_books.setItem(j, 0, QTableWidgetItem(info[i][1]))
-                    self.table_books.setItem(j, 1, QTableWidgetItem(info[i][2]))
-                    self.table_books.setItem(j, 2, QTableWidgetItem(str(info[i][3])))
-                    self.table_books.setItem(j, 3, QTableWidgetItem(info[i][4]))
-                    self.table_books.setItem(j, 4, QTableWidgetItem(str(info[i][5])))
-                    self.table_books.setItem(j, 5, QTableWidgetItem(str(info[i][0]) if info[i][6] != 1 else "Выдана"))
-                    j += 1
+        j = 0
+        for i in range(len(info)):
+            if not info[i][6]:
+                self.table_books.insertRow(j)
+                j += 1
+        j = 0
+        for i in range(len(info)):
+            if info[i][6] != 1:
+                # отображение найденного в таблице
+                self.table_books.setItem(j, 0, QTableWidgetItem(info[i][1]))
+                self.table_books.setItem(j, 1, QTableWidgetItem(info[i][2]))
+                self.table_books.setItem(j, 2, QTableWidgetItem(str(info[i][3])))
+                self.table_books.setItem(j, 3, QTableWidgetItem(info[i][4]))
+                self.table_books.setItem(j, 4, QTableWidgetItem(str(info[i][5])))
+                self.table_books.setItem(j, 5, QTableWidgetItem(str(info[i][0]) if info[i][6] != 1 else "Выдана"))
+                j += 1
 
     def check_le(self, text):
         try:
@@ -895,6 +919,7 @@ if __name__ == '__main__':
     con = sqlite3.connect("books_db.sqlite")
     cur = con.cursor()
     app = QApplication(sys.argv)
+
     ex = Librarian()
     ex.show()
     sys.exit(app.exec_())

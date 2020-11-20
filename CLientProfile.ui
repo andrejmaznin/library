@@ -213,7 +213,7 @@ border-color: rgb(176, 176, 176)</string>
     <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
-    <string>Книги ну руках:</string>
+    <string>Книги на руках:</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btn_cancel">
