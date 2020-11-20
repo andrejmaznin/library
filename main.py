@@ -6,6 +6,8 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QWidget, QTableWidget, QTableWidgetItem
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QRadioButton, QListWidgetItem
 from PyQt5.QtWidgets import QMainWindow, QLabel, QLineEdit
+from datetime import datetime, date, time
+
 
 
 def test():
@@ -577,7 +579,8 @@ class GiveBook(QWidget):  # выдача книг
 
     def give(self):
         if not cur.execute(f"select * from given where id={self.book_id}").fetchall():
-            cur.execute(f"insert into given(id, name) values({self.book_id}, {self.client_id})")
+            cur.execute(
+                f"insert into given(id, name, given) values({self.book_id}, {self.client_id}, '{datetime.now().strftime('%d.%m.%y')}')")
             cur.execute(f"update books set given=TRUE where ids={self.book_id}")
             self.lb_output.setText("Успешно")
             con.commit()
@@ -891,7 +894,6 @@ class IdIsNotDigit(Exception):
 if __name__ == '__main__':
     con = sqlite3.connect("books_db.sqlite")
     cur = con.cursor()
-
     app = QApplication(sys.argv)
     ex = Librarian()
     ex.show()
