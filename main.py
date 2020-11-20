@@ -63,20 +63,20 @@ class ClientSearch(QWidget):  # поиск читателя по базе
         self.initUI()
 
     def initUI(self):
-        print(1)
         self.lb_nothing.hide()
         self.lb_p.hide()
         self.lb_e.hide()
+
         self.btn_cancel.clicked.connect(self.closer)
         self.btn_search.clicked.connect(self.show_found)
         self.table_clients.itemClicked.connect(self.open_profile)
-        print(1)
         self.lb_p.hide()
         self.lb_e.hide()
 
     def show_found(self):
         self.lb_nothing.hide()
         self.lb_e.hide()
+        self.table_clients.setRowCount(0)
         name = self.lineEdit_name.text()
         if self.check_name(name):
             found = cur.execute(f"""SELECT * FROM reader where name like '%{name}%' order by name""").fetchall()
@@ -173,8 +173,6 @@ class BookSearch(QWidget):  # поиск книги по базе
         self.btn_name.clicked.connect(self.show_found)
         self.btn_type.clicked.connect(self.show_found)
         self.rb_all.clicked.connect(self.show_found)
-        for i in range(self.tableWidget.rowCount()):  # чистка таблицы перед отображением новых данных
-            self.tableWidget.removeRow(i)
         self.btn_cancel.clicked.connect(self.closer)
 
     def hider(self):  # функция показа и прятанье элементов в соответствии с режимом поиска
@@ -191,6 +189,7 @@ class BookSearch(QWidget):  # поиск книги по базе
         self.lb_empty.hide()
         self.lb_id_not_num.hide()
         self.lb_nothing.hide()
+        self.tableWidget.setRowCount(0)
 
         requirement = self.le_name.text()
         info = 0
@@ -337,8 +336,21 @@ class NewClient(QWidget):  # окно добавления нового чита
                 if len(bday) == 10:  # на соответствие указаному формату по длине
                     if bday[0:2].isdigit() and bday[3:5].isdigit() and bday[6:].isdigit() and bday[2] == '.' and bday[
                         5] == '.':  # на соответствие в целом указаному формату
-                        self.lb_wrong_bday.setText('')
-                        return True
+                        day, month, year = int(bday[0:2]), int(bday[3:5]), int(bday[6:])
+                        if month > 12:
+                            raise UnrealDate
+                        elif (month == 2 and year % 4 != 0 and day > 28) or (
+                                month == 2 and year % 4 == 0 and day < 29) or (
+                                month in [4, 6, 9, 11] and day > 30) or day > 31:  # на реальность даты
+                            raise UnrealDate
+                        else:
+                            d = datetime(year=year, month=month, day=day)
+                            t = datetime.today()
+                            if d > t:  # если дата еще не прошла
+                                self.lb_wrong_bday.setText('')
+                                return True
+                            else:
+                                raise UnrealDate
                     else:
                         raise WrongBirthDateFormat
                 else:
@@ -351,6 +363,8 @@ class NewClient(QWidget):  # окно добавления нового чита
         except WrongBirthDateFormat:
             self.lb_wrong_bday.setText('Неверный формат даты.')
             return False
+        except UnrealDate:
+            self.lb_wrong_bday.setText('Несуществующая дата.')
 
     def check_address(self, address):  # проверка адреса:
         try:
@@ -513,7 +527,7 @@ class NewBook(QWidget):
                 if year.isdigit() or year[1:].isdigit() and year[0] == '-':  # на наличие символов кроме цифр
                     year = int(year)
                     if year <= 0:  # на реальность года
-                        raise UnrealYear
+                        raise UnrealDate
                     else:
                         self.lb_wrong_year.setText('')
                         return True
@@ -524,7 +538,7 @@ class NewBook(QWidget):
         except EmptyLE:
             self.lb_wrong_year.setText('Обязательное поле.')
             return False
-        except UnrealYear:
+        except UnrealDate:
             self.lb_wrong_year.setText('Несуществующий год.')
             return False
         except WrongYearFormat:
@@ -601,6 +615,9 @@ class GiveBook(QWidget):  # выдача книг
         self.btn_book_choose.clicked.connect(self.show_book_search)
         self.btn_client_choose.clicked.connect(self.show_client_search)
 
+        self.book_id = None
+        self.client_id = None
+
     def initClientSearch(self):
         self.lb_nothing_2.hide()
         self.lb_p.hide()
@@ -610,13 +627,17 @@ class GiveBook(QWidget):  # выдача книг
         self.table_clients.itemClicked.connect(self.set_client_id)
 
     def give(self):
-        if not cur.execute(f"select * from given where id={self.book_id}").fetchall():
-            ret = datetime.date(datetime.now()) + timedelta(days=14)
-            cur.execute(
-                f"insert into given(id, name, given, return) values({self.book_id}, {self.client_id}, '{datetime.now().strftime('%d.%m.%Y')}', '{ret.strftime('%d.%m.%Y')}')")
-            cur.execute(f"update books set given=TRUE where ids={self.book_id}")
-            self.lb_output.setText("Успешно")
-            con.commit()
+        self.clearer()
+        if self.book_id is not None and self.client_id is not None:
+            if not cur.execute(f"select * from given where id={self.book_id}").fetchall():
+                ret = datetime.date(datetime.now()) + timedelta(days=14)
+                cur.execute(
+                    f"insert into given(id, name, given, return) values({self.book_id}, {self.client_id}, '{datetime.now().strftime('%d.%m.%Y')}', '{ret.strftime('%d.%m.%Y')}')")
+                cur.execute(f"update books set given=TRUE where ids={self.book_id}")
+                self.lb_output.setText("Успешно.")
+                con.commit()
+        else:
+            self.lb_empty_ids.setText('Не выбран читатель или книга.')
 
     def check_name(self, text):
         try:
@@ -635,22 +656,23 @@ class GiveBook(QWidget):  # выдача книг
             return False
 
     def show_found_client(self):
-        for i in range(self.table_clients.rowCount()):  # чистка таблицы перед отображением новых данных
-            self.table_clients.removeRow(i + 1)
-            self.table_clients.removeRow(i)
-            self.table_clients.removeRow(i - 1)
+        self.table_clients.setRowCount(0)
         self.lb_p.hide()
         self.lb_e.hide()
+        self.lb_nothing_2.hide()
         name = self.lineEdit_name.text()
         if self.check_name(name):
             found = cur.execute(f"""SELECT * FROM reader where name like '%{name}%' order by name""").fetchall()
-            for i in found:
-                rowPosition = self.table_clients.rowCount()
-                self.table_clients.insertRow(rowPosition)
-                self.table_clients.setItem(rowPosition, 0, QTableWidgetItem(str(i[0])))
-                self.table_clients.setItem(rowPosition, 1, QTableWidgetItem(i[1]))
-                self.table_clients.setItem(rowPosition, 2, QTableWidgetItem(i[4]))
-                self.table_clients.setItem(rowPosition, 3, QTableWidgetItem(str(i[3])))
+            if found != []:
+                for i in found:
+                    rowPosition = self.table_clients.rowCount()
+                    self.table_clients.insertRow(rowPosition)
+                    self.table_clients.setItem(rowPosition, 0, QTableWidgetItem(str(i[0])))
+                    self.table_clients.setItem(rowPosition, 1, QTableWidgetItem(i[1]))
+                    self.table_clients.setItem(rowPosition, 2, QTableWidgetItem(i[4]))
+                    self.table_clients.setItem(rowPosition, 3, QTableWidgetItem(str(i[3])))
+            elif found == []:
+                self.lb_nothing_2.show()
 
     def initBookSearch(self):
         self.widgets = [self.btn_id, self.lab_id, self.btn_name, self.lab_name, self.le_name,
@@ -681,21 +703,26 @@ class GiveBook(QWidget):  # выдача книг
 
     def set_book_id(self):
         self.book_id = self.table_books.item(self.sender().currentRow(), 5).text()
-        print(self.book_id)
         if self.book_id != "Выдана":
-            self.lb_book_id.setText("Выдать книгу: " + self.table_books.item(self.sender().currentRow(), 5).text())
+            self.lb_book_id.setText("Выдать книгу: " + self.table_books.item(self.sender().currentRow(), 0).text())
+        self.book_s.hide()
+        self.lb_empty_ids.setText('')
 
     def set_client_id(self):
         self.client_id = self.table_clients.item(self.sender().currentRow(), 0).text()
-        self.lb_client_id.setText("Читателю: " + self.table_clients.item(self.sender().currentRow(), 0).text())
+        self.lb_client_id.setText("Читателю: " + self.table_clients.item(self.sender().currentRow(), 1).text())
+        self.client_s.hide()
+        self.lb_empty_ids.setText('')
 
     def show_book_search(self):
         self.book_s.show()
         self.client_s.hide()
+        self.lb_output.setText('')
 
     def show_client_search(self):
         self.book_s.hide()
         self.client_s.show()
+        self.lb_output.setText('')
 
     def hider(self):  # функция показа и прятанье элементов в соответствии с режимом поиска
         self.le_name.setText("")
@@ -709,24 +736,32 @@ class GiveBook(QWidget):  # выдача книг
         self.lb_perc.hide()
         self.lb_no_g.hide()
         self.lb_empty.hide()
+        self.lb_nothing.hide()
         self.lb_id_not_num.hide()
         self.table_books.clearContents()
+        self.table_books.setRowCount(0)
 
         requirement = self.le_name.text()
         info = []
+        not_ok = False
 
         if self.rb_all.isChecked():
             info = cur.execute("select * from books").fetchall()
+            # not_ok = True
         if self.rb_id.isChecked() and self.check_id(requirement):
             if requirement:
                 info = cur.execute(f"""select * from books where ids = {requirement}""").fetchall()
+                not_ok = True
             else:
                 info = []
         if self.rb_name.isChecked() and self.check_le(requirement):
             info = cur.execute(f"""select * from books where name like '%{requirement}%'""").fetchall()
+            not_ok = True
         if self.rb_author.isChecked() and self.check_le(requirement):
             info = cur.execute(f"""select * from books where author like '%{requirement}%'""").fetchall()
+            not_ok = True
         if self.rb_type.isChecked() and self.check_genre():
+            not_ok = True
             genres = []
             for i in self.genres:
                 if i.isChecked():
@@ -739,21 +774,23 @@ class GiveBook(QWidget):  # выдача книг
                 info = cur.execute(f"select * from books where genre like {requirement}").fetchall()
             else:
                 info = cur.execute("select * from books").fetchall()
-        j = 0
         info2 = list(filter(lambda b: b[6] != 1, info))
         self.table_books.setRowCount(len(info2))
-
-        j = 0
-        for i in range(len(info)):
-            if info[i][6] != 1:
-                # отображение найденного в таблице
-                self.table_books.setItem(j, 0, QTableWidgetItem(info[i][1]))
-                self.table_books.setItem(j, 1, QTableWidgetItem(info[i][2]))
-                self.table_books.setItem(j, 2, QTableWidgetItem(str(info[i][3])))
-                self.table_books.setItem(j, 3, QTableWidgetItem(info[i][4]))
-                self.table_books.setItem(j, 4, QTableWidgetItem(str(info[i][5])))
-                self.table_books.setItem(j, 5, QTableWidgetItem(str(info[i][0]) if info[i][6] != 1 else "Выдана"))
-                j += 1
+        if info != []:
+            self.table_books.setRowCount(len(info2))
+            j = 0
+            for i in range(len(info)):
+                if info[i][6] != 1:
+                    # отображение найденного в таблице
+                    self.table_books.setItem(j, 0, QTableWidgetItem(info[i][1]))
+                    self.table_books.setItem(j, 1, QTableWidgetItem(info[i][2]))
+                    self.table_books.setItem(j, 2, QTableWidgetItem(str(info[i][3])))
+                    self.table_books.setItem(j, 3, QTableWidgetItem(info[i][4]))
+                    self.table_books.setItem(j, 4, QTableWidgetItem(str(info[i][5])))
+                    self.table_books.setItem(j, 5, QTableWidgetItem(str(info[i][0]) if info[i][6] != 1 else "Выдана"))
+                    j += 1
+        elif info == [] and not_ok:
+            self.lb_nothing.show()
 
     def check_le(self, text):
         try:
@@ -800,6 +837,17 @@ class GiveBook(QWidget):  # выдача книг
         except NoTypes:
             self.lb_no_g.show()
             return False
+
+    def clearer(self):
+        self.table_books.setRowCount(0)
+        self.table_clients.setRowCount(0)
+        self.lineEdit_name.clear()
+        self.lb_book_id.setText('Выдать книгу:')
+        self.lb_client_id.setText('Читателю:')
+        for el in self.widgets:
+            if 'id' in el.accessibleName():
+                el.show()
+        self.rb_id.setChecked(True)
 
     def closer(self):
         self.close()
@@ -871,7 +919,7 @@ class WrongNameFormat(Exception):
     pass
 
 
-class UnrealYear(Exception):
+class UnrealDate(Exception):
     pass
 
 

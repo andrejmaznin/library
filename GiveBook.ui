@@ -19,8 +19,8 @@
   <widget class="QLabel" name="lb_output">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>120</y>
+     <x>20</x>
+     <y>140</y>
      <width>600</width>
      <height>30</height>
     </rect>
@@ -312,7 +312,7 @@
    <widget class="QLabel" name="lb_nothing_2">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>10</x>
       <y>100</y>
       <width>500</width>
       <height>20</height>
@@ -1024,7 +1024,7 @@ border-color: rgb(176, 176, 176)</string>
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>100</y>
+      <y>105</y>
       <width>181</width>
       <height>16</height>
      </rect>
@@ -1040,7 +1040,7 @@ border-color: rgb(176, 176, 176)</string>
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>100</y>
+      <y>105</y>
       <width>181</width>
       <height>16</height>
      </rect>
@@ -1056,7 +1056,7 @@ border-color: rgb(176, 176, 176)</string>
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>100</y>
+      <y>105</y>
       <width>500</width>
       <height>21</height>
      </rect>
@@ -1068,6 +1068,22 @@ border-color: rgb(176, 176, 176)</string>
      <string>Знак % не учитывается в запросах. Составьте запрос без него.</string>
     </property>
    </widget>
+  </widget>
+  <widget class="QLabel" name="lb_empty_ids">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>110</y>
+     <width>500</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0,0);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
   </widget>
  </widget>
  <resources/>

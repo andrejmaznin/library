@@ -543,7 +543,7 @@ border-color: rgb(176, 176, 176)</string>
    </column>
    <column>
     <property name="text">
-     <string>Доступные id</string>
+     <string>id</string>
     </property>
     <property name="font">
      <font>
