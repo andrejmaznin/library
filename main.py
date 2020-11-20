@@ -814,28 +814,22 @@ class ReturnBook(QWidget):  # сдача книг
 
     def returner(self):
         ok_book = self.check_book_id(self.le_book_id.text())  # вызов проверок
+
         if ok_book:
             # происходит удаление из таблицы вадачи
-            id_return = self.le_book_id.text()
-            cur_ids = cur.execute(f"select ids from books where ids like '%{id_return}/given/%'").fetchall()[0][
-                0].split(";")
+            id_return = int(self.le_book_id.text())
+            cur.execute(f"update books set given=0 where ids={id_return}")
+            con.commit()
+            cur.execute(f"delete from given where id={id_return}")
+            con.commit()
+        self.lb_output.setText('Сдача произведена успешно, книга может быть помещена на полку.')
 
-            if cur_ids:
-                position = cur_ids.index(id_return + "/given/")
-                cur_ids[position] = id_return
-                cur_ids = ";".join(cur_ids)
-                cur.execute(f"update books set ids='{cur_ids}' where ids like '%{id_return}/given/%'")
-                con.commit()
-                cur.execute(f"delete from given where id='{id_return}'")
-                con.commit()
-            self.lb_output.setText('Сдача произведена успешно, книга может быть помещена на полку.')
 
     def check_book_id(self, id):  # проверка id книги
         try:
             self.lb_wrong_book_id.setText('')
             if id.strip() != '':
-
-                if cur.execute(f"select ids from books where ids like '%{id.strip()}/given/%'").fetchall():
+                if cur.execute(f"select ids from books where ids={int(id)}").fetchall():
                     return True
                 else:
                     raise NoSuchID
@@ -847,6 +841,7 @@ class ReturnBook(QWidget):  # сдача книг
         except NoSuchID:
             self.lb_wrong_book_id.setText('Такого id нет')
             return False
+
 
     def closer(self):
         self.close()
