@@ -824,7 +824,6 @@ class ReturnBook(QWidget):  # сдача книг
             con.commit()
         self.lb_output.setText('Сдача произведена успешно, книга может быть помещена на полку.')
 
-
     def check_book_id(self, id):  # проверка id книги
         try:
             self.lb_wrong_book_id.setText('')
@@ -841,7 +840,6 @@ class ReturnBook(QWidget):  # сдача книг
         except NoSuchID:
             self.lb_wrong_book_id.setText('Такого id нет')
             return False
-
 
     def closer(self):
         self.close()
