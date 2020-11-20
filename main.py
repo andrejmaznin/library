@@ -210,20 +210,23 @@ class BookSearch(QWidget):  # поиск книги по базе
                 info = cur.execute(f"select * from books where genre like {requirement}").fetchall()
             else:
                 info = cur.execute("select * from books").fetchall()
-        self.tableWidget.setRowCount(len(info))
-        for i in range(len(info)):
-            if info[i][0]:
-                book_is = "1"
-            else:
-                book_is = "Нет в наличии"
-                # отображение найденного в таблице
-            self.tableWidget.setItem(i, 0, QTableWidgetItem(info[i][1]))
-            self.tableWidget.setItem(i, 1, QTableWidgetItem(info[i][2]))
-            self.tableWidget.setItem(i, 2, QTableWidgetItem(str(info[i][3])))
-            self.tableWidget.setItem(i, 3, QTableWidgetItem(info[i][4]))
-            self.tableWidget.setItem(i, 4, QTableWidgetItem(str(info[i][5])))
-            self.tableWidget.setItem(i, 5, QTableWidgetItem(book_is))
-            self.tableWidget.setItem(i, 6, QTableWidgetItem(str(info[i][0]) if info[i][6] != "TRUE" else "Выдана"))
+        if info != 0 and info != []:
+            self.tableWidget.setRowCount(len(info))
+            for i in range(len(info)):
+                if info[i][0]:
+                    book_is = "1"
+                else:
+                    book_is = "Нет в наличии"
+                    # отображение найденного в таблице
+                self.tableWidget.setItem(i, 0, QTableWidgetItem(info[i][1]))
+                self.tableWidget.setItem(i, 1, QTableWidgetItem(info[i][2]))
+                self.tableWidget.setItem(i, 2, QTableWidgetItem(str(info[i][3])))
+                self.tableWidget.setItem(i, 3, QTableWidgetItem(info[i][4]))
+                self.tableWidget.setItem(i, 4, QTableWidgetItem(str(info[i][5])))
+                self.tableWidget.setItem(i, 5, QTableWidgetItem(book_is))
+                self.tableWidget.setItem(i, 6, QTableWidgetItem(str(info[i][0]) if info[i][6] != "TRUE" else "Выдана"))
+        elif info == []:
+            self.lb_nothing.show()
 
     def check_le(self, text):
         try:
@@ -254,6 +257,7 @@ class BookSearch(QWidget):  # поиск книги по базе
             self.lb_id_not_num.show()
             return False
         except EmptyLE:
+            print(1)
             self.lb_empty.show()
             return False
 
