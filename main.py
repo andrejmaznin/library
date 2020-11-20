@@ -69,6 +69,7 @@ class ClientSearch(QWidget):  # поиск читателя по базе
 
         self.btn_cancel.clicked.connect(self.closer)
         self.btn_search.clicked.connect(self.show_found)
+        self.lineEdit_name.editingFinished.connect(self.show_found)
         self.table_clients.itemClicked.connect(self.open_profile)
         self.lb_p.hide()
         self.lb_e.hide()
@@ -173,6 +174,7 @@ class BookSearch(QWidget):  # поиск книги по базе
         self.btn_name.clicked.connect(self.show_found)
         self.btn_type.clicked.connect(self.show_found)
         self.rb_all.clicked.connect(self.show_found)
+        self.le_name.editingFinished.connect(self.show_found)
         self.btn_cancel.clicked.connect(self.closer)
 
     def hider(self):  # функция показа и прятанье элементов в соответствии с режимом поиска
@@ -223,13 +225,13 @@ class BookSearch(QWidget):  # поиск книги по базе
                 else:
                     book_is = "Нет в наличии"
                     # отображение найденного в таблице
-                self.tableWidget.setItem(i, 0, QTableWidgetItem(info[i][1]))
-                self.tableWidget.setItem(i, 1, QTableWidgetItem(info[i][2]))
-                self.tableWidget.setItem(i, 2, QTableWidgetItem(str(info[i][3])))
-                self.tableWidget.setItem(i, 3, QTableWidgetItem(info[i][4]))
-                self.tableWidget.setItem(i, 4, QTableWidgetItem(str(info[i][5])))
-                self.tableWidget.setItem(i, 5, QTableWidgetItem(book_is))
-                self.tableWidget.setItem(i, 6, QTableWidgetItem(str(info[i][0]) if info[i][6] != "TRUE" else "Выдана"))
+                self.tableWidget.setItem(i, 0, QTableWidgetItem(str(info[i][0]) if info[i][6] != "TRUE" else "Выдана"))
+                self.tableWidget.setItem(i, 1, QTableWidgetItem(info[i][1]))
+                self.tableWidget.setItem(i, 2, QTableWidgetItem(info[i][2]))
+                self.tableWidget.setItem(i, 3, QTableWidgetItem(str(info[i][3])))
+                self.tableWidget.setItem(i, 4, QTableWidgetItem(info[i][4]))
+                self.tableWidget.setItem(i, 5, QTableWidgetItem(str(info[i][5])))
+                self.tableWidget.setItem(i, 6, QTableWidgetItem(book_is))
         elif info == []:
             self.lb_nothing.show()
 
@@ -255,10 +257,10 @@ class BookSearch(QWidget):  # поиск книги по базе
                 if id.isdigit():
                     return True
                 else:
-                    raise IdIsNotDigit
+                    raise IsNotDigit
             else:
                 raise EmptyLE
-        except IdIsNotDigit:
+        except IsNotDigit:
             self.lb_id_not_num.show()
             return False
         except EmptyLE:
@@ -481,7 +483,7 @@ class NewBook(QWidget):
             for i in range(len(ids)):
                 self.listWidget.addItem(QListWidgetItem(str(ids[i])))
 
-        self.lb_success.show()
+            self.lb_success.show()
 
     def check_directory(self, text):
         try:
@@ -521,12 +523,15 @@ class NewBook(QWidget):
             self.lb_wrong_author.setText('Обязательное поле.')
             return False
 
-    def check_year(self, year):  # проверка года издания книги:
+    def check_year(self, year_input):  # проверка года издания книги:
         try:
-            if year.strip() != '':  # на пустую строку
-                if year.isdigit() or year[1:].isdigit() and year[0] == '-':  # на наличие символов кроме цифр
-                    year = int(year)
-                    if year <= 0:  # на реальность года
+            if year_input.strip() != '':  # на пустую строку
+                if year_input.isdigit() or year_input[1:].isdigit() and year_input[
+                    0] == '-':  # на наличие символов кроме цифр
+                    y = int(year_input)
+                    d = datetime(year=y, month=1, day=1)
+                    t = datetime.today()
+                    if y <= 0 or d > t:  # на реальность года
                         raise UnrealDate
                     else:
                         self.lb_wrong_year.setText('')
@@ -624,20 +629,25 @@ class GiveBook(QWidget):  # выдача книг
         self.lb_e.hide()
         self.btn_cancel.clicked.connect(self.closer)
         self.btn_search.clicked.connect(self.show_found_client)
+        self.lineEdit_name.editingFinished.connect(self.show_found_client)
         self.table_clients.itemClicked.connect(self.set_client_id)
 
     def give(self):
-        self.clearer()
-        if self.book_id is not None and self.client_id is not None:
-            if not cur.execute(f"select * from given where id={self.book_id}").fetchall():
-                ret = datetime.date(datetime.now()) + timedelta(days=14)
-                cur.execute(
-                    f"insert into given(id, name, given, return) values({self.book_id}, {self.client_id}, '{datetime.now().strftime('%d.%m.%Y')}', '{ret.strftime('%d.%m.%Y')}')")
-                cur.execute(f"update books set given=TRUE where ids={self.book_id}")
-                self.lb_output.setText("Успешно.")
-                con.commit()
-        else:
-            self.lb_empty_ids.setText('Не выбран читатель или книга.')
+        self.lb_empty_ids.setText('')
+        ok = self.check_days()
+        if ok:
+            if self.book_id is not None and self.client_id is not None:
+                self.clearer()
+                if not cur.execute(f"select * from given where id={self.book_id}").fetchall():
+                    print(self.le_days.text())
+                    ret = datetime.date(datetime.now()) + timedelta(days=int(self.le_days.text()))
+                    cur.execute(
+                        f"insert into given(id, name, given, return) values({self.book_id}, {self.client_id}, '{datetime.now().strftime('%d.%m.%Y')}', '{ret.strftime('%d.%m.%Y')}')")
+                    cur.execute(f"update books set given=TRUE where ids={self.book_id}")
+                    self.lb_output.setText("Успешно.")
+                    con.commit()
+            else:
+                self.lb_empty_ids.setText('Не выбран читатель или книга.')
 
     def check_name(self, text):
         try:
@@ -653,6 +663,29 @@ class GiveBook(QWidget):  # выдача книг
             return False
         except EmptyLE:
             self.lb_e.show()
+            return False
+
+    def check_days(self):
+        try:
+            days = self.le_days.text()
+            if days.strip() != '':
+                if days.isdigit():
+                    if int(days) <= 31:
+                        return True
+                    else:
+                        raise TooManyDays
+                else:
+                    raise IsNotDigit
+            else:
+                raise EmptyLE
+        except EmptyLE:
+            self.lb_wrong_days.setText('Введите количество дней.')
+            return False
+        except IsNotDigit:
+            self.lb_wrong_days.setText('Допускаются только цифры.')
+            return False
+        except TooManyDays:
+            self.lb_wrong_days.setText('Слишком много дней.')
             return False
 
     def show_found_client(self):
@@ -697,14 +730,15 @@ class GiveBook(QWidget):  # выдача книг
         self.btn_name.clicked.connect(self.show_found)
         self.btn_type.clicked.connect(self.show_found)
         self.rb_all.clicked.connect(self.show_found)
+        self.le_name.editingFinished.connect(self.show_found)
         self.btn_cancel.clicked.connect(self.closer)
 
         self.table_books.itemClicked.connect(self.set_book_id)
 
     def set_book_id(self):
-        self.book_id = self.table_books.item(self.sender().currentRow(), 5).text()
+        self.book_id = self.table_books.item(self.sender().currentRow(), 0).text()
         if self.book_id != "Выдана":
-            self.lb_book_id.setText("Выдать книгу: " + self.table_books.item(self.sender().currentRow(), 0).text())
+            self.lb_book_id.setText("Выдать книгу: " + self.table_books.item(self.sender().currentRow(), 1).text())
         self.book_s.hide()
         self.lb_empty_ids.setText('')
 
@@ -782,12 +816,12 @@ class GiveBook(QWidget):  # выдача книг
             for i in range(len(info)):
                 if info[i][6] != 1:
                     # отображение найденного в таблице
-                    self.table_books.setItem(j, 0, QTableWidgetItem(info[i][1]))
-                    self.table_books.setItem(j, 1, QTableWidgetItem(info[i][2]))
-                    self.table_books.setItem(j, 2, QTableWidgetItem(str(info[i][3])))
-                    self.table_books.setItem(j, 3, QTableWidgetItem(info[i][4]))
-                    self.table_books.setItem(j, 4, QTableWidgetItem(str(info[i][5])))
-                    self.table_books.setItem(j, 5, QTableWidgetItem(str(info[i][0]) if info[i][6] != 1 else "Выдана"))
+                    self.table_books.setItem(j, 0, QTableWidgetItem(str(info[i][0]) if info[i][6] != 1 else "Выдана"))
+                    self.table_books.setItem(j, 1, QTableWidgetItem(info[i][1]))
+                    self.table_books.setItem(j, 2, QTableWidgetItem(info[i][2]))
+                    self.table_books.setItem(j, 3, QTableWidgetItem(str(info[i][3])))
+                    self.table_books.setItem(j, 4, QTableWidgetItem(info[i][4]))
+                    self.table_books.setItem(j, 5, QTableWidgetItem(str(info[i][5])))
                     j += 1
         elif info == [] and not_ok:
             self.lb_nothing.show()
@@ -814,10 +848,10 @@ class GiveBook(QWidget):  # выдача книг
                 if id.isdigit():
                     return True
                 else:
-                    raise IdIsNotDigit
+                    raise IsNotDigit
             else:
                 raise EmptyLE
-        except IdIsNotDigit:
+        except IsNotDigit:
             self.lb_id_not_num.show()
             return False
         except EmptyLE:
@@ -848,6 +882,7 @@ class GiveBook(QWidget):  # выдача книг
             if 'id' in el.accessibleName():
                 el.show()
         self.rb_id.setChecked(True)
+        self.lb_wrong_days.setText('')
 
     def closer(self):
         self.close()
@@ -861,7 +896,9 @@ class ReturnBook(QWidget):  # сдача книг
 
     def initUI(self):
         self.btn_return.clicked.connect(self.returner)
+        self.le_book_id.editingFinished.connect(self.returner)
         self.btn_cancel.clicked.connect(self.closer)
+        self.le_book_id.textChanged.connect(self.clearer)
 
     def returner(self):
         ok_book = self.check_book_id(self.le_book_id.text())  # вызов проверок
@@ -891,6 +928,9 @@ class ReturnBook(QWidget):  # сдача книг
         except NoSuchID:
             self.lb_wrong_book_id.setText('Такого id нет')
             return False
+
+    def clearer(self):
+        self.lb_output.setText('')
 
     def closer(self):
         self.close()
@@ -955,7 +995,11 @@ class WrongDataFormat(Exception):
     pass
 
 
-class IdIsNotDigit(Exception):
+class IsNotDigit(Exception):
+    pass
+
+
+class TooManyDays(Exception):
     pass
 
 

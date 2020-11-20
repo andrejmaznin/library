@@ -20,7 +20,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>140</y>
+     <y>180</y>
      <width>600</width>
      <height>30</height>
     </rect>
@@ -45,6 +45,14 @@
      <width>90</width>
      <height>30</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <kerning>true</kerning>
+    </font>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
    </property>
    <property name="styleSheet">
     <string notr="true">background-color: rgb(51, 153, 153);</string>
@@ -120,6 +128,14 @@
      <height>30</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <kerning>false</kerning>
+    </font>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
    <property name="styleSheet">
     <string notr="true">background-color: rgb(51, 153, 153);</string>
    </property>
@@ -135,6 +151,9 @@
      <width>90</width>
      <height>30</height>
     </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
    </property>
    <property name="styleSheet">
     <string notr="true">background-color: rgb(51, 153, 153);</string>
@@ -602,6 +621,9 @@
       <height>431</height>
      </rect>
     </property>
+    <property name="cursor" stdset="0">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(176, 176, 176);
 border-color: rgb(176, 176, 176)</string>
@@ -609,6 +631,17 @@ border-color: rgb(176, 176, 176)</string>
     <property name="gridStyle">
      <enum>Qt::SolidLine</enum>
     </property>
+    <column>
+     <property name="text">
+      <string>id</string>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+    </column>
     <column>
      <property name="text">
       <string>Название</string>
@@ -656,17 +689,6 @@ border-color: rgb(176, 176, 176)</string>
     <column>
      <property name="text">
       <string notr="true">Стеллаж</string>
-     </property>
-     <property name="font">
-      <font>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>id</string>
      </property>
      <property name="font">
       <font>
@@ -1073,13 +1095,69 @@ border-color: rgb(176, 176, 176)</string>
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>110</y>
+     <y>150</y>
      <width>500</width>
      <height>16</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">color: rgb(255, 0,0);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lb_days">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>100</y>
+     <width>301</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
+   <property name="text">
+    <string>На сколько дней (не больше месяца):</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="le_days">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>100</y>
+     <width>50</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(176, 176, 176);</string>
+   </property>
+   <property name="text">
+    <string>14</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lb_wrong_days">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>110</y>
+     <width>200</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
    </property>
    <property name="text">
     <string/>
