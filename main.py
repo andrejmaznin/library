@@ -75,15 +75,20 @@ class ClientSearch(QWidget):  # поиск читателя по базе
         self.lb_e.hide()
 
     def show_found(self):
+        self.lb_nothing.hide()
+        self.lb_e.hide()
         name = self.lineEdit_name.text()
         if self.check_name(name):
             found = cur.execute(f"""SELECT * FROM reader where name like '%{name}%' order by name""").fetchall()
-            self.table_clients.setRowCount(len(found))
-            for i in range(len(found)):
-                self.table_clients.setItem(i, 0, QTableWidgetItem(str(found[i][0])))
-                self.table_clients.setItem(i, 1, QTableWidgetItem(found[i][1]))
-                self.table_clients.setItem(i, 2, QTableWidgetItem(found[i][4]))
-                self.table_clients.setItem(i, 3, QTableWidgetItem(str(found[i][3])))
+            if found != []:
+                self.table_clients.setRowCount(len(found))
+                for i in range(len(found)):
+                    self.table_clients.setItem(i, 0, QTableWidgetItem(str(found[i][0])))
+                    self.table_clients.setItem(i, 1, QTableWidgetItem(found[i][1]))
+                    self.table_clients.setItem(i, 2, QTableWidgetItem(found[i][4]))
+                    self.table_clients.setItem(i, 3, QTableWidgetItem(str(found[i][3])))
+            elif found == []:
+                self.lb_nothing.show()
 
     def check_name(self, text):
         try:
@@ -185,6 +190,7 @@ class BookSearch(QWidget):  # поиск книги по базе
         self.lb_no_g.hide()
         self.lb_empty.hide()
         self.lb_id_not_num.hide()
+        self.lb_nothing.hide()
 
         requirement = self.le_name.text()
         info = 0
