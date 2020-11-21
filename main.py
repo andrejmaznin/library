@@ -504,7 +504,7 @@ class NewBook(QWidget):
 
             for i in range(len(info)):
                 cur.execute(f"""insert into books(ids, name, author, year, genre, position)
-                                                VALUES('{info[i][0]}', '{info[i][1]}',
+                                                VALUES({info[i][0]}, '{info[i][1]}',
                                                 '{info[i][2]}', '{info[i][3]}', '{info[i][4]}', '{str(info[i][5])}')""")
                 con.commit()
             self.lb_success.show()
