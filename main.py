@@ -360,9 +360,10 @@ class NewClient(QWidget):  # окно добавления нового чита
                         '{self.le_bday.text()}', '{self.le_address.text()}', '{self.le_contact.text()}')""")
 
             con.commit()
-            # id = cur.execute(
-            #     f"select id from reader where name={self.le_name.text()}").fetchall()# and reader.date={self.le_bday.text()} and reader.address={self.le_address.text()} and reader.info={self.le_contact.text()}").fetchall()
-            self.success = Warning(f"Читатель успешно добавлен, его id: 1")
+            id = cur.execute(
+                f"select id from reader where name='{self.le_name.text()}' and date='{self.le_bday.text()}'"
+                f" and address='{self.le_address.text()}' and info='{self.le_contact.text()}'").fetchall()
+            self.success = Warning(f"Читатель успешно добавлен, его id: {id[0][0]}")
             self.success.show()
             self.le_name.clear()
             self.le_bday.clear()
