@@ -186,7 +186,7 @@
     <string notr="true">color: rgb(255, 0, 0);</string>
    </property>
    <property name="text">
-    <string>Допускаются только цифры.</string>
+    <string>Знак % не учитывается в запросах. Составьте запрос без него.</string>
    </property>
   </widget>
   <widget class="QLabel" name="lb_e">

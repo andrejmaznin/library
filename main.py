@@ -1,7 +1,5 @@
 import sys
 import sqlite3
-import pymysql
-import hashlib
 import traceback
 
 from PyQt5 import uic
@@ -94,7 +92,7 @@ class ClientSearch(QWidget):  # поиск читателя по базе
     def check_name(self, text):
         try:
             if text.strip() != '':
-                if text.isdigit():
+                if "%" not in text:
                     return True
                 else:
                     raise IsNotDigit
@@ -400,7 +398,8 @@ class NewClient(QWidget):  # окно добавления нового чита
                             raise UnrealDate
                         elif (month == 2 and year % 4 != 0 and day > 28) or (
                                 month == 2 and year % 4 == 0 and day < 29) or (
-                                month in [4, 6, 9, 11] and day > 30) or day > 31:  # на реальность даты
+                                month in [4, 6, 9, 11] and day > 30) or day > 31\
+                                or day == 0 or month == 0 or year == 0:  # на реальность даты
                             raise UnrealDate
                         else:
                             d = datetime(year=year, month=month, day=day)
@@ -501,13 +500,15 @@ class NewBook(QWidget):
             con_input = sqlite3.connect(path)
             cur_input = con_input.cursor()
             info = cur_input.execute("select * from books").fetchall()
-
+        try:
             for i in range(len(info)):
                 cur.execute(f"""insert into books(ids, name, author, year, genre, position)
                                                 VALUES({info[i][0]}, '{info[i][1]}',
                                                 '{info[i][2]}', '{info[i][3]}', '{info[i][4]}', '{str(info[i][5])}')""")
                 con.commit()
             self.lb_success.show()
+        except Exception:
+            print(traceback.format_exc())
 
     def input_form(self):  # добавление книг вручную
         self.lb_success.hide()
@@ -583,16 +584,19 @@ class NewBook(QWidget):
     def check_year(self, year_input):  # проверка года издания книги:
         try:
             if year_input.strip() != '':  # на пустую строку
-                if year_input.isdigit() or year_input[1:].isdigit() and year_input[
-                    0] == '-':  # на наличие символов кроме цифр
+                if year_input.isdigit():  # на наличие символов кроме цифр
                     y = int(year_input)
-                    d = datetime(year=y, month=1, day=1)
-                    t = datetime.today()
-                    if y <= 0 or d > t:  # на реальность года
+                    if y > 3000 or y == 0:
                         raise UnrealDate
                     else:
-                        self.lb_wrong_year.setText('')
-                        return True
+                        d = datetime(year=y, month=1, day=1)
+                        print(d)
+                        t = datetime.today()
+                        if y <= 0 or d > t:  # на реальность года
+                            raise UnrealDate
+                        else:
+                            self.lb_wrong_year.setText('')
+                            return True
                 else:
                     raise WrongYearFormat
             else:
