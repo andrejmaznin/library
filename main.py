@@ -7,7 +7,7 @@ import traceback
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QWidget, QTableWidget, QTableWidgetItem
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QRadioButton, QListWidgetItem
-from PyQt5.QtWidgets import QMainWindow, QLabel, QLineEdit
+from PyQt5.QtWidgets import QMainWindow, QLabel, QLineEdit, QButtonGroup
 from datetime import datetime, date, time, timedelta
 
 
@@ -164,6 +164,13 @@ class BookSearch(QWidget):  # поиск книги по базе
                 el.hide()
         self.rb_id.setChecked(True)
 
+        self.books_type = QButtonGroup(self)
+        self.books_type.addButton(self.rb_all_books)
+        self.books_type.addButton(self.rb_in_books)
+        self.books_type.addButton(self.rb_given_books)
+        self.rb_all_books.setChecked(True)
+        self.books_type.idClicked.connect(self.show_found)
+
         self.rb_id.clicked.connect(self.hider)
         self.rb_name.clicked.connect(self.hider)
         self.rb_author.clicked.connect(self.hider)
@@ -217,15 +224,19 @@ class BookSearch(QWidget):  # поиск книги по базе
                 info = cur.execute(f"select * from books where genre like {requirement}").fetchall()
             else:
                 info = cur.execute("select * from books").fetchall()
+        if self.rb_in_books.isChecked():
+            info = list(filter(lambda book: not book[6], info))
+        elif self.rb_given_books.isChecked():
+            info = list(filter(lambda book: book[6], info))
         if info != 0 and info != []:
             self.tableWidget.setRowCount(len(info))
             for i in range(len(info)):
-                if info[i][0]:
-                    book_is = "1"
+                if info[i][6]:
+                    book_is = "Выдана"
                 else:
-                    book_is = "Нет в наличии"
+                    book_is = "Есть"
                     # отображение найденного в таблице
-                self.tableWidget.setItem(i, 0, QTableWidgetItem(str(info[i][0]) if info[i][6] != "TRUE" else "Выдана"))
+                self.tableWidget.setItem(i, 0, QTableWidgetItem(str(info[i][0])))
                 self.tableWidget.setItem(i, 1, QTableWidgetItem(info[i][1]))
                 self.tableWidget.setItem(i, 2, QTableWidgetItem(info[i][2]))
                 self.tableWidget.setItem(i, 3, QTableWidgetItem(str(info[i][3])))
