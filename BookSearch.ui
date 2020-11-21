@@ -546,7 +546,7 @@ border-color: rgb(176, 176, 176)</string>
    </column>
    <column>
     <property name="text">
-     <string>В наличие</string>
+     <string>Наличие</string>
     </property>
     <property name="font">
      <font>

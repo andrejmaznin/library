@@ -94,13 +94,13 @@ class ClientSearch(QWidget):  # поиск читателя по базе
     def check_name(self, text):
         try:
             if text.strip() != '':
-                if '%' not in text:
+                if text.isdigit():
                     return True
                 else:
-                    raise PercIn
+                    raise IsNotDigit
             else:
                 raise EmptyLE
-        except PercIn:
+        except IsNotDigit:
             self.lb_p.show()
             return False
         except EmptyLE:
@@ -112,7 +112,7 @@ class ClientSearch(QWidget):  # поиск читателя по базе
 
     def open_profile(self):
         id = self.table_clients.item(self.sender().currentRow(), 1).text()
-        self.profile = ClientProfile(id)
+        self.profile = ClientProfile()
         id = self.table_clients.item(self.sender().currentRow(), 0).text()
         self.profile.lb_name.setText(self.table_clients.item(self.sender().currentRow(), 1).text())
         self.profile.lb_id.setText("id: " + id)
@@ -183,6 +183,7 @@ class BookSearch(QWidget):  # поиск книги по базе
         self.rb_all.clicked.connect(self.show_found)
         self.le_name.editingFinished.connect(self.show_found)
         self.btn_cancel.clicked.connect(self.closer)
+        self.tableWidget.itemClicked.connect(self.open_profile)
 
     def hider(self):  # функция показа и прятанье элементов в соответствии с режимом поиска
         self.le_name.setText("")
@@ -224,11 +225,12 @@ class BookSearch(QWidget):  # поиск книги по базе
                 info = cur.execute(f"select * from books where genre like {requirement}").fetchall()
             else:
                 info = cur.execute("select * from books").fetchall()
-        if self.rb_in_books.isChecked():
-            info = list(filter(lambda book: not book[6], info))
-        elif self.rb_given_books.isChecked():
-            info = list(filter(lambda book: book[6], info))
+
         if info != 0 and info != []:
+            if self.rb_in_books.isChecked():
+                info = list(filter(lambda book: not book[6], info))
+            elif self.rb_given_books.isChecked():
+                info = list(filter(lambda book: book[6], info))
             self.tableWidget.setRowCount(len(info))
             for i in range(len(info)):
                 if info[i][6]:
@@ -275,7 +277,6 @@ class BookSearch(QWidget):  # поиск книги по базе
             self.lb_id_not_num.show()
             return False
         except EmptyLE:
-            print(1)
             self.lb_empty.show()
             return False
 
@@ -292,6 +293,46 @@ class BookSearch(QWidget):  # поиск книги по базе
         except NoTypes:
             self.lb_no_g.show()
             return False
+
+    def open_profile(self):
+        state = self.tableWidget.item(self.sender().currentRow(), 6).text()
+        if str(state) == "Есть":
+            self.profile = Warning(
+                'Невозможно открыть подробную\nинформацию о читателе,у которого эта книга,\nтак как она находится в библиотеке.')
+            # self.profile.show()
+        elif state == 'Выдана':
+            id = self.tableWidget.item(self.sender().currentRow(), 0).text()
+            info = cur.execute(f"SELECT * FROM given where id={id}").fetchall()
+            self.profile = ClientProfile()
+            # id = self.table_clients.item(self.sender().currentRow(), 0).text()
+            client_id = int(info[0][1])
+            client_info = cur.execute(f"SELECT * FROM reader where id={client_id}").fetchall()
+            self.profile.lb_name.setText(client_info[0][1])
+            self.profile.lb_id.setText("id: " + str(client_id))
+            self.profile.lb_date.setText(
+                "Дата рождения: " + client_info[0][2])
+            self.profile.lb_address.setText("Адрес: " + client_info[0][4])
+            self.profile.lb_contact.setText(
+                "Контактная информация: " + client_info[0][3])
+            info_books = cur.execute(f"select * from given where name={client_id}").fetchall()
+            for i in range(len(info_books)):
+                self.profile.table_books.insertRow(i)
+            for i in range(len(info_books)):
+                self.profile.table_books.setItem(i, 0, QTableWidgetItem(str(info_books[i][0])))
+                self.profile.table_books.setItem(i, 1, QTableWidgetItem(
+                    cur.execute(f"select name from books where ids={int(info_books[i][0])}").fetchall()[0][0]))
+                self.profile.table_books.setItem(i, 2, QTableWidgetItem(info_books[i][2]))
+                self.profile.table_books.setItem(i, 3, QTableWidgetItem(info_books[i][3]))
+                ret = list(map(int, info_books[0][3].split(".")))
+                given = list(map(int, info_books[0][2].split(".")))
+
+                if datetime.date(datetime.now()) > date(ret[2], ret[1], ret[0]):
+                    status = "Просрочена"
+                else:
+                    status = "Выдана"
+                self.profile.table_books.setItem(i, 4, QTableWidgetItem(status))
+
+        self.profile.show()
 
     def closer(self):
         self.close()
@@ -317,8 +358,12 @@ class NewClient(QWidget):  # окно добавления нового чита
             cur.execute(f"""INSERT INTO reader(name, date, address, info)
                         VALUES('{self.le_name.text()}',
                         '{self.le_bday.text()}', '{self.le_address.text()}', '{self.le_contact.text()}')""")
-            self.lb_success.setText('Читатель успешно добавлен.')
+
             con.commit()
+            # id = cur.execute(
+            #     f"select id from reader where name={self.le_name.text()}").fetchall()# and reader.date={self.le_bday.text()} and reader.address={self.le_address.text()} and reader.info={self.le_contact.text()}").fetchall()
+            self.success = Warning(f"Читатель успешно добавлен, его id: 1")
+            self.success.show()
             self.le_name.clear()
             self.le_bday.clear()
             self.le_address.clear()
@@ -359,7 +404,7 @@ class NewClient(QWidget):  # окно добавления нового чита
                         else:
                             d = datetime(year=year, month=month, day=day)
                             t = datetime.today()
-                            if d > t:  # если дата еще не прошла
+                            if d < t:  # если дата еще не прошла
                                 self.lb_wrong_bday.setText('')
                                 return True
                             else:
@@ -920,23 +965,28 @@ class ReturnBook(QWidget):  # сдача книг
             con.commit()
             cur.execute(f"delete from given where id={id_return}")
             con.commit()
-        self.lb_output.setText('Сдача произведена успешно, книга может быть помещена на полку.')
+            self.lb_output.setText('Сдача произведена успешно, книга может быть помещена на полку.')
 
     def check_book_id(self, id):  # проверка id книги
         try:
             self.lb_wrong_book_id.setText('')
             if id.strip() != '':
-                if cur.execute(f"select ids from books where ids={int(id)}").fetchall():
-                    return True
-                else:
-                    raise NoSuchID
+                if id.isdigit():
+                    if cur.execute(f"select ids from books where ids={int(id)}").fetchall():
+                        return True
+                    else:
+                        raise NoSuchID
+                raise IsNotDigit
             else:
                 raise EmptyLE
         except EmptyLE:
             self.lb_wrong_book_id.setText('Обязательное поле.')
             return False
         except NoSuchID:
-            self.lb_wrong_book_id.setText('Такого id нет')
+            self.lb_wrong_book_id.setText('Такого id нет.')
+            return False
+        except IsNotDigit:
+            self.lb_wrong_book_id.setText('Допускаются только\nцифры.')
             return False
 
     def clearer(self):
@@ -947,13 +997,26 @@ class ReturnBook(QWidget):  # сдача книг
 
 
 class ClientProfile(QWidget):
-    def __init__(self, id):
+    def __init__(self):
         super().__init__()
         uic.loadUi('ClientProfile.ui', self)
-        self.initUI(id)
+        self.initUI()
 
-    def initUI(self, id):
-        # выставление данных читателя в форме, а также книг в таблице, если такие у него есть
+    def initUI(self):
+        self.btn_cancel.clicked.connect(self.closer)
+
+    def closer(self):
+        self.close()
+
+
+class Warning(QWidget):
+    def __init__(self, message):
+        super().__init__()
+        uic.loadUi('Warning.ui', self)
+        self.initUI(message)
+
+    def initUI(self, message):
+        self.lb_message.setText(message)
         self.btn_cancel.clicked.connect(self.closer)
 
     def closer(self):
