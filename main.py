@@ -819,10 +819,9 @@ class GiveBook(QWidget):  # выдача книг
                 info = cur.execute(f"select * from books where genre like {requirement}").fetchall()
             else:
                 info = cur.execute("select * from books").fetchall()
-        info2 = list(filter(lambda b: b[6] != 1, info))
-        self.table_books.setRowCount(len(info2))
+        info = list(filter(lambda b: not b[6], info))
         if info != []:
-            self.table_books.setRowCount(len(info2))
+            self.table_books.setRowCount(len(info))
             j = 0
             for i in range(len(info)):
                 if info[i][6] != 1:
