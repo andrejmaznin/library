@@ -26,7 +26,6 @@ class Librarian(QMainWindow):  # основное окно
         self.btn_new_client.clicked.connect(self.open_new_client)
         self.btn_new_book.clicked.connect(self.open_new_book)
         self.btn_give_book.clicked.connect(self.open_give_book)
-        self.btn_return_book.clicked.connect(self.open_return_book)
 
     # функции открытия остальных форм
     def open_client_search(self):
@@ -48,10 +47,6 @@ class Librarian(QMainWindow):  # основное окно
     def open_give_book(self):
         self.give_book = GiveBook()
         self.give_book.show()
-
-    def open_return_book(self):
-        self.return_book = ReturnBook()
-        self.return_book.show()
 
 
 class ClientSearch(QWidget):  # поиск читателя по базе
@@ -109,37 +104,8 @@ class ClientSearch(QWidget):  # поиск читателя по базе
         self.close()
 
     def open_profile(self):
-        id = self.table_clients.item(self.sender().currentRow(), 1).text()
-        self.profile = ClientProfile()
         id = self.table_clients.item(self.sender().currentRow(), 0).text()
-        self.profile.lb_name.setText(self.table_clients.item(self.sender().currentRow(), 1).text())
-        self.profile.lb_id.setText("id: " + id)
-        self.profile.lb_date.setText(
-            "Дата рождения: " + cur.execute(f"select date from reader where id={id}").fetchall()[0][0])
-        self.profile.lb_address.setText("Адрес: " + self.table_clients.item(self.sender().currentRow(), 2).text())
-        self.profile.lb_contact.setText(
-            "Контактная информация: " + self.table_clients.item(self.sender().currentRow(), 3).text())
-        info = cur.execute(f"select * from given where name={id}").fetchall()
-        for i in range(len(info)):
-            self.profile.table_books.insertRow(i)
-        for i in range(len(info)):
-            self.profile.table_books.setItem(i, 0, QTableWidgetItem(str(info[i][0])))
-            self.profile.table_books.setItem(i, 1,
-                                             QTableWidgetItem(cur.execute(
-                                                 f"select name from books where ids={info[i][0]}").fetchall()[0][0]))
-            self.profile.table_books.setItem(i, 2, QTableWidgetItem(info[i][2]))
-            self.profile.table_books.setItem(i, 3, QTableWidgetItem(info[i][3]))
-            ret = list(map(int, info[0][3].split(".")))
-            given = list(map(int, info[0][2].split(".")))
-
-            if datetime.date(datetime.now()) > date(ret[2], ret[1], ret[0]):
-                print(datetime.date(datetime.now()))
-                print(date(ret[2], ret[1], ret[0]))
-                status = "Просрочена"
-            else:
-                status = "Выдана"
-            self.profile.table_books.setItem(i, 4, QTableWidgetItem(status))
-
+        self.profile = ClientProfile(id)
         self.profile.show()
 
 
@@ -297,39 +263,11 @@ class BookSearch(QWidget):  # поиск книги по базе
         if str(state) == "Есть":
             self.profile = Warning(
                 'Невозможно открыть подробную\nинформацию о читателе,у которого эта книга,\nтак как она находится в библиотеке.')
-            # self.profile.show()
         elif state == 'Выдана':
-            id = self.tableWidget.item(self.sender().currentRow(), 0).text()
-            info = cur.execute(f"SELECT * FROM given where id={id}").fetchall()
-            self.profile = ClientProfile()
-            # id = self.table_clients.item(self.sender().currentRow(), 0).text()
-            client_id = int(info[0][1])
-            client_info = cur.execute(f"SELECT * FROM reader where id={client_id}").fetchall()
-            self.profile.lb_name.setText(client_info[0][1])
-            self.profile.lb_id.setText("id: " + str(client_id))
-            self.profile.lb_date.setText(
-                "Дата рождения: " + client_info[0][2])
-            self.profile.lb_address.setText("Адрес: " + client_info[0][4])
-            self.profile.lb_contact.setText(
-                "Контактная информация: " + client_info[0][3])
-            info_books = cur.execute(f"select * from given where name={client_id}").fetchall()
-            for i in range(len(info_books)):
-                self.profile.table_books.insertRow(i)
-            for i in range(len(info_books)):
-                self.profile.table_books.setItem(i, 0, QTableWidgetItem(str(info_books[i][0])))
-                self.profile.table_books.setItem(i, 1, QTableWidgetItem(
-                    cur.execute(f"select name from books where ids={int(info_books[i][0])}").fetchall()[0][0]))
-                self.profile.table_books.setItem(i, 2, QTableWidgetItem(info_books[i][2]))
-                self.profile.table_books.setItem(i, 3, QTableWidgetItem(info_books[i][3]))
-                ret = list(map(int, info_books[0][3].split(".")))
-                given = list(map(int, info_books[0][2].split(".")))
-
-                if datetime.date(datetime.now()) > date(ret[2], ret[1], ret[0]):
-                    status = "Просрочена"
-                else:
-                    status = "Выдана"
-                self.profile.table_books.setItem(i, 4, QTableWidgetItem(status))
-
+            id_book = self.tableWidget.item(self.sender().currentRow(), 0).text()
+            info = cur.execute(f"SELECT * FROM given where id={id_book}").fetchall()
+            client_id = info[0][1]
+            self.profile = ClientProfile(client_id)
         self.profile.show()
 
     def closer(self):
@@ -398,7 +336,7 @@ class NewClient(QWidget):  # окно добавления нового чита
                             raise UnrealDate
                         elif (month == 2 and year % 4 != 0 and day > 28) or (
                                 month == 2 and year % 4 == 0 and day < 29) or (
-                                month in [4, 6, 9, 11] and day > 30) or day > 31\
+                                month in [4, 6, 9, 11] and day > 30) or day > 31 \
                                 or day == 0 or month == 0 or year == 0:  # на реальность даты
                             raise UnrealDate
                         else:
@@ -950,66 +888,77 @@ class GiveBook(QWidget):  # выдача книг
 
 
 class ReturnBook(QWidget):  # сдача книг
-    def __init__(self):
+    def __init__(self, id):
         super().__init__()
         uic.loadUi('ReturnBook.ui', self)
-        self.initUI()
+        self.initUI(id)
 
-    def initUI(self):
-        self.btn_return.clicked.connect(self.returner)
-        self.le_book_id.editingFinished.connect(self.returner)
+    def initUI(self, id):
+        self.id = id
+        info = cur.execute(f"""select name from books where ids={self.id}""").fetchall()
+        self.label.setText(f"Читатель точно хочет вернуть книгу:\n{str(info[0][0])}?")
+        self.btn_ok.clicked.connect(self.returner)
         self.btn_cancel.clicked.connect(self.closer)
-        self.le_book_id.textChanged.connect(self.clearer)
 
     def returner(self):
-        ok_book = self.check_book_id(self.le_book_id.text())  # вызов проверок
-
-        if ok_book:
-            # происходит удаление из таблицы вадачи
-            id_return = int(self.le_book_id.text())
-            cur.execute(f"update books set given=0 where ids={id_return}")
-            con.commit()
-            cur.execute(f"delete from given where id={id_return}")
-            con.commit()
-            self.lb_output.setText('Сдача произведена успешно, книга может быть помещена на полку.')
-
-    def check_book_id(self, id):  # проверка id книги
-        try:
-            self.lb_wrong_book_id.setText('')
-            if id.strip() != '':
-                if id.isdigit():
-                    if cur.execute(f"select ids from books where ids={int(id)}").fetchall():
-                        return True
-                    else:
-                        raise NoSuchID
-                raise IsNotDigit
-            else:
-                raise EmptyLE
-        except EmptyLE:
-            self.lb_wrong_book_id.setText('Обязательное поле.')
-            return False
-        except NoSuchID:
-            self.lb_wrong_book_id.setText('Такого id нет.')
-            return False
-        except IsNotDigit:
-            self.lb_wrong_book_id.setText('Допускаются только\nцифры.')
-            return False
-
-    def clearer(self):
-        self.lb_output.setText('')
+        position = cur.execute(f"""select position from books where ids={self.id}""").fetchall()
+        cur.execute(f"update books set given=0 where ids={self.id}")
+        con.commit()
+        cur.execute(f"delete from given where id={self.id}")
+        con.commit()
+        self.label.setText(f"""Сдача произведена успешно,\nкнига может быть помещена на\nполку {position[0][0]}.""")
+        self.btn_ok.hide()
+        self.btn_cancel.setText('Закрыть')
 
     def closer(self):
         self.close()
 
 
 class ClientProfile(QWidget):
-    def __init__(self):
+    def __init__(self, id):
         super().__init__()
         uic.loadUi('ClientProfile.ui', self)
-        self.initUI()
+        self.initUI(id)
 
-    def initUI(self):
+    def initUI(self, id):
+        self.id = id
         self.btn_cancel.clicked.connect(self.closer)
+        # получение и отображение данных читателя
+        info = cur.execute(f"""select * from reader where id={id}""").fetchall()
+        self.lb_name.setText(str(info[0][1]))
+        self.lb_id.setText("id: " + str(id))
+        self.lb_date.setText("Дата рождения: " + str(info[0][2]))
+        self.lb_address.setText("Адрес: " + info[0][4])
+        self.lb_contact.setText("Контактная информация: " + info[0][3])
+        # отображение книг, которые у него на руках
+        self.show_books()
+        # подкючение выдачи книг
+        self.table_books.itemDoubleClicked.connect(self.return_books)
+
+    def show_books(self):
+        self.table_books.setRowCount(0)
+        info = cur.execute(f"select * from given where name={self.id}").fetchall()
+        for i in range(len(info)):
+            self.table_books.insertRow(i)
+        for i in range(len(info)):
+            self.table_books.setItem(i, 0, QTableWidgetItem(str(info[i][0])))
+            self.table_books.setItem(i, 1, QTableWidgetItem(
+                cur.execute(f"select name from books where ids={info[i][0]}").fetchall()[0][0]))
+            self.table_books.setItem(i, 2, QTableWidgetItem(info[i][2]))
+            self.table_books.setItem(i, 3, QTableWidgetItem(info[i][3]))
+            ret = list(map(int, info[0][3].split(".")))
+            given = list(map(int, info[0][2].split(".")))
+            if datetime.date(datetime.now()) > date(ret[2], ret[1], ret[0]):
+                status = "Просрочена"
+            else:
+                status = "Выдана"
+            self.table_books.setItem(i, 4, QTableWidgetItem(status))
+
+    def return_books(self):
+        id = self.table_books.item(self.sender().currentRow(), 0).text()
+        self.returner = ReturnBook(id)
+        self.returner.show()
+        self.returner.btn_ok.clicked.connect(self.show_books)
 
     def closer(self):
         self.close()
@@ -1029,7 +978,7 @@ class Warning(QWidget):
         self.close()
 
 
-# исключения используемые при проверках
+# исключения используемые при проверках вводимых данных
 class WrongBirthDateFormat(Exception):
     pass
 

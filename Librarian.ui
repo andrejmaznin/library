@@ -278,7 +278,7 @@
    <widget class="QPushButton" name="btn_new_book">
     <property name="geometry">
      <rect>
-      <x>95</x>
+      <x>185</x>
       <y>290</y>
       <width>150</width>
       <height>150</height>
@@ -303,7 +303,7 @@
    <widget class="QPushButton" name="btn_give_book">
     <property name="geometry">
      <rect>
-      <x>275</x>
+      <x>365</x>
       <y>290</y>
       <width>150</width>
       <height>150</height>
@@ -332,40 +332,6 @@
     </property>
     <property name="text">
      <string>Выдать книгу</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btn_return_book">
-    <property name="geometry">
-     <rect>
-      <x>455</x>
-      <y>290</y>
-      <width>150</width>
-      <height>150</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="font">
-     <font>
-      <family>Gabriola</family>
-      <pointsize>14</pointsize>
-     </font>
-    </property>
-    <property name="cursor">
-     <cursorShape>PointingHandCursor</cursorShape>
-    </property>
-    <property name="acceptDrops">
-     <bool>false</bool>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(51, 153, 153);</string>
-    </property>
-    <property name="text">
-     <string>Вернуть книгу</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
