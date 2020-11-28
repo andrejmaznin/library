@@ -60,7 +60,7 @@ class ClientSearch(QWidget):  # поиск читателя по базе
         self.lb_p.hide()
         self.lb_e.hide()
 
-        self.btn_cancel.clicked.connect(self.closer)
+        self.btn_cancel.clicked.connect(self.close)
         self.btn_search.clicked.connect(self.show_found)
         self.lineEdit_name.editingFinished.connect(self.show_found)
         self.table_clients.itemDoubleClicked.connect(self.open_profile)
@@ -100,9 +100,6 @@ class ClientSearch(QWidget):  # поиск читателя по базе
             self.lb_e.show()
             return False
 
-    def closer(self):
-        self.close()
-
     def open_profile(self):
         id = self.table_clients.item(self.sender().currentRow(), 0).text()
         self.profile = ClientProfile(id)
@@ -133,8 +130,8 @@ class BookSearch(QWidget):  # поиск книги по базе
         self.books_type.addButton(self.rb_in_books)
         self.books_type.addButton(self.rb_given_books)
         self.rb_all_books.setChecked(True)
-        self.books_type.idClicked.connect(self.show_found)
 
+        self.books_type.idClicked.connect(self.show_found)
         self.rb_id.clicked.connect(self.hider)
         self.rb_name.clicked.connect(self.hider)
         self.rb_author.clicked.connect(self.hider)
@@ -146,7 +143,7 @@ class BookSearch(QWidget):  # поиск книги по базе
         self.btn_type.clicked.connect(self.show_found)
         self.rb_all.clicked.connect(self.show_found)
         self.le_name.editingFinished.connect(self.show_found)
-        self.btn_cancel.clicked.connect(self.closer)
+        self.btn_cancel.clicked.connect(self.close)
         self.tableWidget.itemDoubleClicked.connect(self.open_profile)
 
     def hider(self):  # функция показа и прятанье элементов в соответствии с режимом поиска
@@ -270,9 +267,6 @@ class BookSearch(QWidget):  # поиск книги по базе
             self.profile = ClientProfile(client_id)
         self.profile.show()
 
-    def closer(self):
-        self.close()
-
 
 class NewClient(QWidget):  # окно добавления нового читателя
     def __init__(self):
@@ -282,7 +276,7 @@ class NewClient(QWidget):  # окно добавления нового чита
 
     def initUI(self):
         self.btn_input.clicked.connect(self.new_input)
-        self.btn_cancel.clicked.connect(self.closer)
+        self.btn_cancel.clicked.connect(self.close)
 
     def new_input(self):
         name_ok = self.check_name(self.le_name.text())  # вызов проверок соответствия ввода с необходимыми форматами
@@ -407,6 +401,11 @@ class NewBook(QWidget):
         self.errors = [self.lb_wrong_author, self.lb_wrong_name, self.lb_wrong_number, self.lb_error,
                        self.lb_wrong_number, self.lb_wrong_shelf, self.lb_wrong_type, self.lb_wrong_year]
 
+        self.line_edits = [self.le_author, self.le_year, self.le_number, self.le_shelf, self.le_name]
+        #
+        # for el in self.line_edits:
+        #     el.textEdited.connect(self.clearer)
+
         for el in self.widgets:  # прятанье элементов
             if 'form' not in el.accessibleName():
                 el.hide()
@@ -431,8 +430,8 @@ class NewBook(QWidget):
             el.setText('')
 
     def input_file(self):  # добавление книг через уже готовый документ
+        self.listWidget.clear()
         try:
-            self.lb_success.hide()
             self.lb_error.setText('')
             if self.check_directory(self.le_directory.text()):
                 path = self.le_directory.text()
@@ -444,14 +443,14 @@ class NewBook(QWidget):
                                                 VALUES({info[i][0]}, '{info[i][1]}',
                                                 '{info[i][2]}', '{info[i][3]}', '{info[i][4]}', '{str(info[i][5])}')""")
                 con.commit()
-            self.lb_success.show()
+            self.success = Warning('Успешно!')
+            self.success.show()
         except Exception:
             self.error = Warning("Ошибка!")
             self.error.show()
 
     def input_form(self):  # добавление книг вручную
-        self.lb_success.hide()
-
+        self.listWidget.clear()
         ok_name = self.check_name(self.le_name.text())  # вызов проверок полей
         ok_author = self.check_author(self.le_author.text())
         ok_year = self.check_year(self.le_year.text())
@@ -479,8 +478,12 @@ class NewBook(QWidget):
                 ids.append(a)
             for i in range(len(ids)):
                 self.listWidget.addItem(QListWidgetItem(str(ids[i])))
-
-            self.lb_success.show()
+            for el in self.line_edits:
+                el.setText('')
+            for el in self.types:
+                el.setChecked(False)
+            self.success = Warning('Успешно!')
+            self.success.show()
 
     def check_directory(self, text):
         try:
@@ -601,8 +604,9 @@ class NewBook(QWidget):
             self.lb_wrong_shelf.setText('Обязательное поле.')
             return False
 
-    def closer(self):
-        self.close()
+    def clearer(self):
+        self.listWidget.clear()
+        self.success.hide()
 
 
 class GiveBook(QWidget):  # выдача книг
@@ -619,7 +623,7 @@ class GiveBook(QWidget):  # выдача книг
         self.btn_give.clicked.connect(self.give)
         self.btn_book_choose.clicked.connect(self.show_book_search)
         self.btn_client_choose.clicked.connect(self.show_client_search)
-
+        self.btn_cancel.clicked.connect(self.close)
         self.book_id = None
         self.client_id = None
 
@@ -627,7 +631,6 @@ class GiveBook(QWidget):  # выдача книг
         self.lb_nothing_2.hide()
         self.lb_p.hide()
         self.lb_e.hide()
-        self.btn_cancel.clicked.connect(self.closer)
         self.btn_search.clicked.connect(self.show_found_client)
         self.lineEdit_name.editingFinished.connect(self.show_found_client)
         self.table_clients.itemDoubleClicked.connect(self.set_client_id)
@@ -883,9 +886,6 @@ class GiveBook(QWidget):  # выдача книг
         self.rb_id.setChecked(True)
         self.lb_wrong_days.setText('')
 
-    def closer(self):
-        self.close()
-
 
 class ReturnBook(QWidget):  # сдача книг
     def __init__(self, id):
@@ -898,7 +898,7 @@ class ReturnBook(QWidget):  # сдача книг
         info = cur.execute(f"""select name from books where ids={self.id}""").fetchall()
         self.label.setText(f"Читатель точно хочет вернуть книгу:\n{str(info[0][0])}?")
         self.btn_ok.clicked.connect(self.returner)
-        self.btn_cancel.clicked.connect(self.closer)
+        self.btn_cancel.clicked.connect(self.close)
 
     def returner(self):
         position = cur.execute(f"""select position from books where ids={self.id}""").fetchall()
@@ -910,9 +910,6 @@ class ReturnBook(QWidget):  # сдача книг
         self.btn_ok.hide()
         self.btn_cancel.setText('Закрыть')
 
-    def closer(self):
-        self.close()
-
 
 class ClientProfile(QWidget):
     def __init__(self, id):
@@ -922,7 +919,7 @@ class ClientProfile(QWidget):
 
     def initUI(self, id):
         self.id = id
-        self.btn_cancel.clicked.connect(self.closer)
+        self.btn_cancel.clicked.connect(self.close)
         # получение и отображение данных читателя
         info = cur.execute(f"""select * from reader where id={id}""").fetchall()
         self.lb_name.setText(str(info[0][1]))
@@ -960,9 +957,6 @@ class ClientProfile(QWidget):
         self.returner.show()
         self.returner.btn_ok.clicked.connect(self.show_books)
 
-    def closer(self):
-        self.close()
-
 
 class Warning(QWidget):
     def __init__(self, message):
@@ -972,10 +966,7 @@ class Warning(QWidget):
 
     def initUI(self, message):
         self.lb_message.setText(message)
-        self.btn_cancel.clicked.connect(self.closer)
-
-    def closer(self):
-        self.close()
+        self.btn_cancel.clicked.connect(self.close)
 
 
 # исключения используемые при проверках вводимых данных
