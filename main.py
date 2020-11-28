@@ -692,7 +692,7 @@ class GiveBook(QWidget):  # выдача книг
         self.btn_cancel.clicked.connect(self.closer)
         self.btn_search.clicked.connect(self.show_found_client)
         self.lineEdit_name.editingFinished.connect(self.show_found_client)
-        self.table_clients.itemClicked.connect(self.set_client_id)
+        self.table_clients.itemDoubleClicked.connect(self.set_client_id)
 
     def give(self):
         self.lb_empty_ids.setText('')
@@ -795,7 +795,7 @@ class GiveBook(QWidget):  # выдача книг
         self.le_name.editingFinished.connect(self.show_found)
         self.btn_cancel.clicked.connect(self.closer)
 
-        self.table_books.itemClicked.connect(self.set_book_id)
+        self.table_books.itemDoubleClicked.connect(self.set_book_id)
 
     def set_book_id(self):
         self.book_id = self.table_books.item(self.sender().currentRow(), 0).text()
