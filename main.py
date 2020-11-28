@@ -27,7 +27,7 @@ class Librarian(QMainWindow):  # основное окно
         self.btn_new_book.clicked.connect(self.open_new_book)
         self.btn_give_book.clicked.connect(self.open_give_book)
 
-    # функции открытия остальных форм
+    # функции открытия остальных окон
     def open_client_search(self):
         self.client_search = ClientSearch()
         self.client_search.show()
@@ -402,9 +402,6 @@ class NewBook(QWidget):
                        self.lb_wrong_number, self.lb_wrong_shelf, self.lb_wrong_type, self.lb_wrong_year]
 
         self.line_edits = [self.le_author, self.le_year, self.le_number, self.le_shelf, self.le_name]
-        #
-        # for el in self.line_edits:
-        #     el.textEdited.connect(self.clearer)
 
         for el in self.widgets:  # прятанье элементов
             if 'form' not in el.accessibleName():
@@ -416,7 +413,7 @@ class NewBook(QWidget):
         self.rb_form.clicked.connect(self.hider)
         self.rb_file.clicked.connect(self.hider)
 
-        self.btn_cancel.clicked.connect(self.closer)
+        self.btn_cancel.clicked.connect(self.close )
         self.btn_file_input.clicked.connect(self.input_file)
         self.btn_form_input.clicked.connect(self.input_form)
 
