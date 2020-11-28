@@ -68,7 +68,7 @@ class ClientSearch(QWidget):  # поиск читателя по базе
         self.btn_cancel.clicked.connect(self.closer)
         self.btn_search.clicked.connect(self.show_found)
         self.lineEdit_name.editingFinished.connect(self.show_found)
-        self.table_clients.itemClicked.connect(self.open_profile)
+        self.table_clients.itemDoubleClicked.connect(self.open_profile)
         self.lb_p.hide()
         self.lb_e.hide()
 
@@ -181,7 +181,7 @@ class BookSearch(QWidget):  # поиск книги по базе
         self.rb_all.clicked.connect(self.show_found)
         self.le_name.editingFinished.connect(self.show_found)
         self.btn_cancel.clicked.connect(self.closer)
-        self.tableWidget.itemClicked.connect(self.open_profile)
+        self.tableWidget.itemDoubleClicked.connect(self.open_profile)
 
     def hider(self):  # функция показа и прятанье элементов в соответствии с режимом поиска
         self.le_name.setText("")
@@ -493,14 +493,14 @@ class NewBook(QWidget):
             el.setText('')
 
     def input_file(self):  # добавление книг через уже готовый документ
-        self.lb_success.hide()
-        self.lb_error.setText('')
-        if self.check_directory(self.le_directory.text()):
-            path = self.le_directory.text()
-            con_input = sqlite3.connect(path)
-            cur_input = con_input.cursor()
-            info = cur_input.execute("select * from books").fetchall()
         try:
+            self.lb_success.hide()
+            self.lb_error.setText('')
+            if self.check_directory(self.le_directory.text()):
+                path = self.le_directory.text()
+                con_input = sqlite3.connect(path)
+                cur_input = con_input.cursor()
+                info = cur_input.execute("select * from books").fetchall()
             for i in range(len(info)):
                 cur.execute(f"""insert into books(ids, name, author, year, genre, position)
                                                 VALUES({info[i][0]}, '{info[i][1]}',
@@ -508,7 +508,8 @@ class NewBook(QWidget):
                 con.commit()
             self.lb_success.show()
         except Exception:
-            print(traceback.format_exc())
+            self.error = Warning("Ошибка!")
+            self.error.show()
 
     def input_form(self):  # добавление книг вручную
         self.lb_success.hide()
