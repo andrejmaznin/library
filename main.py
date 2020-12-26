@@ -613,16 +613,19 @@ class GiveBook(QWidget):  # выдача книг
         self.initUI()
 
     def initUI(self):
-        self.book_s.hide()
-        self.client_s.hide()
-        self.initBookSearch()
-        self.initClientSearch()
-        self.btn_give.clicked.connect(self.give)
-        self.btn_book_choose.clicked.connect(self.show_book_search)
-        self.btn_client_choose.clicked.connect(self.show_client_search)
-        self.btn_cancel.clicked.connect(self.close)
-        self.book_id = None
-        self.client_id = None
+        try:
+            self.book_s.hide()
+            self.client_s.hide()
+            self.initBookSearch()
+            self.initClientSearch()
+            self.btn_give.clicked.connect(self.give)
+            self.btn_book_choose.clicked.connect(self.show_book_search)
+            self.btn_client_choose.clicked.connect(self.show_client_search)
+            self.btn_cancel.clicked.connect(self.close)
+            self.book_id = None
+            self.client_id = None
+        except Exception:
+            print(traceback.format_exc())
 
     def initClientSearch(self):
         self.lb_nothing_2.hide()
@@ -731,7 +734,7 @@ class GiveBook(QWidget):  # выдача книг
         self.btn_type.clicked.connect(self.show_found)
         self.rb_all.clicked.connect(self.show_found)
         self.le_name.editingFinished.connect(self.show_found)
-        self.btn_cancel.clicked.connect(self.closer)
+        self.btn_cancel.clicked.connect(self.close)
 
         self.table_books.itemDoubleClicked.connect(self.set_book_id)
 
